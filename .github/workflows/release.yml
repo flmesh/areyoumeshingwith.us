@@ -1,0 +1,75 @@
+name: Terraform Release
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+
+permissions:
+  id-token: write
+  contents: read
+  pull-requests: write
+
+defaults:
+  run:
+    shell: bash
+  
+jobs:
+  terraform:
+    name: Deploy Terraform Infrastructure as Code
+    runs-on: ubuntu-latest
+
+    defaults:
+      run:
+        working-directory: terraform/
+  
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v4
+
+    - name: Setup Terraform
+      uses: hashicorp/setup-terraform@v3
+
+    - name: Configure AWS credentials
+      uses: aws-actions/configure-aws-credentials@v4
+      with:
+        role-to-assume:  ${{ secrets.AWS_MGMT_ROLE_ARN }}
+        aws-region: us-east-1
+
+    - name: Terraform Format
+      id: fmt
+      run: terraform fmt -no-color -check
+      continue-on-error: true
+
+    - name: Terraform Init
+      id: init
+      run: terraform init -no-color -backend-config="key=${{ github.repository }}/terraform.tfstate"
+    
+    - name: Terraform Validate
+      id: validate
+      run: terraform validate -no-color
+    
+    - name: Terraform Plan
+      id: plan
+      env:
+        TF_VAR_gh_action_role: ${{ secrets.AWS_GITHUB_ROLE_ARN }}
+      run: terraform plan -out .planfile
+
+    - name: Post PR comment
+      if: github.event_name == 'pull_request'
+      uses: borchero/terraform-plan-comment@v2
+      with:
+        token: ${{ secrets.GITHUB_TOKEN }}
+        planfile: .planfile
+        working-directory: terraform/
+
+    - name: Terraform Plan Status
+      if: steps.plan.outcome == 'failure'
+      run: exit 1
+
+    - name: Terraform Apply
+      if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+      env:
+        TF_VAR_gh_action_role: ${{ secrets.AWS_GITHUB_ROLE_ARN }}
+      run: terraform apply -no-color -auto-approve .planfile
