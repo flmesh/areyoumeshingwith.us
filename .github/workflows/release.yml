@@ -1,4 +1,4 @@
-name: Terraform Release
+name: Website Release
 
 on:
   push:
