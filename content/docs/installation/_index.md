@@ -1,6 +1,6 @@
 ---
-title: Installation Guide
-linkTitle: Installation
+title: Installation Guides
+linkTitle: Installations
 nav_icon:
   vendor: bs
   name: cloud-download

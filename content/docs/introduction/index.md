@@ -1,6 +1,7 @@
 ---
-date: 2022-03-06T22:42:23+08:00
+date: 2025-02-27T19:35:00-05:00
 title: Introduction
+description: An introduction to what the Florida Mesh community is about.
 nav_weight: 1
 series:
   - Guide
@@ -9,15 +10,7 @@ nav_icon:
   name: book
   color: indigo
 authors:
-  - razonyang
+  - jbouse
 ---
 
-A fast, responsive and feature-rich Hugo theme for blog and documentation site.
-
-<!--more-->
-
-## Greeting
-
-```sh
-echo "Hi there"
-```
+TBD
