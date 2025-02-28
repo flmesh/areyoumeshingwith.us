@@ -1,4 +1,4 @@
-description: The starter theme template of HB (Hugo Bootstrap) Framework.
+description: The Florida Mesh User Community
 
 hb:
   # override SASS variables, please replace the dash with underline, e.g. `list-group-color` should be `list_group_color`.
@@ -16,13 +16,16 @@ hb:
     # see https://hbstack.dev/en/docs/modules/socials/.
     socials:
       github: flmesh
+      discord: JUc8N9nUa8
       rss: true
   footer:
     # see https://hbstack.dev/en/docs/modules/socials/.
     socials:
       _color: true # when false, remove the color of social icons.
       github: flmesh
+      discord: JUc8N9nUa8
       rss: true
+    powered_by: false
   terms:
     # the paginate for categories, tags, series list pages.
     paginate: 12
@@ -31,10 +34,10 @@ hb:
       profile:
         # title: Profile title other than site title.
         # description: Profile description other than site description.
-        company: Florida Mesh
         location: Florida, USA
         socials:
           github: flmesh
+          discord: JUc8N9nUa8
           rss: true
       posts:
         recent_count: 5 # the number of recent posts.
@@ -43,7 +46,7 @@ hb:
         count: true # whether to show the number of posts associated to the item.
         limit: 10 # the maximum number of the item.
     paginate: 12 # paginate.
-    post_thumbnail_placeholder: HB THEME # the text of thumbnail placeholder, default to site title.
+    post_thumbnail_placeholder: FL MESH # the text of thumbnail placeholder, default to site title.
     # post_thumbnail: false # whether to show the thumbnails.
     # post_date_format: ":date_long" # see https://gohugo.io/functions/dateformat/#datetime-formatting-layouts.
     home: # homepage settings.
@@ -66,9 +69,18 @@ hb:
       service: github # github or gitlab.
       repo: flmesh/areyoumeshingwith.us
       branch: main
-      # subpath: exampleSite
-  # gallery:
-  #   thumbnail_size: "x640"
+  gallery:
+    thumbnail_size: "x640"
+  google_fonts:
+    families:
+      - name: Ubuntu
+  back_to_top:
+    icon_name: radioactive
+  sass_silence_deprecations:
+    - import
+    - mixed-decls
+    - global-builtin
+    - color-functions
 
 seo:
   favicons: # see https://hugomods.com/en/docs/seo/#favicons-module

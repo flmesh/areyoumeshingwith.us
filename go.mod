@@ -1,6 +1,6 @@
 module github.com/flmesh/areyoumeshingwith.us
 
-go 1.23
+go 1.21
 
 require (
 	github.com/GoogleChrome/workbox v7.3.0+incompatible // indirect
@@ -54,6 +54,7 @@ require (
 	github.com/hbstack/header/modules/search v0.1.38 // indirect
 	github.com/hbstack/header/modules/socials v0.2.2 // indirect
 	github.com/hbstack/header/modules/theme-toggle v0.5.2 // indirect
+	github.com/hbstack/header/themes/tabs v0.1.0 // indirect
 	github.com/hbstack/heading-sign v0.2.0 // indirect
 	github.com/hbstack/iframe v0.2.0 // indirect
 	github.com/hbstack/mermaid v0.2.2 // indirect

@@ -20,7 +20,7 @@ imports:
 
   # header themes
   # - path: github.com/hbstack/header/themes/pills
-  # - path: github.com/hbstack/header/themes/tabs
+  - path: github.com/hbstack/header/themes/tabs
   # - path: github.com/hbstack/header/themes/classic
 
   # blog sidebar
@@ -61,6 +61,7 @@ imports:
   - path: github.com/hbstack/google-fonts
   - path: github.com/hbstack/announcement-bar
   - path: github.com/hbstack/iframe
+  - path: github.com/hbstack/progress-bar
   - path: github.com/hbstack/background-image
 
   # recommended modules
