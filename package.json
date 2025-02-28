@@ -1,0 +1,22 @@
+{
+  "name": "areyoumeshingwith.us",
+  "description": "Florida Mesh website.",
+  "scripts": {
+    "dev": "hugo server --gc --enableGitInfo -DF",
+    "prod": "hugo server --gc --disableFastRender --enableGitInfo --minify -e production -p 1314"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/flmesh/areyoumeshingwith.us.git"
+  },
+  "author": "Jeremy T. Bouse <jeremy.bouse@undergrid.net>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/flmesh/areyoumeshingwith.us/issues"
+  },
+  "homepage": "https://github.com/flmesh/areyoumeshingwith.us#readme",
+  "dependencies": {
+    "@fullhuman/postcss-purgecss": "^7.0.2",
+    "@hbstack/node-packages": "^0.1.5"
+  }
+}

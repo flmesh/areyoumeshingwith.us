@@ -1,0 +1,136 @@
+description: The Florida Mesh User Community
+
+hb:
+  # override SASS variables, please replace the dash with underline, e.g. `list-group-color` should be `list_group_color`.
+  # styles:
+  #   primary: '#6610f2'
+  
+  # js_bundle_name: main # the JS bundle name.
+  # css_bundle_name: main # the CSS bundle name.
+  
+  full_width: false # when true, the layout takes full width globally.
+
+  header:
+    brand: FL Mesh # the brand name, leave it empty to use site's title.
+    logo_bg: '#712cf9' # logo background color, used by logo with transparent background.
+    # see https://hbstack.dev/en/docs/modules/socials/.
+    socials:
+      github: flmesh
+      discord: JUc8N9nUa8
+      rss: true
+  footer:
+    # see https://hbstack.dev/en/docs/modules/socials/.
+    socials:
+      _color: true # when false, remove the color of social icons.
+      github: flmesh
+      discord: JUc8N9nUa8
+      rss: true
+    powered_by: false
+  terms:
+    # the paginate for categories, tags, series list pages.
+    paginate: 12
+  blog:
+    sidebar:
+      profile:
+        # title: Profile title other than site title.
+        # description: Profile description other than site description.
+        location: Florida, USA
+        socials:
+          github: flmesh
+          discord: JUc8N9nUa8
+          rss: true
+      posts:
+        recent_count: 5 # the number of recent posts.
+        featured_count: 5 # the number of featured posts.
+      taxonomies:
+        count: true # whether to show the number of posts associated to the item.
+        limit: 10 # the maximum number of the item.
+    paginate: 12 # paginate.
+    post_thumbnail_placeholder: FL MESH # the text of thumbnail placeholder, default to site title.
+    # post_thumbnail: false # whether to show the thumbnails.
+    # post_date_format: ":date_long" # see https://gohugo.io/functions/dateformat/#datetime-formatting-layouts.
+    home: # homepage settings.
+      # taxonomies: false # remove the taxonomies stat from the homepage.
+      featured_posts: 5 # the number of the featured posts.
+      main_sections: # leave it empty to include all regular pages.
+        - docs
+        - blog
+    giscus:
+      repo: flmesh/areyoumeshingwith.us
+      repo_id: R_kgDOOArsUA
+      category_id: DIC_kwDOOArsUM4CnaPt
+  docs:
+    giscus:
+      repo: flmesh/areyoumeshingwith.us
+      repo_id: R_kgDOOArsUA
+      category_id: DIC_kwDOOArsUM4CnaPt
+  content_panel:
+    repo:
+      service: github # github or gitlab.
+      repo: flmesh/areyoumeshingwith.us
+      branch: main
+  gallery:
+    thumbnail_size: "x640"
+  google_fonts:
+    families:
+      - name: Ubuntu
+  back_to_top:
+    icon_name: radioactive
+  sass_silence_deprecations:
+    - import
+    - mixed-decls
+    - global-builtin
+    - color-functions
+
+seo:
+  favicons: # see https://hugomods.com/en/docs/seo/#favicons-module
+    icon: images/logo.png # use logo as favicon.
+
+# PWA settings, see https://hugomods.com/en/docs/pwa/#site-parameters.
+# The PWA was disabled on development environment. Set `hugopress.modules.pwa.disable` as `false`
+# on `config/development/params.yaml` to debug and test.
+pwa:
+  debug: false
+  icon_path: 'images/logo.png' # default to the logo path, replace it if the icon is different from the logo.
+  icon_sizes:	[48, 64, 128, 144, 256, 512]
+  offline_image: 'images/pwa/offline.png' # the offline image to show if the requested image is not available.
+  # manifest metadata, read more on https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/manifest.json#list_of_manifest.json_keys.
+  manifest:
+    background_color: '#712cf9'
+    theme_color: '#712cf9'
+    short_name: 'FL Mesh'
+
+# see https://hugomods.com/search/configurations/.
+search:
+  stall_threshold: 300
+  min_match_char_length: 2
+  case_sensitive: false
+  shortcut_search: ["/"]
+
+mermaid:
+  # replace it with other CDNs or self-hosted URLs.
+  js_url: https://cdn.jsdelivr.net/npm/mermaid@latest/dist/mermaid.esm.min.mjs
+
+hugopress:
+  modules:
+    hb-custom:
+      hooks:
+        # see layouts/partials/hugopress/modules/hb-custom/hooks/head-end.html.
+        head-end:
+          cacheable: true
+        # see layouts/partials/hugopress/modules/hb-custom/hooks/body-end.html.
+        body-end:
+          cacheable: true
+        # see layouts/partials/hugopress/modules/hb-custom/hooks/hb-blog-sidebar.html.
+        hb-blog-sidebar:
+          cacheable: true
+          weight: 1
+    # change the order of sidebar modules.
+    hb-blog-sidebar-taxonomies:
+      hooks:
+        hb-blog-sidebar:
+          weight: 3
+    hb-blog-sidebar-posts:
+      hooks:
+        hb-blog-sidebar:
+          weight: 2

@@ -1,0 +1,16 @@
+name: mysite
+
+services:
+  server:
+    image: hugomods/hugo:exts-non-root
+    command: server -D
+    volumes:
+      - ./:/src
+      - ~/.cache/hugo_cache:/tmp/hugo_cache
+    ports:
+      - 1313:1313
+    env_file:
+      - path: .env
+        required: false
+        
+
