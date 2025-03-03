@@ -1,4 +1,4 @@
-description: The Florida Mesh User Community
+description: Florida Mesh User Community
 
 hb:
   # override SASS variables, please replace the dash with underline, e.g. `list-group-color` should be `list_group_color`.
@@ -11,8 +11,7 @@ hb:
   full_width: false # when true, the layout takes full width globally.
 
   header:
-    brand: FL Mesh # the brand name, leave it empty to use site's title.
-    logo_bg: '#712cf9' # logo background color, used by logo with transparent background.
+    brand: Florida Mesh # the brand name, leave it empty to use site's title.
     # see https://hbstack.dev/en/docs/modules/socials/.
     socials:
       github: flmesh
@@ -59,6 +58,7 @@ hb:
       repo: flmesh/areyoumeshingwith.us
       repo_id: R_kgDOOArsUA
       category_id: DIC_kwDOOArsUM4CnaPt
+    post_thumbnail_default: images/logo.png
   docs:
     giscus:
       repo: flmesh/areyoumeshingwith.us
