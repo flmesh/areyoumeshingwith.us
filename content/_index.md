@@ -1,14 +1,14 @@
 ---
 title: Florida Mesh
 layout: landing
-# menu:
-#   main:
-#     name: Home
-#     weight: 1
-#     params:
-#       icon:
-#         vendor: bs
-#         name: house
+menu:
+  main:
+    name: Home
+    weight: 1
+    params:
+      icon:
+        vendor: bs
+        name: house
 ---
 
 # Welcome to the Florida Mesh User Community
