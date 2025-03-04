@@ -2,7 +2,7 @@
 title: Gallery
 menu:
   main:
-    weight: 10
+    weight: 50
     params:
       icon:
         vendor: fas
