@@ -19,7 +19,7 @@ module "website" {
 
 module "cdn" {
   source  = "cloudposse/cloudfront-s3-cdn/aws"
-  version = "0.96.2"
+  version = "0.97.0"
 
   name                        = "cdn"
   comment                     = var.comment
