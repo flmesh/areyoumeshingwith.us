@@ -66,7 +66,7 @@ require (
 	github.com/hbstack/revision v0.6.9 // indirect
 	github.com/hbstack/scrollbar v0.1.0 // indirect
 	github.com/hbstack/search v0.2.2 // indirect
-	github.com/hbstack/slide v0.4.0 // indirect
+	github.com/hbstack/slide v0.4.1 // indirect
 	github.com/hbstack/snackbar v0.1.2 // indirect
 	github.com/hbstack/social-share-buttons v0.6.0 // indirect
 	github.com/hbstack/socials v0.18.0 // indirect
