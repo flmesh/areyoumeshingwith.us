@@ -38,6 +38,7 @@ If you would like to connect your nodes to the MQTT broker and provide telemetry
     * TLS Enabled: `Unchecked`
     * Root topic: `msh/US/FL`
     * Map reporting: `Checked`
+    * Map reporting interval (seconds): 10800
     * Precise location: `Unchecked`
     * Precision Slider: `1194ft / 363m or greater`
 
