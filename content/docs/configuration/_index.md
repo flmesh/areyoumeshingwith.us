@@ -43,6 +43,7 @@ If you would like to connect your nodes to the MQTT broker and provide telemetry
 
     Neighbor Info:
     * Neighbor Info enabled: `Checked`
+    * Update interval (seconds): 14400
     * Transmit over LoRa: `Unchecked`
 ```
 
