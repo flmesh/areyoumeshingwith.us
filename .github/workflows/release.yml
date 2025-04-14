@@ -35,11 +35,17 @@ jobs:
     - name: Setup Terraform
       uses: hashicorp/setup-terraform@v3
 
+    - name: Debug OIDC Claims
+      uses: github/actions-oidc-debugger@main
+      with:
+        audience: '${{ github.server_url }}/${{ github.repository_owner }}'
+
     - name: Configure AWS credentials
       uses: aws-actions/configure-aws-credentials@v4
       with:
         role-to-assume: arn:aws:iam::343598423625:role/flmesh-gbl-github-actions
         aws-region: us-east-1
+        role-session-name: GHAWorkflow
 
     - name: Terraform Format
       id: fmt
@@ -130,6 +136,7 @@ jobs:
       uses: aws-actions/configure-aws-credentials@v4
       with:
         role-to-assume: arn:aws:iam::343598423625:role/flmesh-gbl-github-actions
+        role-session-name: GHAWorkflow
         aws-region: us-east-1
 
     - name: Assume IAM Role
@@ -137,6 +144,7 @@ jobs:
       with:
         role-to-assume: arn:aws:iam::225989335976:role/GitHubActionsExecution
         role-chaining: true
+        role-session-name: GHAWorkflow
         aws-region: us-east-1
 
     - name: Hugo Deploy
