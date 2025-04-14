@@ -4,7 +4,8 @@ on:
   push:
     branches:
       - main
-  pull_request:
+  pull_request_target:
+
 env:
   AWS_GITHUB_OIDC_ROLE: ${{ vars.AWS_OIDC_ROLE_ARN }}
   AWS_GITHUB_ACTIONS_ROLE: ${{ vars.AWS_GITHUB_ACTIONS_ROLE_ARN }}
