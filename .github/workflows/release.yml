@@ -5,6 +5,9 @@ on:
     branches:
       - main
   pull_request:
+env:
+  AWS_GITHUB_OIDC_ROLE: ${{ vars.AWS_OIDC_ROLE_ARN }}
+  AWS_GITHUB_ACTIONS_ROLE: ${{ vars.AWS_GITHUB_ACTIONS_ROLE_ARN }}
 
 permissions:
   id-token: write
@@ -38,7 +41,7 @@ jobs:
     - name: Configure AWS credentials
       uses: aws-actions/configure-aws-credentials@v4
       with:
-        role-to-assume:  ${{ secrets.AWS_MGMT_ROLE_ARN }}
+        role-to-assume:  ${{ env.AWS_GITHUB_OIDC_ROLE }}
         aws-region: us-east-1
 
     - name: Terraform Format
@@ -57,7 +60,7 @@ jobs:
     - name: Terraform Plan
       id: plan
       env:
-        TF_VAR_gh_action_role: ${{ secrets.AWS_GITHUB_ROLE_ARN }}
+        TF_VAR_gh_action_role: ${{ env.AWS_GITHUB_ACTIONS_ROLE }}
       run: terraform plan -out .planfile
 
     - name: Post PR comment
@@ -75,7 +78,7 @@ jobs:
     - name: Terraform Apply
       if: github.ref == 'refs/heads/main' && github.event_name == 'push'
       env:
-        TF_VAR_gh_action_role: ${{ secrets.AWS_GITHUB_ROLE_ARN }}
+        TF_VAR_gh_action_role: ${{ env.AWS_GITHUB_ACTIONS_ROLE }}
       run: terraform apply -no-color -auto-approve .planfile
 
     - name: Output Terraform values
@@ -129,13 +132,13 @@ jobs:
     - name: Configure AWS credentials
       uses: aws-actions/configure-aws-credentials@v4
       with:
-        role-to-assume: ${{ secrets.AWS_MGMT_ROLE_ARN }}
+        role-to-assume: ${{ env.AWS_GITHUB_OIDC_ROLE }}
         aws-region: us-east-1
 
     - name: Assume IAM Role
       uses: aws-actions/configure-aws-credentials@v4
       with:
-        role-to-assume: ${{ secrets.AWS_GITHUB_ROLE_ARN }}
+        role-to-assume: ${{ env.AWS_GITHUB_ACTIONS_ROLE }}
         role-chaining: true
         aws-region: us-east-1
 
