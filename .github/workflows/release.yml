@@ -10,8 +10,8 @@ on:
     types: [assigned, opened, synchronize, reopened]
 
 env:
-  AWS_GITHUB_OIDC_ROLE: ${{ vars.AWS_OIDC_ROLE_ARN }}
-  AWS_GITHUB_ACTIONS_ROLE: ${{ vars.AWS_GITHUB_ACTIONS_ROLE_ARN }}
+  AWS_GITHUB_OIDC_ROLE: ${{ secrets.AWS_MGMT_ROLE_ARN }}
+  AWS_GITHUB_ACTIONS_ROLE: ${{ secrets.AWS_GITHUB_ROLE_ARN }}
 
 permissions:
   id-token: write
