@@ -7,8 +7,6 @@ on:
   pull_request:
 
 permissions:
-  id-token: write
-  contents: read
   pull-requests: write
 
 defaults:
@@ -18,6 +16,9 @@ defaults:
 jobs:
   terraform:
     name: Deploy Terraform Infrastructure as Code
+    permissions:
+      id-token: write
+      contents: read
     runs-on: ubuntu-latest
     outputs:
       distribution: ${{ steps.terraform.outputs.DID }}
