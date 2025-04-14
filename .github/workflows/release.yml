@@ -4,7 +4,11 @@ on:
   push:
     branches:
       - main
-  pull_request:
+  pull_request_target:
+    branches:
+      - main
+    types: [assigned, opened, synchronize, reopened]
+
 env:
   AWS_GITHUB_OIDC_ROLE: ${{ vars.AWS_OIDC_ROLE_ARN }}
   AWS_GITHUB_ACTIONS_ROLE: ${{ vars.AWS_GITHUB_ACTIONS_ROLE_ARN }}
@@ -43,6 +47,11 @@ jobs:
       with:
         role-to-assume:  ${{ env.AWS_GITHUB_OIDC_ROLE }}
         aws-region: us-east-1
+
+    - name: Debug OIDC Claims
+      uses: github/actions-oidc-debugger@main
+      with:
+        audience: '${{ github.server_url }}/${{ github.repository_owner }}'
 
     - name: Terraform Format
       id: fmt
