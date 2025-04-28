@@ -29,24 +29,24 @@ If you would like to connect your nodes to the MQTT broker and provide telemetry
 ### Module Configuration
   MQTT:
   * Enabled: `Checked`
-  * MQTT Server Address: `mqtt.meshtastic.org`
-  * MQTT Username: `meshdev`
-  * MQTT Password: `large4cats`
+  * MQTT Server Address: `mqtt.areyoumeshingwith.us`
+  * MQTT Username: `uplink`
+  * MQTT Password: `uplink`
   * Encryption Enabled: `Checked`
   * JSON Enabled: `Unchecked`
-  * TLS Enabled: `Unchecked`
+  * TLS Enabled: *user preference* \*
   * Root topic: `msh/US/FL`
   * Map reporting: `Checked`
   * Map reporting interval (seconds): `10800`
-  * Precise location: `Unchecked`
-  * Precision Slider: `1194ft / 363m or greater`
+  * Precise location: *user preference*
+  * Precision Slider: *user preference*
 
-  Neighbor Info:
+*\* Note: TLS encrypts data transmitted between MQTT clients and the broker for increased security, but it is not supported on all platforms.*
+
+  Neighbor Info: 
   * Neighbor Info enabled: `Checked`
   * Update interval (seconds): `14400`
   * Transmit over LoRa: `Unchecked`
-
-*\* Note: If you leave precise location enabled or set precision lower than [1194ft / 363m][PRECISION], the MQTT server will silently drop the packets.*
 
 ## Verifying Your Configuration
 
