@@ -22,11 +22,11 @@ If you would like to connect your nodes to the MQTT broker and provide telemetry
 
 ### Radio Configuration
   Channels:
-  * Primary (usually LongFast)
+  * LongFast (primary)
     * Uplink Enabled: `Checked`
     * Downlink Enabled: `Unchecked` 
     * Position enabled: `Checked`
-    * Precise Location: `Unchecked`
+    * Precise Location: *user preference*
     * Precision Slider: *user preference*
 
   LoRa:
