@@ -1,5 +1,12 @@
 ---
-title: Configuration
+title: Node Configuration
+linkTitle: Configuration
+description: Recommendations for configuring your node and contributing to the mesh.
+nav_weight: 3
+authors:
+  - beanfield
+series:
+  - Guide
 date: 2025-04-10T00:31:34-04:00
 nav_icon:
   vendor: bs
