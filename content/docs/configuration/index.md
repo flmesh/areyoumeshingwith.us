@@ -27,7 +27,7 @@ If you would like to connect your nodes to the MQTT broker and provide telemetry
     * Downlink Enabled: `Unchecked` 
     * Position enabled: `Checked`
     * Precise Location: `Unchecked`
-    * Precision Slider: `1194ft / 363m or greater`
+    * Precision Slider: *user preference*
 
   LoRa:
   * Ignore MQTT: `Unchecked`
