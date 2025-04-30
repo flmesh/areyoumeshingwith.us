@@ -10,7 +10,7 @@ series:
 date: 2025-04-10T00:31:34-04:00
 nav_icon:
   vendor: bs
-  name: gear
+  name: toggles
   color: white
 ---
 
