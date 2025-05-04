@@ -86,7 +86,7 @@ require (
 	github.com/hugomods/hugopress v0.5.0 // indirect
 	github.com/hugomods/i18n-js v0.2.1 // indirect
 	github.com/hugomods/icons v0.6.6 // indirect
-	github.com/hugomods/icons/vendors/bootstrap v0.5.9 // indirect
+	github.com/hugomods/icons/vendors/bootstrap v0.5.10 // indirect
 	github.com/hugomods/icons/vendors/font-awesome v0.6.12 // indirect
 	github.com/hugomods/icons/vendors/simple-icons v1.1.1 // indirect
 	github.com/hugomods/idb-js v0.1.0 // indirect
@@ -111,5 +111,5 @@ require (
 	github.com/jakearchibald/idb v8.0.2+incompatible // indirect
 	github.com/krisk/Fuse v7.1.0+incompatible // indirect
 	github.com/twbs/bootstrap v5.3.5+incompatible // indirect
-	github.com/twbs/icons v1.11.3 // indirect
+	github.com/twbs/icons v1.12.1 // indirect
 )
