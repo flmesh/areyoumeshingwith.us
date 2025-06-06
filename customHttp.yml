@@ -1,0 +1,83 @@
+customHeaders:
+  - pattern: '**'
+    headers:
+      - key: Strict-Transport-Security
+        value: 'max-age=31536000; includeSubDomains'
+      - key: X-Frame-Options
+        value: 'SAMEORIGIN'
+      - key: X-XSS-Protection
+        value: '1; mode=block'
+      - key: X-Content-Type-Options
+        value: 'nosniff'
+      - key: Content-Security-Policy
+        value: >-
+          default-src 'self';
+          script-src 'report-sample' 'self';
+          script-src-elem 'self' https://www.googletagmanager.com
+           'sha256-fOzJneoYskkj07dmiOpH55X6WwARv1F3m8T6lrIKW5o='
+           'sha256-C4uTBCugUHQczIuUWCtMgJc+SBjtQVWI8AqXTbFGPC8=';
+          style-src 'report-sample' 'self' https://fonts.googleapis.com
+           'sha256-U/HacHpav40HkmNq/pa1fz5R2DIekpSJtNX39+0NmUw='
+           'sha256-RwllUQiCsIe06C7BvmPbRbT+dI9lQTFnnNHvgEbsydY='
+           'sha256-LyYrIkErYz0Ssn+p+Uo7BJWCHLg0HP8KiMgOP+1dyeg='
+           'sha256-8f935d27GvUutRyY9yWScUMiFUk4WTdZURISiYfPOeQ='
+           'sha256-4I9JE7vMidnVCy8DE3N+/cOHChVFyn7OD6T57Sgs/ho='
+           'sha256-3xGZDRgyBf9oOGWRbPBoVaT+2g3yZshYfEdTX12SRuw='
+           'sha256-Ml+uyEiAOK/TL+OzS2F7gjxWPQgc966lV9mb73RFJwU=';
+          connect-src 'self' https://fonts.googleapis.com https://www.google-analytics.com https://www.googletagmanager.com;
+          object-src data:;
+          font-src 'self' https://fonts.gstatic.com;
+          img-src 'self' https://www.gravatar.com https://www.googletagmanager.com data:;
+          worker-src 'self';
+          report-uri https://maftkc82.uriports.com/reports/report;
+          report-to default
+      - key: Content-Security-Policy-Report-Only
+        value: >-
+          default-src 'self';
+          script-src 'report-sample' 'self';
+          script-src-elem 'self' https://www.googletagmanager.com
+           'sha256-fOzJneoYskkj07dmiOpH55X6WwARv1F3m8T6lrIKW5o='
+           'sha256-C4uTBCugUHQczIuUWCtMgJc+SBjtQVWI8AqXTbFGPC8=';
+          style-src 'report-sample' 'self' https://fonts.googleapis.com
+           'sha256-U/HacHpav40HkmNq/pa1fz5R2DIekpSJtNX39+0NmUw='
+           'sha256-RwllUQiCsIe06C7BvmPbRbT+dI9lQTFnnNHvgEbsydY='
+           'sha256-LyYrIkErYz0Ssn+p+Uo7BJWCHLg0HP8KiMgOP+1dyeg='
+           'sha256-8f935d27GvUutRyY9yWScUMiFUk4WTdZURISiYfPOeQ='
+           'sha256-4I9JE7vMidnVCy8DE3N+/cOHChVFyn7OD6T57Sgs/ho='
+           'sha256-3xGZDRgyBf9oOGWRbPBoVaT+2g3yZshYfEdTX12SRuw='
+           'sha256-Ml+uyEiAOK/TL+OzS2F7gjxWPQgc966lV9mb73RFJwU=';
+          connect-src 'self' https://fonts.googleapis.com https://www.google-analytics.com https://www.googletagmanager.com;
+          object-src data:;
+          font-src 'self' https://fonts.gstatic.com;
+          img-src 'self' https://www.gravatar.com https://www.googletagmanager.com data:;
+          worker-src 'self';
+          report-uri https://maftkc82.uriports.com/reports/report;
+          report-to default
+      - key: Cache-Control
+        value: must-revalidate, public, max-age=3600, s-maxage=3600
+      - key: Reporting-Endpoints
+        value: default="https://maftkc82.uriports.com/reports"
+      - key: Report-to
+        value: '{"group":"default","max_age":10886400,"endpoints":[{"url":"https://maftkc82.uriports.com/reports"}],"include_subdomains":true}'
+      - key: NEL
+        value: '{"report_to":"default","max_age":2592000,"include_subdomains":true,"failure_fraction":1.0}'
+      # - key: Cross-Origin-Embedder-Policy
+      #   value: require-corp
+      - key: Cross-Origin-Embedder-Policy-Report-Only
+        value: require-corp; report-to="default"
+      # - key: Cross-Origin-Opener-Policy
+      #   value: same-origin
+      - key: Cross-Origin-Opener-Policy-Report-Only
+        value: same-origin; report-to="default"
+  - pattern: '/images/*'
+    headers:
+      - key: Cache-Control
+        value: must-revalidate, public, max-age=3600, s-maxage=3600
+  - pattern: '.well-known/atproto-did'
+    headers:
+      - key: Content-Type
+        value: "application/octetstream"
+      - key: Cache-Control
+        value: must-revalidate, public, max-age=3600, s-maxage=3600
+      - key: Access-Control-Allow-Origin
+        value: '*'

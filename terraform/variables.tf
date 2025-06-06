@@ -1,11 +1,16 @@
 variable "gh_action_role" {
-  type        = string
   description = "AWS IAM ARN for Terraform GitHub Actions"
+  type        = string
+}
+
+variable "repository" {
+  description = "Source respository"
+  type        = string
 }
 
 variable "domain_name" {
-  type        = string
   description = "The domain name to host site"
+  type        = string
 }
 
 variable "comment" {
@@ -17,10 +22,4 @@ variable "aliases" {
   description = "Additional aliases for Cloudfront"
   type        = list(string)
   default     = []
-}
-
-variable "host_name" {
-  description = "The host name for the site"
-  type        = string
-  default     = null
 }
