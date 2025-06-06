@@ -50,5 +50,4 @@ resource "aws_amplify_domain_association" "website" {
     branch_name = aws_amplify_branch.main.branch_name
     prefix      = "mta-sts"
   }
-
 }
