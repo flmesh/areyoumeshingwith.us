@@ -21,6 +21,7 @@ github.com/hbstack/bigger-picture v0.10.1/go.mod h1:wZpRrOlTFrt2lO3tl9Y7cIAJbAJN
 github.com/hbstack/blog v0.40.1 h1:d2pLRq9eI7uXLWDKrELCYPKX10Ik5c0I6SxgKu74SRg=
 github.com/hbstack/blog v0.40.1/go.mod h1:0hnPIZ2nusfXE4jkYQCXNLv7eXud4CBea3ymc8w3JAM=
 github.com/hbstack/blog v0.40.3/go.mod h1:cY11zRGUms24avT5c2OwKYBgun858LPVeKwM758NtH0=
+github.com/hbstack/blog v0.41.0/go.mod h1:qJY+oyrJQlLv93LMvweskitIrI8Bv2Mhczpq61BwmzM=
 github.com/hbstack/blog/modules/breadcrumb v0.1.23 h1:MgUR88vv4cs/M1/cVBKUInFw3DcRw0W2AlmmcdhxewY=
 github.com/hbstack/blog/modules/breadcrumb v0.1.23/go.mod h1:smQySqXDtUv2pP7bb+XBr+QGNFxhDGN0fLmQkOIWa5g=
 github.com/hbstack/blog/modules/content-panel v0.1.21 h1:g43IVjn3O6QCQSvCbgr9iYCgZcI5XG8YAiuVPb269Ok=
@@ -180,6 +181,7 @@ github.com/hugomods/idb-js v0.1.0/go.mod h1:GPfnmr+BQpP4s6Epd4Yu+RlUog8q/Djw8qy8
 github.com/hugomods/images v0.11.2 h1:d7u3c/ePboeOGx8OI5eUnilpA79YvD7KJjUgqVMR83Y=
 github.com/hugomods/images v0.11.2/go.mod h1:U6Gwj16LKvk66rOMyGFrnF6f0aV8lT89lqOsckOAjYY=
 github.com/hugomods/images v0.12.1/go.mod h1:U6Gwj16LKvk66rOMyGFrnF6f0aV8lT89lqOsckOAjYY=
+github.com/hugomods/images v0.12.3/go.mod h1:U6Gwj16LKvk66rOMyGFrnF6f0aV8lT89lqOsckOAjYY=
 github.com/hugomods/katex v0.3.6 h1:Xl7ruiXuwvEGlz3H02w24B0zRGtHcL4sMc11Ke/aMFE=
 github.com/hugomods/katex v0.3.6/go.mod h1:6ACkMfCEOjLIRwcbS33Yji29C113+zGdBF/5oMfWfZI=
 github.com/hugomods/masonry-js v0.1.0 h1:mZagvVEWsgyIFViMY1ZkOOJfdFV5D76eB99SHgwhbRU=
@@ -224,6 +226,7 @@ github.com/twbs/bootstrap v5.3.3+incompatible/go.mod h1:fZTSrkpSf0/HkL0IIJzvVspT
 github.com/twbs/bootstrap v5.3.5+incompatible h1:6XrrFNMsiTTFcVTBf2886FO2XUNtwSE+QPv1os0uAA4=
 github.com/twbs/bootstrap v5.3.5+incompatible/go.mod h1:fZTSrkpSf0/HkL0IIJzvVspTt1r9zuf7XlZau8kpcY0=
 github.com/twbs/bootstrap v5.3.6+incompatible/go.mod h1:fZTSrkpSf0/HkL0IIJzvVspTt1r9zuf7XlZau8kpcY0=
+github.com/twbs/bootstrap v5.3.7+incompatible/go.mod h1:fZTSrkpSf0/HkL0IIJzvVspTt1r9zuf7XlZau8kpcY0=
 github.com/twbs/icons v1.11.3 h1:XhvrQ1XDom9ggBbQx3wQCFGEr8qAQwQP/dAcw8OXMtA=
 github.com/twbs/icons v1.11.3/go.mod h1:GnRlymgVWp5iVJCMa0Me5b6tFyGpVc2bSxPMRGIJmyA=
 github.com/twbs/icons v1.12.1/go.mod h1:GnRlymgVWp5iVJCMa0Me5b6tFyGpVc2bSxPMRGIJmyA=
