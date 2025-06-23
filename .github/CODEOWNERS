@@ -1,0 +1,12 @@
+# This file designates code owners for this repository.
+# Lines starting with '#' are comments.
+
+# Set the main maintainers as code owners for everything in the repo:
+*       @flmesh
+
+/.github/CODEOWNERS @jbouse
+/terraform/    @jbouse
+/.devcontainer/ @jbouse
+/assets/    @flmesh/editors
+/content/   @flmesh/editors
+/data/  @flmesh/editors
