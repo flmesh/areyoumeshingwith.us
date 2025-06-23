@@ -2,6 +2,7 @@
   "name": "areyoumeshingwith.us",
   "description": "Florida Mesh website.",
   "scripts": {
+    "csdev": "hugo server --gc --enableGitInfo -DF -b / --appendPort=false",
     "dev": "hugo server --gc --enableGitInfo -DF",
     "prod": "hugo server --gc --disableFastRender --enableGitInfo --minify -e production -p 1314"
   },
