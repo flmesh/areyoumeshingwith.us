@@ -14,11 +14,19 @@ Florida Mesh - https://AreYouMeshingWith.us/ website
 
 ## Architecture
 
-The infrastructure to support the site is deployed via Terraform Infrastructure as Code in the [terraform/](terraform/) directory.
+Infrastructure for this project is managed using [Terraform](https://www.terraform.io/) in the [`terraform/`](terraform/) directory. The deployment leverages AWS Amplify for hosting, branch previews, and custom domain management.
 
-This is handled by the GitHub Actions workflow by PR comment of the Terraform Plan and execution of Terraform apply on merge with the `main` branch.
+**Key components provisioned:**
+- **AWS Amplify App**: Hosts the static website, connects to the Git repository, and enables automatic branch creation/deletion for preview environments.
+- **AWS Amplify Branch**: Configures the `main` branch as the production branch and enables pull request previews.
+- **AWS Amplify Domain Association**: Associates your custom domain (and the `mta-sts` subdomain) with the Amplify app, using a custom ACM certificate for HTTPS.
 
-The current deployment is using AWS Cloudfront CDN with ACM certificate in front of an S3 bucket. All related DNS records are handled by Route53.
+**Notably:**
+- All static site hosting, CDN, and branch preview functionality are managed by AWS Amplify.
+- No S3, CloudFront, or Route53 resources are directly managed in the Terraform code.
+- DNS and ACM certificate management are assumed to be handled outside this Terraform configuration, except for referencing the ACM certificate.
+
+See [`terraform/`](terraform/) for all configuration files and variables.
 
 ## Website
 
@@ -43,6 +51,52 @@ This will run a [local webserver](http://localhost:1313/) that you can connect t
 **Troubleshooting:**
 - If you see errors about missing Hugo features, ensure you have the *extended* version.
 - If npm commands fail, check your Node.js version (recommend v18+).
+
+## Developing with GitHub Codespaces
+
+This project supports [GitHub Codespaces](https://github.com/features/codespaces) for a fully configured, cloud-based development environment. The included devcontainer provides all necessary tools and dependencies for local development and deployment.
+
+### Features
+
+- **Git** (latest, built from source)
+- **Go** and common Go utilities, with the Go extension
+- **Node.js**, **npm**, and **eslint**
+- **Hugo** static site generator
+- **Terraform CLI**, with optional **TFLint** and **Terragrunt**, and the Terraform extension
+
+### Getting Started
+
+1. Click the **Code** button on the repository page and select **Open with Codespaces**.
+2. Wait for the environment to build and initialize.
+3. All required tools are pre-installed and available on the `PATH`.
+4. The Hugo development server starts automatically—no need to run `hugo server` manually.
+5. Use the integrated terminal and editor for development, testing, and deployment.
+
+### Common Tasks
+
+- **Run Terraform commands:**  
+  ```sh
+  terraform init
+  terraform plan
+  terraform apply
+  ```
+- **Run Go or Node.js tools:**  
+  Use `go`, `node`, or `npm` as needed.
+- **Common Hugo tasks:**  
+  - Create new content:
+    ```sh
+    hugo new blog/my-first-post.md
+    ```
+  - Check site configuration:
+    ```sh
+    hugo config
+    ```
+  - Tidy Hugo modules (update/download required modules):
+    ```sh
+    hugo mod tidy
+    ```
+
+For more details, see the [.devcontainer](.devcontainer/) directory
 
 ### Contributing
 
