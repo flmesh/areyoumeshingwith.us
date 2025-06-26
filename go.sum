@@ -137,6 +137,7 @@ github.com/hbstack/social-share-buttons v0.6.0 h1:UjbFkku9B67gS3+7aO70QZBl4YPq1p
 github.com/hbstack/social-share-buttons v0.6.0/go.mod h1:WAXsqPI+12QA67fA/IWLvxVubuvbW8kzLwTo0pZW41E=
 github.com/hbstack/socials v0.18.0 h1:ESA5/lPEoFpzprJ6x++FrwX8ajo68rWpSdYJrPE9yLY=
 github.com/hbstack/socials v0.18.0/go.mod h1:iZvyHnOhH2ZYGvUnO6QomRiCwirCB9CtxUbsHsJloL8=
+github.com/hbstack/socials v0.19.0/go.mod h1:sUCnojrpGHuEnUOva8vHf3CBinJhpftcQemOCUtxY00=
 github.com/hbstack/syntax-highlighting v0.2.1 h1:JMAfLzebsQy983WS560yPo4vnF6rBCo6OBx9jpNbAQ8=
 github.com/hbstack/syntax-highlighting v0.2.1/go.mod h1:6IoaM+tSIkKZblIrT1i5L3zVH68nt4UScU9JB30FQsc=
 github.com/hbstack/syntax-highlighting/styles/gruvbox v0.1.2 h1:H6wxfQ5+WaDPrxDWRdzz9WyzbGSKgnEA8C39F9erkAs=
