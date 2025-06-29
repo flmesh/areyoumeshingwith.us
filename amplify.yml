@@ -4,7 +4,7 @@ env:
     # Application versions
     DART_SASS_VERSION: 1.87.0
     GO_VERSION: 1.24.2
-    HUGO_VERSION: 0.147.1
+    HUGO_VERSION: 0.147.7
     # Time zone
     TZ: America/New_York
     # Cache
@@ -46,7 +46,23 @@ frontend:
         - git config --add core.quotepath false
     build:
       commands:
-        - hugo --gc --cleanDestinationDir --enableGitInfo --minify
+        - |
+          if [ -n "$BASEURL" ]; then
+            case "$AWS_BRANCH" in
+              main|master)
+                export HUGO_BASEURL="https://$BASEURL"
+                export HUGO_FUTURE=""
+                ;;
+              *)
+                export HUGO_BASEURL="https://$AWS_BRANCH.$BASEURL"
+                export HUGO_FUTURE="-F"
+                ;;
+            esac
+          else
+            export HUGO_BASEURL="/"
+            export HUGO_FUTURE=""
+          fi
+          hugo --gc --cleanDestinationDir --enableGitInfo --minify $HUGO_FUTURE --baseURL "$HUGO_BASEURL"
   artifacts:
     baseDirectory: public
     files:
