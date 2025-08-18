@@ -47,11 +47,6 @@ jobs:
         role-to-assume:  ${{ env.AWS_GITHUB_OIDC_ROLE }}
         aws-region: us-east-1
 
-    - name: Debug OIDC Claims
-      uses: github/actions-oidc-debugger@main
-      with:
-        audience: '${{ github.server_url }}/${{ github.repository_owner }}'
-
     - name: Terraform Format
       id: fmt
       run: terraform fmt -no-color -check
