@@ -43,6 +43,9 @@ If you would like to connect your nodes to the MQTT broker and provide telemetry
   * JSON Enabled: `Unchecked`
   * TLS Enabled: *user preference* \*
   * Root topic: `msh/US/FL`
+  
+  *\* Note: If you followed the above MQTT steps in order, then you need to hit "Send" to update the device at this point before you proceed to the below four steps. Otherwise the send button will be grayed out.*
+  
   * Map reporting: `Checked`
   * Map reporting interval (seconds): `10800`
   * Precise location: *user preference*
