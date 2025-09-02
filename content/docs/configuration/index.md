@@ -29,6 +29,9 @@ If you would like to connect your nodes to the MQTT broker and provide telemetry
     * Precise Location: *user preference*
     * Precision Slider: *user preference*
 
+  Device:
+  * Role: `Client, unless you have a different use case. *Never set this to ROUTER*`
+
   LoRa:
   * Ignore MQTT: `Unchecked`
   * OK to MQTT: `Checked`
