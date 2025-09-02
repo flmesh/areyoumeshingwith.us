@@ -27,7 +27,7 @@ If you would like to connect your nodes to the MQTT broker and provide telemetry
     * Downlink Enabled: `Unchecked` 
     * Position enabled: `Checked`
     * Precise Location: *user preference*
-    * Precision Slider: *user preference*
+    * Precision Slider: *user preference, but 1194ft is the most accurate setting that can still show up on a map*
 
   LoRa:
   * Ignore MQTT: `Unchecked`
@@ -46,7 +46,7 @@ If you would like to connect your nodes to the MQTT broker and provide telemetry
   * Map reporting: `Checked`
   * Map reporting interval (seconds): `10800`
   * Precise location: *user preference*
-  * Precision Slider: *user preference*
+  * Precision Slider: *user preference, but 1194ft is the most accurate setting that can still show up on a map*
 
 *\* Note: TLS encrypts data transmitted between MQTT clients and the broker for increased security, but it is not supported on all platforms.*
 
