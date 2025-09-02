@@ -30,6 +30,7 @@ If you would like to connect your nodes to the MQTT broker and provide telemetry
     * Precision Slider: *user preference*
 
   LoRa:
+  * Hop limit: `3, except in specific use cases` *(user preference: but do not set to higher than 5)*
   * Ignore MQTT: `Unchecked`
   * OK to MQTT: `Checked`
 
