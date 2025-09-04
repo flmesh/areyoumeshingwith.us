@@ -29,7 +29,11 @@ If you would like to connect your nodes to the MQTT broker and provide telemetry
     * Precise Location: *user preference*
     * Precision Slider: *user preference, but 1194ft is the most accurate setting that can still show up on a map*
 
+  Device:
+  * Role: `Client, unless you have a different use case. *Never set this to ROUTER*`
+
   LoRa:
+  * Hop limit: `3, except in specific use cases` *(user preference: but do not set to higher than 5)*
   * Ignore MQTT: `Unchecked`
   * OK to MQTT: `Checked`
   * Note: Modem Preset should be LONG_FAST everywhere in Florida, except:
