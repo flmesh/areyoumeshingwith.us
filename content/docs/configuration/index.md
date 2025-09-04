@@ -32,6 +32,8 @@ If you would like to connect your nodes to the MQTT broker and provide telemetry
   LoRa:
   * Ignore MQTT: `Unchecked`
   * OK to MQTT: `Checked`
+  * Note: Modem Preset should be LONG_FAST everywhere in Florida, except:
+    * As of 2025/09, Miami/Palm Beach area is switching to MEDIUM_FAST
 
 ### Module Configuration
   MQTT:
