@@ -48,7 +48,7 @@ If you would like to connect your nodes to the MQTT broker and provide telemetry
   * Ignore MQTT: `Unchecked` *(Can be Checked to stop rouge MQTT data from appearing on your node and hopping though)*
   * OK to MQTT: `Checked` *(This gives others permission to uplink your node to MQTT Servers)*
   * Note: Modem Preset should be LONG_FAST everywhere in Florida, except:
-    * As of 2025/09, Miami/Palm Beach area is switching to MEDIUM_FAST with a hop count of 5
+    * As of 2025/09, Port St. Lucie to Islamorada switched to MEDIUM_FAST with a hop count of 5
 
 ### Module Configuration
   MQTT:
@@ -88,7 +88,7 @@ This will let the node pass MQTT data via the phone to the MQTT server.
 
 If your using a NRF52 based node for a Base Station for example its best practice to use a secondary node that can either run off WIFI or ethernet, like a ESP32 based node or Portduino (Linux) based node, to operate as the feeder node.
 If you do run secondary feeder node, remember to set it to `Client_Mute` to prevent it from causing unnecessary noise.
-You can feed directly from a NRF52 via a phone but long term its not the most reliable, since the connection is done over Bluetooth. Its best for adhoc quick deployments and mobile use.
+You can feed directly from a NRF52 via a phone but longterm its not the most reliable, since the connection is done over Bluetooth. Its best for adhoc quick deployments and mobile use.
 
 ## Verifying Your Configuration
 
@@ -109,4 +109,4 @@ If your node is not appearing on the map:
 
 [MESHMAP]: https://map.areyoumeshingwith.us "Florida Mesh Map"
 [PRECISION]: https://meshtastic.org/docs/software/integrations/mqtt/#location-precision-filtering "Location Precision Filtering"
-[Malla]: https://malla.areyoumeshingwith.us "Florida Mesh Telemetry"
+[Malla]: https://malla.areyoumeshingwith.us/ "Florida Mesh Telemetry"
