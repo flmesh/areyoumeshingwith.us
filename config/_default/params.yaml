@@ -15,14 +15,14 @@ hb:
     # see https://hbstack.dev/en/docs/modules/socials/.
     socials:
       github: flmesh
-      discord: JUc8N9nUa8
+      discord: floridamesh
       rss: true
   footer:
     # see https://hbstack.dev/en/docs/modules/socials/.
     socials:
       _color: true # when false, remove the color of social icons.
       github: flmesh
-      discord: JUc8N9nUa8
+      discord: floridamesh
       rss: true
     powered_by: false
   terms:
@@ -36,7 +36,7 @@ hb:
         location: Florida, USA
         socials:
           github: flmesh
-          discord: JUc8N9nUa8
+          discord: floridamesh
           rss: true
       posts:
         recent_count: 5 # the number of recent posts.
