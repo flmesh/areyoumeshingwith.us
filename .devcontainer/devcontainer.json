@@ -1,0 +1,26 @@
+{
+  "name": "Hugo Development",
+  "image": "mcr.microsoft.com/devcontainers/go:latest",
+  "features": {
+    "ghcr.io/devcontainers/features/hugo:1": {
+      "extended": true
+    },
+    "ghcr.io/devcontainers/features/terraform:1": {},
+    "ghcr.io/prplecake/devcontainer-features/dart-sass:1": {},
+    "ghcr.io/devcontainers/features/node:1": {}
+  },
+  "forwardPorts": [
+    1313
+  ],
+  "postCreateCommand": "./.devcontainer/postCreateCommand.sh",
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "github.copilot",
+        "github.copilot-chat",
+        "hashicorp.terraform",
+        "ms-vsliveshare.vsliveshare"
+      ]
+    }
+  }
+}

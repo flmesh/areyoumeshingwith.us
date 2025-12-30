@@ -13,11 +13,18 @@ menu:
 
 # Welcome to the Florida Mesh User Community
 
-## Are you meshing with us?
+### *Are you meshing with us?*
 
-Yes, well then welcome aboard! We're happy to have you with us.
+Yes? Well then welcome aboard! We're happy to have you with us.
 
-No, what are you waiting on? We're here waiting on you.
+Have a new node and want to get meshing right away? Or do you have an existing node you haven't checked the configuration on in a bit? Check out the [recommended node settings][CONFIGURATION] for best practices when joining the Florida mesh!
 
-You don't need to look any further to find information on how to connect with other
-Florida Mesh users.
+Want to get a feel for who's established in your area? The [Florida Mesh Map][MESHMAP] shows active nodes in the Florida mesh. Note that this doesn't show every single node around, but it will show nodes configured to share telemetry with the Florida Mesh User Community. You may find there are many more nodes you can see from your location!
+
+New to all of this and want to know what's going on? There are quick [introduction videos][STARTERVIDEO], [overviews][OFFICIALINTRO], and you can take a look at what meshing can [actually do][USECASES]. 
+
+[CONFIGURATION]: https://areyoumeshingwith.us/docs/configuration/ "Docs - Configuration"
+[MESHMAP]: https://map.areyoumeshingwith.us "Florida Mesh Map"
+[STARTERVIDEO]: https://youtu.be/oAo2sb8LpFc "Meshtastic Introduction Video"
+[USECASES]: https://www.reddit.com/r/meshtastic/comments/1bb3yax/what_do_you_use_meshtastic_for/ "Actual Use Case Examples"
+[OFFICIALINTRO]: https://meshtastic.org/docs/introduction/ "Meshtastic Introduction"

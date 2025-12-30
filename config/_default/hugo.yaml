@@ -1,4 +1,4 @@
-baseURL: https://localhost/
+# baseURL: https://localhost/
 title: Florida Mesh
 # Copyright, the {year} is the placeholder of this year.
 copyright: "Copyright © 2024-{year} [Florida Mesh](https://AreYouMeshingWith.us/). All Rights Reserved."

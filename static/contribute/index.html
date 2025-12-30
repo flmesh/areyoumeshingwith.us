@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>A Contributor's Guide to the Florida Mesh Website</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700;900&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+        .chart-container {
+            position: relative;
+            width: 100%;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+            height: 300px;
+            max-height: 400px;
+        }
+        @media (min-width: 768px) {
+            .chart-container {
+                height: 350px;
+            }
+        }
+        .flow-arrow {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2.5rem;
+            color: #427AA1;
+            margin: 0.5rem 0;
+        }
+        @media (min-width: 768px) {
+            .flow-arrow {
+                margin: 0 1rem;
+            }
+        }
+    </style>
+</head>
+<body class="bg-[#EBF2FA]">
+
+    <!-- 
+        Chosen Color Palette: Brilliant Blues 
+        #004E89 (Deep Blue - Primary Text, Headers)
+        #427AA1 (Medium Blue - Secondary Text, Accents)
+        #EBF2FA (Light Blue - Background)
+        #FFFFFF (White - Card Backgrounds)
+        #F4A261 (Orange Accent - Buttons)
+        
+        Narrative Plan:
+        1. Intro & Setup: Hook the user and guide them through creating a GitHub account and forking the repo.
+        2. Development Environment: Explain the "magic" of CodeSpaces.
+        3. Content Creation Workflow: A detailed, visual flowchart of creating/editing/previewing content.
+        4. Submission & Review: A timeline/flowchart of the pull request process.
+        5. Staying Involved: Encourage future contributions with a chart and sync instructions.
+
+        Visualization Choices (NO SVG, NO MERMAID JS):
+        - Process Flow (Creation & PR): Goal: Organize. Viz: Flow Chart. Justification: Best for sequential steps. Method: Structured HTML/CSS with Tailwind.
+        - Contribution Ideas: Goal: Compare/Inform. Viz: Bar Chart. Justification: More engaging than a list. Method: Chart.js (Canvas).
+        - Key Steps Overview: Goal: Inform. Viz: Big Numbers/Icons. Justification: Quick, digestible summary. Method: HTML/CSS with Unicode icons.
+        - Fork Syncing: Goal: Show Relationship. Viz: Simple Diagram. Justification: Visually explains the connection between repos. Method: HTML/CSS with Tailwind.
+
+        Confirmation: NEITHER Mermaid JS NOR SVG were used in this output. All charts are rendered on Canvas via Chart.js and all diagrams are constructed using standard HTML elements and Tailwind CSS.
+    -->
+
+    <div class="container mx-auto p-4 md:p-8 max-w-7xl">
+        <header class="text-center mb-12">
+            <h1 class="text-4xl md:text-5xl font-black text-[#004E89] mb-2">Become a Website Contributor</h1>
+            <p class="text-lg text-[#427AA1] max-w-3xl mx-auto">An easy-to-follow guide to creating and publishing content on the Florida Mesh website.</p>
+        </header>
+
+        <main class="space-y-12">
+
+            <!-- Section 1: Initial Setup -->
+            <section id="setup">
+                <h2 class="text-3xl font-bold text-[#004E89] text-center mb-8">Your First Three Steps</h2>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-8 text-center">
+                    <div class="bg-white p-6 rounded-lg shadow-md">
+                        <div class="text-5xl mb-4">👤</div>
+                        <h3 class="text-2xl font-bold text-[#004E89] mb-2">1. Create Account</h3>
+                        <p class="text-[#427AA1]">First, you need a free GitHub account. This is your identity for all contributions. Using your callsign as your username is a great idea!</p>
+                        <a href="https://github.com/join" target="_blank" class="mt-4 inline-block bg-[#F4A261] text-white font-bold py-2 px-4 rounded-lg shadow hover:bg-opacity-90 transition-colors">Join GitHub</a>
+                    </div>
+                    <div class="bg-white p-6 rounded-lg shadow-md">
+                        <div class="text-5xl mb-4">🍴</div>
+                        <h3 class="text-2xl font-bold text-[#004E89] mb-2">2. Fork Repository</h3>
+                        <p class="text-[#427AA1]">A "fork" is your personal copy of our website's code. This lets you work on changes without affecting the live site.</p>
+                        <a href="https://github.com/flmesh/areyoumeshingwith.us" target="_blank" class="mt-4 inline-block bg-[#F4A261] text-white font-bold py-2 px-4 rounded-lg shadow hover:bg-opacity-90 transition-colors">Fork The Repo</a>
+                    </div>
+                    <div class="bg-white p-6 rounded-lg shadow-md">
+                        <div class="text-5xl mb-4">🚀</div>
+                        <h3 class="text-2xl font-bold text-[#004E89] mb-2">3. Launch CodeSpace</h3>
+                        <p class="text-[#427AA1]">Open your fork in CodeSpaces—a full, pre-configured development environment that runs in your browser. No local setup needed!</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Section 2: Content Creation Workflow -->
+            <section id="workflow" class="bg-white p-6 md:p-8 rounded-lg shadow-md">
+                <h2 class="text-3xl font-bold text-[#004E89] text-center mb-2">The Content Creation Workflow</h2>
+                <p class="text-center text-[#427AA1] mb-8">Follow these steps inside your GitHub CodeSpace to create, edit, and preview your post.</p>
+                <div class="flex flex-col md:flex-row items-center justify-center md:space-x-4">
+                    
+                    <div class="flex-1 text-center border-2 border-dashed border-[#427AA1] p-4 rounded-lg">
+                        <h4 class="text-xl font-bold text-[#004E89]">1. Create File</h4>
+                        <p class="text-sm text-[#427AA1]">Open the terminal and run one command to generate a new post file from a template.</p>
+                        <code class="block bg-gray-100 text-[#004E89] p-2 rounded-md mt-2 text-sm">hugo new blog/your-title.md</code>
+                    </div>
+
+                    <div class="flow-arrow md:rotate-0 rotate-90">→</div>
+
+                    <div class="flex-1 text-center border-2 border-dashed border-[#427AA1] p-4 rounded-lg">
+                        <h4 class="text-xl font-bold text-[#004E89]">2. Edit Content</h4>
+                        <p class="text-sm text-[#427AA1]">Find your new file in the `content/blog` folder. Update the title and write your content using Markdown.</p>
+                        <p class="text-sm text-[#427AA1] mt-2">Remember to set <code class="bg-gray-100 text-xs p-1 rounded">draft: false</code>!</p>
+                    </div>
+                    
+                    <div class="flow-arrow md:rotate-0 rotate-90">→</div>
+
+                    <div class="flex-1 text-center border-2 border-dashed border-[#427AA1] p-4 rounded-lg">
+                        <h4 class="text-xl font-bold text-[#004E89]">3. Preview Site</h4>
+                        <p class="text-sm text-[#427AA1]">The server starts automatically! Just go to the "Ports" tab and click the globe icon to see a live preview of your changes.</p>
+                    </div>
+
+                </div>
+            </section>
+
+            <!-- Section 3: Submission Process -->
+            <section id="submission">
+                <h2 class="text-3xl font-bold text-[#004E89] text-center mb-8">Submitting for Review</h2>
+                 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+                    <div class="bg-white p-6 rounded-lg shadow-md text-center">
+                        <h3 class="text-xl font-bold text-[#004E89] mb-2">Step 1: Commit</h3>
+                        <p class="text-[#427AA1]">Save your changes with a descriptive message in the "Source Control" tab. This creates a snapshot of your work.</p>
+                    </div>
+                    <div class="bg-white p-6 rounded-lg shadow-md text-center">
+                        <h3 class="text-xl font-bold text-[#004E89] mb-2">Step 2: Push</h3>
+                        <p class="text-[#427AA1]">"Push" your committed changes from CodeSpaces up to your forked repository on GitHub.</p>
+                    </div>
+                    <div class="bg-white p-6 rounded-lg shadow-md text-center">
+                        <h3 class="text-xl font-bold text-[#004E89] mb-2">Step 3: Pull Request</h3>
+                        <p class="text-[#427AA1]">Create a "Pull Request" (PR) on GitHub. This proposes your changes to the main website administrators.</p>
+                    </div>
+                     <div class="bg-white p-6 rounded-lg shadow-md text-center">
+                        <h3 class="text-xl font-bold text-[#004E89] mb-2">Step 4: Review & Merge</h3>
+                        <p class="text-[#427AA1]">An admin will review your PR. Once approved, it's merged and published automatically to the live site!</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Section 4: Staying Involved -->
+            <section id="next-steps">
+                 <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                    <div class="bg-white p-6 rounded-lg shadow-md">
+                        <h3 class="text-2xl font-bold text-[#004E89] text-center mb-4">Content We're Looking For</h3>
+                        <p class="text-center text-[#427AA1] mb-4">Not sure what to write? Here are some ideas to get you started. We welcome all kinds of contributions that benefit the group.</p>
+                        <div class="chart-container">
+                             <canvas id="contributionChart"></canvas>
+                        </div>
+                    </div>
+                     <div class="bg-white p-6 rounded-lg shadow-md flex flex-col justify-center">
+                        <h3 class="text-2xl font-bold text-[#004E89] text-center mb-4">Always Stay in Sync</h3>
+                        <p class="text-center text-[#427AA1] mb-6">Before starting new work, make sure your fork has the latest changes from the main repository. It only takes two clicks on your fork's GitHub page!</p>
+                        <div class="flex items-center justify-center space-x-4">
+                            <div class="text-center p-4 bg-blue-50 rounded-lg">
+                                <span class="text-4xl">🌐</span>
+                                <p class="font-bold text-[#004E89]">Main Repo</p>
+                            </div>
+                            <div class="text-4xl font-light text-[#427AA1]">←</div>
+                            <div class="text-center p-4 bg-blue-50 rounded-lg">
+                                <span class="text-4xl">🍴</span>
+                                <p class="font-bold text-[#004E89]">Your Fork</p>
+                            </div>
+                        </div>
+                         <p class="text-center mt-6">
+                            <a href="#" class="text-[#F4A261] font-bold hover:underline" onclick="alert('On your fork\'s GitHub page, simply click the &quot;Sync fork&quot; button, then &quot;Update branch&quot;.'); return false;">Click here for sync instructions.</a>
+                        </p>
+                    </div>
+                 </div>
+            </section>
+        
+        </main>
+
+        <footer class="text-center mt-12 pt-8 border-t border-[#427AA1]/30">
+            <p class="text-[#427AA1]">Thank you for helping improve the Florida Mesh website!</p>
+            <div class="mt-4 space-x-4">
+                <a href="https://github.com/flmesh/areyoumeshingwith.us" class="text-[#004E89] hover:underline">Main Repository</a>
+                <span class="text-gray-400">|</span>
+                <a href="https://gohugo.io/getting-started/quick-start/" class="text-[#004E89] hover:underline">Hugo Docs</a>
+                <span class="text-gray-400">|</span>
+                 <a href="https://www.markdownguide.org/cheat-sheet/" class="text-[#004E89] hover:underline">Markdown Cheatsheet</a>
+            </div>
+        </footer>
+    </div>
+
+<script>
+    function wrapLabels(label, maxWidth) {
+        const words = label.split(' ');
+        let lines = [];
+        let currentLine = '';
+
+        for (const word of words) {
+            if ((currentLine + ' ' + word).length > maxWidth) {
+                lines.push(currentLine);
+                currentLine = word;
+            } else {
+                currentLine = currentLine ? currentLine + ' ' + word : word;
+            }
+        }
+        lines.push(currentLine);
+        return lines;
+    }
+    
+    const tooltipTitleCallback = (tooltipItems) => {
+        const item = tooltipItems[0];
+        let label = item.chart.data.labels[item.dataIndex];
+        if (Array.isArray(label)) {
+          return label.join(' ');
+        }
+        return label;
+    };
+
+    const contributionData = {
+        rawLabels: ['After-Action Reports for Events', 'Tutorials & How-To Guides', 'General News and Announcements', 'Official Meeting Minutes', 'New Member Introductions'],
+        data: [30, 50, 45, 25, 15]
+    };
+
+    const contributionChartCtx = document.getElementById('contributionChart').getContext('2d');
+    new Chart(contributionChartCtx, {
+        type: 'bar',
+        data: {
+            labels: contributionData.rawLabels.map(label => wrapLabels(label, 16)),
+            datasets: [{
+                label: 'Contribution Priority (Example)',
+                data: contributionData.data,
+                backgroundColor: [
+                    '#427AA1',
+                    '#004E89',
+                    '#6497B1',
+                    '#B3CDE0',
+                    '#007FFF' 
+                ],
+                borderColor: '#FFFFFF',
+                borderWidth: 2
+            }]
+        },
+        options: {
+            indexAxis: 'y',
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: {
+                    display: false
+                },
+                tooltip: {
+                    backgroundColor: '#004E89',
+                    titleFont: {
+                        size: 14,
+                        weight: 'bold'
+                    },
+                    bodyFont: {
+                        size: 12
+                    },
+                    callbacks: {
+                        title: tooltipTitleCallback
+                    }
+                }
+            },
+            scales: {
+                x: {
+                    beginAtZero: true,
+                    grid: {
+                      color: '#EBF2FA'
+                    },
+                    ticks: {
+                        color: '#427AA1'
+                    }
+                },
+                y: {
+                     grid: {
+                      display: false
+                    },
+                     ticks: {
+                        color: '#004E89',
+                        font: {
+                            weight: 'bold'
+                        }
+                    }
+                }
+            }
+        }
+    });
+</script>
+
+</body>
+</html>
