@@ -1,7 +1,7 @@
 ---
 title: Meshtasticd Installation Guide
-linkTitle: Meshtasticd Installation
-description: Guide to install Meshtasticd on a Raspberry Pi
+linkTitle: Meshtasticd Installation, ESP32 remote Firmware Updating
+description: Guide to install Meshtasticd on a Raspberry Pi and ESP32 Firmware Updating
 nav_weight: 2
 authors:
   - Json_18
@@ -98,3 +98,59 @@ To make sure everything worked correctly, check the version of the installed too
 
 If the installation was successful, it will print the version number, something like meshtastic version 2.x.x.
 You're all set! You can now connect your Meshtastic device via USB and run commands like meshtastic --nodes or meshtastic --info.
+
+## 7. ESP32 Firmware Upgrades For Nodes Connected to a PI ✅
+You can install or upgrade meshtastic on esp32 devices using the provided scripts in each firmware zip (device-install.sh or device-update.sh).  At the time of this writing, these scripts do not correctly implement the trigger to put them in Device Firmware Update (DF) mode.  You can either put them in DFU manually (different for each device type) or manually invoke esptool with a baud rate of 1200 to trigger DFU mode from your raspberry pi.
+
+Firmware update example, tested on StationG2:
+`Bash`
+
+`python -m esptool --baud 1200 write-flash 0x10000 firmware-station-g2-2.6.11.60ec05e-update.bin`
+
+Once the upgrade is complete, your station g2 should automatically reboot with the updated firmware. 
+
+``` shell
+(meshtastic-venv) ubuntu@rpi-g2admin:/tmp/firmware-esp32s3-2.7.7.5ae4ff9 $ python -m esptool --baud 1200 write-flash 0x10000  firmware-station-g2-2.7.7.5ae4ff9-update.bin 
+esptool v5.1.0
+Connected to ESP32-S3 on /dev/ttyACM0:
+Chip type:          ESP32-S3 (QFN56) (revision v0.2)
+Features:           Wi-Fi, BT 5 (LE), Dual Core + LP Core, 240MHz, Embedded PSRAM 8MB (AP_3v3)
+Crystal frequency:  40MHz
+USB mode:           USB-Serial/JTAG
+MAC:                30:ed:a0:38:8c:24
+Stub flasher running.
+Configuring flash size...
+Flash will be erased from 0x00010000 to 0x001f9fff...
+Wrote 2006976 bytes (1275511 compressed) at 0x00010000 in 18.7 seconds (859.7 kbit/s).
+Hash of data verified.
+Hard resetting via RTS pin...
+```
+
+
+
+
+Note: see the Downloading section in [Notes](#important-final-notes) for details on downloading the correct firmware file. 
+
+## Important Final Notes
+
+Deactivating: When you are finished using the CLI, you can leave the virtual environment by simply typing:
+`Bash`
+`deactivate`
+
+
+Reactivating: The next time you want to use the Meshtastic CLI, you must navigate back to your project folder and reactivate the environment:
+`Bash`
+`cd ~/meshtastic-cli`
+`source venv/bin/activate`
+
+Downloading: The latest stable (beta) or alpha firmware is in the `Firmware` section at the bottom of the [downloads](https://meshtastic.org/downloads/) page.  Once you select the version, you will be redirected to the github page for that release.  Scroll down to the bottom `Assets` section, right click on the `firmware-esp32s3-{version}.zip` link, and select `copy link address` from your browser’s drop down to get the full link in your clipboard. Then go to your ssh session on the raspberry pi and download it to an appropriate location of your choosing, unzip it, and continue with the install. For example, to download 2.6.11 into /tmp (non-persistent storage):
+
+``` shell
+cd /tmp
+wget https://github.com/meshtastic/firmware/releases/download/v2.6.11.60ec05e/firmware-esp32s3-2.6.11.60ec05e.zip  
+unzip -d firmware-esp32s3-2.6.11.60ec05e firmware-esp32s3-2.6.11.60ec05e.zip
+cd firmware-esp32s3-2.6.11.60ec05e
+	```
+
+
+Note: the example above downloads firmware to /tmp which is not persisted if the node is rebooted. If you would like to keep firmware long term for an emergency offline recovery / rollback, choose another location.  
