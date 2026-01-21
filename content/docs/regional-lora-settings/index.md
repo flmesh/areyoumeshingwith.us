@@ -40,7 +40,7 @@ nav_icon:
 
 {{< figure src="regional-lora-settings.webP" alt="Florida Mesh Regions" width="50%" class="float-end me-3" >}}
 #### Here at Florida Mesh we've divided up the State into Five distinct regions. They are as follows:
-* <span style="display: inline-block; width: 16px; height: 16px; background-color: #aa66cd; margin-right: 8px;"></span>Purple – North East Florida
+* <span style="display: inline-block; width: 16px; height: 16px; background-color: #aa66cd; margin-right: 8px;"></span>Purple – North West Florida
 * <span style="display: inline-block; width: 16px; height: 16px; background-color: #a80000; margin-right: 8px;"></span>Red – North Florida
 * <span style="display: inline-block; width: 16px; height: 16px; background-color: #0084a8; margin-right: 8px;"></span>Blue – Central West Florida
 * <span style="display: inline-block; width: 16px; height: 16px; background-color: #d1c800; margin-right: 8px; border: 1px solid #999;"></span>Yellow – Central East Florida
@@ -48,7 +48,7 @@ nav_icon:
 
 ### Each Region's LoRa settings and Metro based Meshes settings will be called out in each Region Section.
 
-## <span style="display: inline-block; width: 23px; height: 23px; background-color: #aa66cd; margin-right: 8px;"></span>North East Florida
+## <span style="display: inline-block; width: 23px; height: 23px; background-color: #aa66cd; margin-right: 8px;"></span>North West Florida
 
 >##### Special Notes: There is no standardized alternative modes here.  
 
