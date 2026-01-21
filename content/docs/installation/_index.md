@@ -2,7 +2,7 @@
 title: Meshtasticd Installation Guide
 linkTitle: Meshtasticd Installation, ESP32 remote Firmware Updating
 description: Guide to install Meshtasticd on a Raspberry Pi and ESP32 Firmware Updating
-nav_weight: 2
+nav_weight: 4
 authors:
   - Json_18
 series:
@@ -10,7 +10,7 @@ series:
 date: 2025-12-31T00:35:00-04:00
 nav_icon:
   vendor: bs
-  name: cloud-download
+  name: wrench
   color: green
 ---
 

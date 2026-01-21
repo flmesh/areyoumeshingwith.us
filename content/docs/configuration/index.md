@@ -13,7 +13,7 @@ date: 2026-01-19T00:31:34-04:00
 nav_icon:
   vendor: bs
   name: toggles
-  color: white
+  color: grey
 ---
 
 Below are configuration recommendations for optimizing your Meshtastic nodes for getting on the [Florida Mesh Map][MESHMAP] & [Florida Mesh Telemetry][Malla].
