@@ -2,7 +2,7 @@
 title: "Regional LoRa Settings"
 # linkTitle:
 date: 2026-01-21T03:31:13Z
-draft: true
+draft: false
 description: This is an active directory for each of the State's Regions and the Meshtastic LoRa RF settings. This document will be updated and maintained as frequency presets change.
 noindex: false
 # comments: false
