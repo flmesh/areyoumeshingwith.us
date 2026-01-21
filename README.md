@@ -108,6 +108,28 @@ If you would like to contribute, fork this repository and work on your content c
 3. Run `npm run dev` to test locally.
 4. Push your branch and open a Pull Request.
 5. Add yourself to `content/authors/` if you are a new contributor.
+    * Create a folder for your displayed name.
+    * Inside that folder create a `.md` file called `_index.md`
+       This is the file that will contain any contact information and avatar.
+       Hugo supports a wide range of socials in this section, so if you would like to link a different acount then what's shown in the example below, feel free to reach out.
+       Here is the list of Hugo Supported [Socials](https://github.com/hbstack/socials/blob/main/layouts/partials/hb/modules/socials/link.html).
+
+       For our avatars we are using [Gravatar](https://gravatar.com/) But you can also hardlink a photo to your file.
+       To create the `email_hash` (the link to the Gravatar info.) follow this guide: [Creating Identifier (hash)](https://docs.gravatar.com/rest/hash/).
+    * Your finished `_index.md` should look something like this when finished:
+      ```
+      ---
+      title: John Doe
+      email_hash: Random MD5 Hash from Gravatar Hash Creation
+      socials:
+        github: John Doe's Git
+        email: John Doe's Email
+      ---
+      ```
+
+    
+
+
 
 The most common `Hugo` command you'll need to understand will be [hugo new content](https://gohugo.io/commands/hugo_new_content/) as most of the site configuration and theming will not need to be modified. It is beneficial to understand the `Hugo` [directory structure](https://gohugo.io/getting-started/directory-structure/) to better understand how things work together.
 
