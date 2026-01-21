@@ -82,7 +82,7 @@ If you would like to connect your nodes to the MQTT broker and provide telemetry
 ### Special Settings for Mobile Nodes and NRF52 Nodes
 If your wanting to run a MQTT feeder from a mobile NRF52 or ESP32 based node. You'll need to enable an additional setting.
 
-  LoRa:
+  MQTT:
   * Proxy to Client: `Enabled`
 
 This will let the node pass MQTT data via the phone to the MQTT server.
