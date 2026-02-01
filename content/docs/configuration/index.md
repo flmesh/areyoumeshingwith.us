@@ -48,8 +48,7 @@ If you would like to connect your nodes to the MQTT broker and provide telemetry
   * Hop limit: `3, except in specific use cases` *(user preference: but do not set to higher than 5)*
   * Ignore MQTT: `Unchecked` *(Can be Checked to stop rouge MQTT data from appearing on your node and hopping though)*
   * OK to MQTT: `Checked` *(This gives others permission to uplink your node to MQTT Servers)*
-  * Note: Modem Preset should be LONG_FAST everywhere in Florida, except:
-    * As of 2025/09, Port St. Lucie to Islamorada switched to MEDIUM_FAST with a hop count of 5
+  * Note: Please reference [Regional-Lora-Mesh-Presets] for up to date modem presets for each area of the state.
 
 ### Module Configuration
   MQTT:
@@ -111,3 +110,4 @@ If your node is not appearing on the map:
 [MESHMAP]: https://map.areyoumeshingwith.us "Florida Mesh Map"
 [PRECISION]: https://meshtastic.org/docs/software/integrations/mqtt/#location-precision-filtering "Location Precision Filtering"
 [Malla]: https://malla.areyoumeshingwith.us/ "Florida Mesh Telemetry"
+[Regional-Lora-Mesh-Presets]: https://areyoumeshingwith.us/docs/regional-lora-settings/ "Regional LoRa Mesh Presets"

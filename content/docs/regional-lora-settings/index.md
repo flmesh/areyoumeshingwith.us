@@ -52,7 +52,7 @@ nav_icon:
 
 >##### Special Notes: There is no standardized alternative modes here.  
 
->LoRa - `Long Fast`
+>LoRa - `LongFast`
 
 >Frequency Slot - `0` (default masking) * if your using a nonstandard Channel, in Channel slot - `0`, you will need to place in the correct frequency slot manually, which is slot `20`.
 
@@ -94,7 +94,7 @@ nav_icon:
 
 ## <span style="display: inline-block; width: 23px; height: 23px; background-color: #e69800; margin-right: 8px;"></span>South Florida
 
->##### Special Notes: As of 2025/09, Port St. Lucie to Islamorada is **MEDIUM_FAST** If your in range of the Eastern Seaboard in this region, Medium_Fast is the frequency you'll want to be on. 
+>##### Special Notes: As of 2025/09, Fort Pierce to Layton key is **MEDIUM_FAST** If your in range of the Eastern Seaboard in this region, Medium_Fast is the frequency you'll want to be on. 
 
   >LoRa - `MediumFast`
 
