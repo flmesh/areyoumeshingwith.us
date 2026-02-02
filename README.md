@@ -48,6 +48,10 @@ npm run dev
 
 This will run a [local webserver](http://localhost:1313/) that you can connect to and view your work.
 
+**Note For First Time Local Dev Writers**
+
+For those that are first time writers and are looking for an easy to use local dev system. Use [Visual Studio Code](https://code.visualstudio.com/), This will be a one-to-one of the below [GitHub Codespaces](https://github.com/features/codespaces), and will be easy to use as well as allow simple intergrations for running the local dev server.
+
 **Troubleshooting:**
 - If you see errors about missing Hugo features, ensure you have the *extended* version.
 - If npm commands fail, check your Node.js version (recommend v18+).
