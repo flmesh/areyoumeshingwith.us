@@ -23,7 +23,7 @@ Want to get a feel for who's established in your area? The [Florida Mesh Map][ME
 
 New to all of this and want to know what's going on? There are quick [introduction videos][STARTERVIDEO], [overviews][OFFICIALINTRO], and you can take a look at what meshing can [actually do][USECASES]. 
 
-[CONFIGURATION]: https://areyoumeshingwith.us/docs/meshtastic-docs/ "Docs - Configuration"
+[CONFIGURATION]: https://areyoumeshingwith.us/docs/meshtastic-docs/configuration/ "Docs - Configuration"
 [MESHMAP]: https://map.areyoumeshingwith.us "Florida Mesh Map"
 [MeshTelemetry]: https://malla.areyoumeshingwith.us "Florida Mesh Telemetry"
 [STARTERVIDEO]: https://youtu.be/oAo2sb8LpFc "Meshtastic Introduction Video"
