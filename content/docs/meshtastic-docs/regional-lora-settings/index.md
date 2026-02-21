@@ -83,7 +83,7 @@ nav_icon:
 
 ## <span style="display: inline-block; width: 23px; height: 23px; background-color: #d1c800; margin-right: 8px; border: 1px solid #999;"></span>Central East Florida
 
->##### Special Notes: There is no standardized alternative modes here.  
+>##### Special Notes: As of 2026/21, Sebastian to Layton key is **MEDIUM_FAST** If your in range of the Eastern Seaboard in this region, Medium_Fast is the frequency you'll want to be on. Please see the South Florida Section below for details.  
 
 >LoRa - `LongFast`
 
@@ -94,7 +94,7 @@ nav_icon:
 
 ## <span style="display: inline-block; width: 23px; height: 23px; background-color: #e69800; margin-right: 8px;"></span>South Florida
 
->##### Special Notes: As of 2025/09, Fort Pierce to Layton key is **MEDIUM_FAST** If your in range of the Eastern Seaboard in this region, Medium_Fast is the frequency you'll want to be on. 
+>##### Special Notes: As of 2026/21, Sebastian to Layton key is **MEDIUM_FAST** If your in range of the Eastern Seaboard in this region, Medium_Fast is the frequency you'll want to be on. 
 
   >LoRa - `MediumFast`
 
