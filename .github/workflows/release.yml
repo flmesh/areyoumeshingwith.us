@@ -68,7 +68,7 @@ jobs:
 
     - name: Post PR comment
       if: github.event_name == 'pull_request'
-      uses: borchero/terraform-plan-comment@v2
+      uses: borchero/terraform-plan-comment@v3
       with:
         token: ${{ secrets.GITHUB_TOKEN }}
         planfile: .planfile
