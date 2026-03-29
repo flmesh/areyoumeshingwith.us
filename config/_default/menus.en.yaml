@@ -8,13 +8,14 @@ main:
         header: Florida Mesh Map
         vendor: font-awesome-solid
         name: map-location-dot
-  
-  - name: Mesh Telemetry
-    identifier: mesh-telemetry
-    url: https://malla.areyoumeshingwith.us
-    weight: 70
-    params:
-      icon:
-        header: Florida Mesh Telemetry
-        vendor: font-awesome-solid
-        name: gauge
+
+  - name: Malla
+    parent: telemetry
+    url: https://malla.areyoumeshingwith.us/
+    weight: 73
+
+    
+  - name: Meshview
+    parent: telemetry
+    url: https://meshview.areyoumeshingwith.us/
+    weight: 74
