@@ -4,7 +4,7 @@ go 1.21
 
 require (
 	github.com/GoogleChrome/workbox v7.4.0+incompatible // indirect
-	github.com/KaTeX/KaTeX v0.16.43 // indirect
+	github.com/KaTeX/KaTeX v0.16.45 // indirect
 	github.com/desandro/masonry v4.2.2+incompatible // indirect
 	github.com/gohugoio/hugo-mod-bootstrap-scss/v5 v5.20300.20800 // indirect
 	github.com/gohugoio/hugo-mod-jslibs-dist/popperjs/v2 v2.21100.20000 // indirect
@@ -109,7 +109,7 @@ require (
 	github.com/hugomods/snackbar v0.1.2 // indirect
 	github.com/hugomods/workbox v0.1.0 // indirect
 	github.com/jakearchibald/idb v8.0.3+incompatible // indirect
-	github.com/krisk/Fuse v7.1.0+incompatible // indirect
+	github.com/krisk/Fuse v7.3.0+incompatible // indirect
 	github.com/twbs/bootstrap v5.3.8+incompatible // indirect
 	github.com/twbs/icons v1.13.1 // indirect
 )
