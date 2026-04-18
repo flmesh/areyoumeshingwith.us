@@ -55,17 +55,21 @@ nav_icon:
 >LoRa - `LongFast`
 
 >Frequency Slot - `0` (default masking) * if your using a nonstandard Channel, in Channel slot - `0`, you will need to place in the correct frequency slot manually, which is slot `20`.
-
 ---
 ---
-
 ## <span style="display: inline-block; width: 23px; height: 23px; background-color: #a80000; margin-right: 8px;"></span>North Florida
 
->##### Special Notes: There is no standardized alternative modes here.  
+>##### Special Notes: As of 3/28/26 Jacksonville / Duval County is **MEDIUM_FAST**.  
 
 >LoRa - `LongFast`
 
 >Frequency Slot - `0` (default masking) * if your using a nonstandard Channel, in Channel slot - `0`, you will need to place in the correct frequency slot manually, which is slot `20`.
+
+---
+
+>LoRa For Duval County - `MediumFast`
+
+ >Frequency Slot - `0` (default masking) * if your using a nonstandard Channel, in Channel slot - `0`, you will need to place in the correct frequency slot manually, which is slot `45`.
 
 ---
 ---
