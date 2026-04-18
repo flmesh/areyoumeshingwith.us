@@ -13,9 +13,21 @@ main:
     parent: telemetry
     url: https://malla.areyoumeshingwith.us/
     weight: 73
+    params:
+      icon:
+        header: Malla
+        vendor: font-awesome-solid
+        name: gauge
+        color: green
 
     
   - name: Meshview
     parent: telemetry
     url: https://meshview.areyoumeshingwith.us/
     weight: 74
+    params:
+      icon:
+        header: Meshview
+        vendor: font-awesome-solid
+        name: gauge
+        color: green

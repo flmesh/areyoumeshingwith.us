@@ -7,7 +7,8 @@ menu:
     params:
       icon:
         vendor: bs
-        name: diagram-3
+        name: bezier2
+        color: green
 ---
 
 Meshtastic documentation and guides.

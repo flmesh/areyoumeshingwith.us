@@ -1,36 +1,11 @@
 ---
-title: "Meshcore"
-# linkTitle:
-date: 2026-03-29T17:25:06-04:00
-draft: true
-description: 
-noindex: false
-# comments: false
-nav_weight: 1000
-# nav_icon:
-#   vendor: bootstrap
-#   name: toggles
-#   color: '#e24d0e'
-series:
-  - Docs
-categories:
-#  - 
-tags:
-#  - 
-images:
-#  - 
-# menu:
-#   main:
-#     weight: 100
-#     params:
-#       icon:
-#         vendor: bs
-#         name: book
-#         color: '#e24d0e'
+title: Meshcore Telemetry
+type: docs
+menu:
+  main:
+    identifier: telemetry
+    weight: 4
 ---
 
-Summary.
-
+*Stay Tuned*
 <!--more-->
-
-Content.
