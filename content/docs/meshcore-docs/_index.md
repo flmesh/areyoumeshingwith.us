@@ -8,6 +8,7 @@ menu:
       icon:
         vendor: bs
         name: diagram-3
+        color: blue
 ---
 
 Meshcore documentation and guides.
