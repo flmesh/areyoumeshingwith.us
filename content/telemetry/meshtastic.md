@@ -1,11 +1,7 @@
 ---
 title: Meshtastic Telemetry
 type: docs
-menu:
-  main:
-    identifier: telemetry
-    weight: 5
-
+date: 2025-02-27T23:16:40+00:00
 ---
  
 <!--more-->
