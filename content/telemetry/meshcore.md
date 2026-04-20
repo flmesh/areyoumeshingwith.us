@@ -1,10 +1,7 @@
 ---
 title: Meshcore Telemetry
 type: docs
-menu:
-  main:
-    identifier: telemetry
-    weight: 4
+date: 2025-02-27T23:16:40+00:00
 ---
 
 *Stay Tuned*
