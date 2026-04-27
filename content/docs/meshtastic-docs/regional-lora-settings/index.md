@@ -52,7 +52,9 @@ Each Region's LoRa settings and Metro based Meshes settings will be called out i
 
 ## 🟣 North West Florida
 
-**Special Notes**: There is no standardized alternative modes here
+{{< notice info >}}
+There is no standardized alternative modes here
+{{< /notice >}}
 
 - LoRa: `LongFast`
 - Frequency Slot: `0` (default masking)[^longfast]
@@ -63,7 +65,9 @@ Each Region's LoRa settings and Metro based Meshes settings will be called out i
 
 ### Jacksonville & Duval Counties
 
-**Special Notes**: As of 3/28/26 Jacksonville & Duval Counties are **MEDIUM_FAST**
+{{< notice note >}}
+As of 3/28/26 Jacksonville & Duval Counties are **MEDIUM_FAST**
+{{< /notice >}}
 
 - LoRa: `MediumFast` (*For Jacksonville & Duval County*)
 - Frequency Slot: `0` (default masking)[^mediumfast]
@@ -79,7 +83,9 @@ Each Region's LoRa settings and Metro based Meshes settings will be called out i
 
 ## 🔵 Central West Florida
 
+{{< notice info >}}
 **Special Notes**: There is no standardized alternative modes here.  
+{{< /notice >}}
 
 - LoRa: - `LongFast`
 - Frequency Slot: `0` (default masking)[^longfast]
@@ -88,7 +94,9 @@ Each Region's LoRa settings and Metro based Meshes settings will be called out i
 
 ## 🟡 Central East Florida
 
-**Special Notes**: As of 2026/21, Sebastian to Layton key is **MEDIUM_FAST** If your in range of the Eastern Seaboard in this region, please see the South Florida Section below for details
+{{< notice note >}}
+As of 2026/21, Sebastian to Layton key is **MEDIUM_FAST** If your in range of the Eastern Seaboard in this region, please see the South Florida Section below for details
+{{< /notice >}}
 
 - LoRa: - `LongFast`
 - Frequency Slot: `0` (default masking)[^longfast]
@@ -99,7 +107,9 @@ Each Region's LoRa settings and Metro based Meshes settings will be called out i
 
 ### Sebastian to Layton key
 
-**Special Notes**: As of 2026/21, Sebastian to Layton key is **MEDIUM_FAST** If your in range of the Eastern Seaboard in this region, Medium_Fast is the frequency you'll want to be on.
+{{< notice note >}}
+As of 2026/21, Sebastian to Layton key is **MEDIUM_FAST** If your in range of the Eastern Seaboard in this region, Medium_Fast is the frequency you'll want to be on.
+{{< /notice >}}
 
 - LoRa: - `MediumFast`
 - Frequency Slot: `0` (default masking)[^mediumfast]
