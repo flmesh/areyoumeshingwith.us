@@ -95,7 +95,7 @@ As of 3/28/26 Jacksonville & Duval Counties are **MEDIUM_FAST**
 ## 🟡 Central East Florida
 
 {{< notice >}}
-As of 2026/21, Sebastian to Layton key is **MEDIUM_FAST** If your in range of the Eastern Seaboard in this region, please see the South Florida Section below for details
+As of 2026/21, Sebastian to Layton key is **MEDIUM_FAST** If your in range of the Eastern Seaboard in this region, please see the [South Florida]({{< relref "docs/meshtastic-docs/regional-lora-settings/index.md#sebastian-to-layton-key" >}}) Section below for details
 {{< /notice >}}
 
 - LoRa: - `LongFast`
