@@ -1,6 +1,5 @@
 ---
 title: Meshcore Docs
-slug: meshcore
 menu:
   main:
     parent: docs
