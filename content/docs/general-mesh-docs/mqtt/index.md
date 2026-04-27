@@ -71,6 +71,8 @@ You can check the MQTT account currently linked to your Discord account with:
 mqtt.my-account
 {{< /notice >}}
 
+{{< figure src="mqtt-myaccount.png" alt="MQTT my-account command over DM with MeshBot" >}}
+
 If your node needs a different MQTT policy profile, request that change from the Admins. Include the account username, node ID, and a short explanation of what access you need changed.
 
 ## Resetting Your MQTT Password
@@ -82,10 +84,14 @@ Use MeshBot in the Discord server channel to rotate your MQTT account password:
 {{< /notice >}}
 
 {{< notice tip "In DM with @MeshBot" >}}
-@MeshBot mqtt.rotate
+mqtt.rotate
 {{< /notice >}}
 
-{{< figure src="mqtt-rotate.png" alt="MQTT account credentials DM from MeshBot" >}}
+{{< figure src="mqtt-rotate.png" alt="MQTT rotate command over DM with MeshBot" >}}
+
+{{< notice tip >}}
+Some MeshBot commands like `mqtt.rotate` that make changes require confirmation before the action to be taken is performed.
+{{< /notice >}}
 
 MeshBot will DM the replacement credentials to you. After receiving them, update the MQTT password on every node using that account. Old passwords should be considered inactive after a rotation.
 
