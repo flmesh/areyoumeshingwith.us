@@ -34,7 +34,11 @@ If you would like to help feed the map yourself, or are in an area with limited 
 
 If you would like to connect your nodes to the MQTT broker and provide telemetry to both the [Florida Mesh Map][MESHMAP] & [Florida Mesh Telemetry][Malla], you will need to configure the following settings:
 
-*\* Note: The Florida Mesh MQTT Server Primary purpose is to provide data to help build and grow the Mesh across the state of Florida; hence this server is set to only allow Uplinking (meaning comunication via this mqtt won't work)[^hubot] The data is availible to be viewed on both the [Florida Mesh Map][MESHMAP] & [Florida Mesh Telemetry][Malla].*
+{{< notice note >}}
+The Florida Mesh MQTT Server Primary purpose is to provide data to help build and grow the Mesh across the state of Florida; hence this server is set to only allow Uplinking (meaning comunication via this mqtt won't work).
+{{< /notice >}}
+
+ The data is availible to be viewed on both the [Florida Mesh Map][MESHMAP] & [Florida Mesh Telemetry][Malla].
 
 ### Radio Configuration
 

@@ -63,6 +63,7 @@ imports:
   - path: github.com/hbstack/iframe
   - path: github.com/hbstack/progress-bar
   - path: github.com/hbstack/background-image
+  - path: github.com/martignoni/hugo-notice
 
   # recommended modules
   # check which modules were imported by recommended module by "hugo mod graph | grep recommended".
