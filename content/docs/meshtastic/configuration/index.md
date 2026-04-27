@@ -121,7 +121,7 @@ If your node is not appearing on the map:
 - Confirm the root topic is set exactly to `msh/US/FL`
 - Verify the MQTT module is enabled and properly configured
 
-[^presets]: Please reference [Regional LoRa Settings]({{< relref "docs/meshtastic-docs/regional-lora-settings/index.md" >}}) for up to date modem presets for each area of the state.
+[^presets]: Please reference [Regional LoRa Settings]({{< relref "regional-lora-settings/index.md" >}}) for up to date modem presets for each area of the state.
 [^tls]: TLS encrypts data transmitted between MQTT clients and the broker for increased security, but may not supported on all platforms.
 [^ninfo]: Please only enable Neighbor Info on Basestation and stationary nodes, when enabled on mobile nodes it causes a lot of noise and clutter to the map. Thank you.
 [^role]: CLIENT, CLIENT_BASE, or CLIENT_MUTE unless you have a different use case. **Never set this to ROUTER or REPEATER**.
@@ -132,4 +132,4 @@ If your node is not appearing on the map:
 
 [MESHMAP]: https://map.areyoumeshingwith.us "Florida Mesh Map"
 [MALLA]: https://malla.areyoumeshingwith.us/ "Florida Mesh Telemetry"
-[LORA-PRESETS]: {{< relref "docs/meshtastic-docs/regional-lora-settings/index.md" >}} "Regional LoRa Mesh Presets"
+[LORA-PRESETS]: {{< relref "docs/meshtastic/regional-lora-settings/index.md" >}} "Regional LoRa Mesh Presets"
