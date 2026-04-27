@@ -1,5 +1,6 @@
 ---
 title: "MQTT Server"
+slug: mqtt
 # linkTitle:
 date: 2026-04-27T11:05:52-04:00
 description: The Florida Mesh MQTT server supports individual account credentials.

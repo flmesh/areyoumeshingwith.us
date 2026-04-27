@@ -1,5 +1,6 @@
 ---
 title: "MeshBot Commands"
+slug: meshbot
 # linkTitle:
 date: 2026-04-27T00:00:00-04:00
 description: Public MeshBot command usage for the Florida Mesh Discord server.
