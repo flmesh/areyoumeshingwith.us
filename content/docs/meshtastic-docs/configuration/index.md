@@ -17,7 +17,7 @@ nav_icon:
   color: grey
 ---
 
-Below are configuration recommendations for optimizing your Meshtastic nodes for getting on the [Florida Mesh Map][MESHMAP] & [Florida Mesh Telemetry][Malla].
+Below are configuration recommendations for optimizing your Meshtastic nodes for getting on the [Florida Mesh Map][MESHMAP] & [Florida Mesh Telemetry][MALLA].
 
 ## Getting on the Map In Existing Meshes
 
@@ -32,13 +32,13 @@ If you would like to help feed the map yourself, or are in an area with limited 
 
 ## Setting up a MQTT Gateway
 
-If you would like to connect your nodes to the MQTT broker and provide telemetry to both the [Florida Mesh Map][MESHMAP] & [Florida Mesh Telemetry][Malla], you will need to configure the following settings:
+If you would like to connect your nodes to the MQTT broker and provide telemetry to both the [Florida Mesh Map][MESHMAP] & [Florida Mesh Telemetry][MALLA], you will need to configure the following settings:
 
 {{< notice note >}}
 The Florida Mesh MQTT Server Primary purpose is to provide data to help build and grow the Mesh across the state of Florida; hence this server is set to only allow Uplinking (meaning comunication via this mqtt won't work).
 {{< /notice >}}
 
-The data is available to be viewed on both the [Florida Mesh Map][MESHMAP] & [Florida Mesh Telemetry][Malla].
+The data is available to be viewed on both the [Florida Mesh Map][MESHMAP] & [Florida Mesh Telemetry][MALLA].
 
 ### Radio Configuration
 
@@ -129,5 +129,5 @@ If your node is not appearing on the map:
 [^hubot]: Florida Mesh has begun testing on a new feature to allow for individual MQTT accounts which allow both channel uplink & downlink ability.
 
 [MESHMAP]: https://map.areyoumeshingwith.us "Florida Mesh Map"
-[Malla]: https://malla.areyoumeshingwith.us/ "Florida Mesh Telemetry"
+[MALLA]: https://malla.areyoumeshingwith.us/ "Florida Mesh Telemetry"
 [LORA-PRESETS]: {{< relref "docs/meshtastic-docs/regional-lora-settings/index.md" >}} "Regional LoRa Mesh Presets"
