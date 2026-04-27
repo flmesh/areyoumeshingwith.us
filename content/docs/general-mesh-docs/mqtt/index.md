@@ -75,7 +75,7 @@ mqtt.my-account
 
 If your node needs a different MQTT policy profile, request that change from the Admins. Include the account username, node ID, and a short explanation of what access you need changed.
 
-## Resetting Your MQTT Password
+## Resetting your MQTT Password
 
 Use MeshBot in the Discord server channel to rotate your MQTT account password:
 
