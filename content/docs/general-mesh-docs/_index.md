@@ -1,5 +1,5 @@
 ---
-title: General Mesh Systems Docs
+title: General Docs
 menu:
   main:
     parent: docs

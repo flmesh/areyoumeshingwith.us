@@ -1,0 +1,86 @@
+---
+title: "MQTT Server"
+# linkTitle:
+date: 2026-04-27T11:05:52-04:00
+draft: true
+description: 
+noindex: false
+# comments: false
+nav_weight: 1000
+authors:
+  - jbouse
+# nav_icon:
+#   vendor: bootstrap
+#   name: toggles
+#   color: '#e24d0e'
+series:
+  - Docs
+categories:
+#  - 
+tags:
+#  - 
+images:
+#  - 
+# menu:
+#   main:
+#     weight: 100
+#     params:
+#       icon:
+#         vendor: bs
+#         name: book
+#         color: '#e24d0e'
+---
+
+The Florida Mesh MQTT server now supports individual account credentials.
+
+<!--more-->
+
+This is meant to enable Florida Mesh to provide better stability for the MQTT server and easier to identify responsible
+parties if there an issue pops up.
+
+To facilitate this, Florida Mesh is utilizing a custom Discord server bot, `@MeshBot`, that can accept commands in
+the [#mqtt](https://discord.com/channels/1235735441592942602/1372379064106483843) channel. Once MeshBot has direct
+messaged (DM) you, commands can then be sent back via DM rather than in the channel and do not require you to `@`
+mention the bot by name.
+
+You must allow direct messages from server members in Discord before requesting an account. If this privacy setting is disabled, MeshBot will not be able to DM you.
+
+## Requesting an MQTT Account
+
+Use MeshBot to request a new MQTT account. Mention `@MeshBot` and run the `mqtt.request` command with the `username` argument set to the MQTT username you want to use.
+
+Example:
+
+{{< notice tip "In #mqtt channel" >}}
+@MeshBot mqtt.request username:your_username
+{{< /notice >}}
+
+After the account is created, MeshBot will DM the MQTT credentials to you. These credentials are used with `mqtt.areyoumeshingwith.us`. Keep them private and only use them on nodes you operate.
+
+You can check the MQTT account currently linked to your Discord account with:
+
+{{< notice tip "In #mqtt channel" >}}
+@MeshBot mqtt.my-account
+{{< /notice >}}
+
+{{< notice tip "In DM with @MeshBot" >}}
+mqtt.my-account
+{{< /notice >}}
+
+If your node needs a different MQTT policy profile, request that change from the Admins. Include the account username, node ID, and a short explanation of what access you need changed.
+
+## Resetting Your MQTT Password
+
+Use MeshBot in the Discord server channel to rotate your MQTT account password:
+
+{{< notice tip "In #mqtt channel" >}}
+@MeshBot mqtt.rotate
+{{< /notice >}}
+
+{{< notice tip "In DM with @MeshBot" >}}
+@MeshBot mqtt.rotate
+{{< /notice >}}
+
+MeshBot will DM the replacement credentials to you. After receiving them, update the MQTT password on every node using that account. Old passwords should be considered inactive after a rotation.
+
+If you cannot rotate your own password, ask an Admin to reset it for you.
