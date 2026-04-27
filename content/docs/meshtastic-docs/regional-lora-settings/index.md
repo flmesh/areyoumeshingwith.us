@@ -7,10 +7,10 @@ description: This is an active directory for each of the State's Regions and the
 noindex: false
 # comments: false
 nav_weight: 2
-# nav_icon:
-#   vendor: bootstrap
-#   name: toggles
-#   color: '#e24d0e'
+nav_icon:
+  vendor: bs
+  name: wifi
+  color: orange
 authors:
   - Json_18
   - jbouse
@@ -22,18 +22,6 @@ tags:
 #  - 
 images:
 #  - 
-# menu:
-#   main:
-#     weight: 100
-#     params:
-#       icon:
-#         vendor: bs
-#         name: book
-#         color: '#e24d0e'
-nav_icon:
-  vendor: bs
-  name: wifi
-  color: orange
 ---
 
 ## Regions

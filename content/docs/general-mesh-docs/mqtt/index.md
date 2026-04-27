@@ -43,7 +43,7 @@ messaged (DM) you, commands can then be sent back via DM rather than in the chan
 
 You must allow direct messages from server members in Discord before requesting an account. If this privacy setting is disabled, MeshBot will not be able to DM you.
 
-{{< figure src="allow-direct-message.png" alt="Discord User Settings" >}}
+{{< figure src="allow-direct-message.png" alt="Discord User Settings" width="75%" >}}
 
 ## Requesting an MQTT Account
 
@@ -55,7 +55,11 @@ Example:
 @MeshBot mqtt.request username:your_username
 {{< /notice >}}
 
+{{< figure src="mqtt-request.png" alt="Request MQTT account from MeshBot" >}}
+
 After the account is created, MeshBot will DM the MQTT credentials to you. These credentials are used with `mqtt.areyoumeshingwith.us`. Keep them private and only use them on nodes you operate.
+
+{{< figure src="mqtt-request-dm.png" alt="MQTT account credentials DM from MeshBot" >}}
 
 You can check the MQTT account currently linked to your Discord account with:
 
@@ -80,6 +84,8 @@ Use MeshBot in the Discord server channel to rotate your MQTT account password:
 {{< notice tip "In DM with @MeshBot" >}}
 @MeshBot mqtt.rotate
 {{< /notice >}}
+
+{{< figure src="mqtt-rotate.png" alt="MQTT account credentials DM from MeshBot" >}}
 
 MeshBot will DM the replacement credentials to you. After receiving them, update the MQTT password on every node using that account. Old passwords should be considered inactive after a rotation.
 
