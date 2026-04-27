@@ -65,7 +65,7 @@ There is no standardized alternative modes here
 
 ### Jacksonville & Duval Counties
 
-{{< notice note >}}
+{{< notice >}}
 As of 3/28/26 Jacksonville & Duval Counties are **MEDIUM_FAST**
 {{< /notice >}}
 
@@ -94,7 +94,7 @@ As of 3/28/26 Jacksonville & Duval Counties are **MEDIUM_FAST**
 
 ## 🟡 Central East Florida
 
-{{< notice note >}}
+{{< notice >}}
 As of 2026/21, Sebastian to Layton key is **MEDIUM_FAST** If your in range of the Eastern Seaboard in this region, please see the South Florida Section below for details
 {{< /notice >}}
 
@@ -107,7 +107,7 @@ As of 2026/21, Sebastian to Layton key is **MEDIUM_FAST** If your in range of th
 
 ### Sebastian to Layton key
 
-{{< notice note >}}
+{{< notice >}}
 As of 2026/21, Sebastian to Layton key is **MEDIUM_FAST** If your in range of the Eastern Seaboard in this region, Medium_Fast is the frequency you'll want to be on.
 {{< /notice >}}
 

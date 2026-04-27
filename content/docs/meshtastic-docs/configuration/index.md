@@ -34,7 +34,7 @@ If you would like to help feed the map yourself, or are in an area with limited 
 
 If you would like to connect your nodes to the MQTT broker and provide telemetry to both the [Florida Mesh Map][MESHMAP] & [Florida Mesh Telemetry][MALLA], you will need to configure the following settings:
 
-{{< notice note >}}
+{{< notice info >}}
 The Florida Mesh MQTT Server Primary purpose is to provide data to help build and grow the Mesh across the state of Florida; hence this server is set to only allow Uplinking (meaning comunication via this mqtt won't work). The data is available to be viewed on both the [Florida Mesh Map](https://map.areyoumeshingwith.us) & [Florida Mesh Telemetry](https://malla.areyoumeshingwith.us).
 {{< /notice >}}
 
@@ -121,7 +121,7 @@ If your node is not appearing on the map:
 - Confirm the root topic is set exactly to `msh/US/FL`
 - Verify the MQTT module is enabled and properly configured
 
-[^presets]: Please reference [Regional LoRa Mesh Presets][LORA-PRESETS] for up to date modem presets for each area of the state.
+[^presets]: Please reference [Regional LoRa Settings]({{< relref "docs/meshtastic-docs/regional-lora-settings/index.md" >}}) for up to date modem presets for each area of the state.
 [^tls]: TLS encrypts data transmitted between MQTT clients and the broker for increased security, but may not supported on all platforms.
 [^ninfo]: Please only enable Neighbor Info on Basestation and stationary nodes, when enabled on mobile nodes it causes a lot of noise and clutter to the map. Thank you.
 [^role]: CLIENT, CLIENT_BASE, or CLIENT_MUTE unless you have a different use case. **Never set this to ROUTER or REPEATER**.
