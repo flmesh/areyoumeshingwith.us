@@ -132,4 +132,4 @@ If your node is not appearing on the map:
 
 [MESHMAP]: https://map.areyoumeshingwith.us "Florida Mesh Map"
 [MALLA]: https://malla.areyoumeshingwith.us/ "Florida Mesh Telemetry"
-[LORA-PRESETS]: {{< relref "docs/meshtastic/regional-lora-settings/index.md" >}} "Regional LoRa Mesh Presets"
+[LORA-PRESETS]: {{< relref "regional-lora-settings/index.md" >}} "Regional LoRa Mesh Presets"
