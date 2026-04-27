@@ -35,10 +35,8 @@ If you would like to help feed the map yourself, or are in an area with limited 
 If you would like to connect your nodes to the MQTT broker and provide telemetry to both the [Florida Mesh Map][MESHMAP] & [Florida Mesh Telemetry][MALLA], you will need to configure the following settings:
 
 {{< notice note >}}
-The Florida Mesh MQTT Server Primary purpose is to provide data to help build and grow the Mesh across the state of Florida; hence this server is set to only allow Uplinking (meaning comunication via this mqtt won't work).
+The Florida Mesh MQTT Server Primary purpose is to provide data to help build and grow the Mesh across the state of Florida; hence this server is set to only allow Uplinking (meaning comunication via this mqtt won't work). The data is available to be viewed on both the [Florida Mesh Map](https://map.areyoumeshingwith.us) & [Florida Mesh Telemetry](https://malla.areyoumeshingwith.us).
 {{< /notice >}}
-
-The data is available to be viewed on both the [Florida Mesh Map][MESHMAP] & [Florida Mesh Telemetry][MALLA].
 
 ### Radio Configuration
 
@@ -59,8 +57,8 @@ LoRa:
 
 - Presets: `LONG_FAST`[^presets]
 - Hop limit: `3`[^hops]
-- Ignore MQTT: `Unchecked` *(Can be Checked to stop rouge MQTT data from appearing on your node and hopping though)*
-- OK to MQTT: `Checked` *(This gives others permission to uplink your node to MQTT Servers)*
+- Ignore MQTT: `Unchecked`[^ignore-mqtt]
+- OK to MQTT: `Checked`[^ok-mqtt]
 
 ### Module Configuration
 
@@ -75,7 +73,9 @@ MQTT:
 - TLS Enabled: *user preference*[^tls]
 - Root topic: `msh/US/FL`
 
- *\* Note: If you followed the above MQTT steps in order, then you need to hit "Send" to update the device at this point before you proceed to the below four steps. Otherwise the send button will be grayed out.*
+{{< notice tip >}}
+If you followed the above MQTT steps in order, then you need to hit "Send" to update the device at this point before you proceed to the below four steps. Otherwise the send button will be grayed out.
+{{< /notice >}}
   
 - Map reporting: `Checked`
 - Map reporting interval (seconds): `10800`
@@ -127,6 +127,8 @@ If your node is not appearing on the map:
 [^role]: CLIENT, CLIENT_BASE, or CLIENT_MUTE unless you have a different use case. **Never set this to ROUTER or REPEATER**.
 [^hops]: Except in specific use cases *(user preference: but do not set to higher than 5)*.
 [^hubot]: Florida Mesh has begun testing on a new feature to allow for individual MQTT accounts which allow both channel uplink & downlink ability.
+[^ignore-mqtt]: Can be Checked to stop rouge MQTT data from appearing on your node and hopping though.
+[^ok-mqtt]: This gives others permission to uplink your node to MQTT Servers.
 
 [MESHMAP]: https://map.areyoumeshingwith.us "Florida Mesh Map"
 [MALLA]: https://malla.areyoumeshingwith.us/ "Florida Mesh Telemetry"
