@@ -1,5 +1,6 @@
 ---
 title: Meshtastic Docs
+slug: meshtastic
 menu:
   main:
     parent: docs

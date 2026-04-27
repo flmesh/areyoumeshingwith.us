@@ -1,5 +1,6 @@
 ---
 title: General Docs
+slug: general
 menu:
   main:
     parent: docs
