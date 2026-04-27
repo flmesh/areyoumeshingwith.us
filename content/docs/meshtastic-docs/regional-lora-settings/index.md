@@ -13,6 +13,7 @@ nav_weight: 2
 #   color: '#e24d0e'
 authors:
   - Json_18
+  - jbouse
 series:
   - Docs
 categories:
@@ -37,80 +38,78 @@ nav_icon:
 
 ## Regions
 
-
 {{< figure src="regional-lora-settings.webP" alt="Florida Mesh Regions" width="50%" class="float-end me-3" >}}
-#### Here at Florida Mesh we've divided up the State into Five distinct regions. They are as follows:
-* <span style="display: inline-block; width: 16px; height: 16px; background-color: #aa66cd; margin-right: 8px;"></span>Purple – North West Florida
-* <span style="display: inline-block; width: 16px; height: 16px; background-color: #a80000; margin-right: 8px;"></span>Red – North Florida
-* <span style="display: inline-block; width: 16px; height: 16px; background-color: #0084a8; margin-right: 8px;"></span>Blue – Central West Florida
-* <span style="display: inline-block; width: 16px; height: 16px; background-color: #d1c800; margin-right: 8px; border: 1px solid #999;"></span>Yellow – Central East Florida
-* <span style="display: inline-block; width: 16px; height: 16px; background-color: #e69800; margin-right: 8px;"></span>Orange – South Florida
 
-### Each Region's LoRa settings and Metro based Meshes settings will be called out in each Region Section.
+Here at Florida Mesh we've divided up the State into Five distinct regions. They are as follows:
 
-## <span style="display: inline-block; width: 23px; height: 23px; background-color: #aa66cd; margin-right: 8px;"></span>North West Florida
+- 🟣 Purple - North West Florida
+- 🔴 Red - North Florida
+- 🔵 Blue - Central West Florida
+- 🟡 Yellow - Central East Florida
+- 🟠 Orange - South Florida
 
->##### Special Notes: There is no standardized alternative modes here.  
+Each Region's LoRa settings and Metro based Meshes settings will be called out in each Region Section.
 
->LoRa - `LongFast`
+## 🟣 North West Florida
 
->Frequency Slot - `0` (default masking) * if your using a nonstandard Channel, in Channel slot - `0`, you will need to place in the correct frequency slot manually, which is slot `20`.
----
----
-## <span style="display: inline-block; width: 23px; height: 23px; background-color: #a80000; margin-right: 8px;"></span>North Florida
+**Special Notes**: There is no standardized alternative modes here
 
->##### Special Notes: As of 3/28/26 Jacksonville / Duval County is **MEDIUM_FAST**.  
-
->LoRa - `LongFast`
-
->Frequency Slot - `0` (default masking) * if your using a nonstandard Channel, in Channel slot - `0`, you will need to place in the correct frequency slot manually, which is slot `20`.
+- LoRa: `LongFast`
+- Frequency Slot: `0` (default masking)[^longfast]
 
 ---
 
->LoRa For Duval County - `MediumFast`
+## 🔴 North Florida
 
- >Frequency Slot - `0` (default masking) * if your using a nonstandard Channel, in Channel slot - `0`, you will need to place in the correct frequency slot manually, which is slot `45`.
+### Jacksonville & Duval Counties
 
----
----
+**Special Notes**: As of 3/28/26 Jacksonville & Duval Counties are **MEDIUM_FAST**
 
-## <span style="display: inline-block; width: 23px; height: 23px; background-color: #0084a8; margin-right: 8px;"></span>Central West Florida
-
->##### Special Notes: There is no standardized alternative modes here.  
-
->LoRa - `LongFast`
-
->Frequency Slot - `0` (default masking) * if your using a nonstandard Channel, in Channel slot - `0`, you will need to place in the correct frequency slot manually, which is slot `20`.
-
----
----
-
-## <span style="display: inline-block; width: 23px; height: 23px; background-color: #d1c800; margin-right: 8px; border: 1px solid #999;"></span>Central East Florida
-
->##### Special Notes: As of 2026/21, Sebastian to Layton key is **MEDIUM_FAST** If your in range of the Eastern Seaboard in this region, Medium_Fast is the frequency you'll want to be on. Please see the South Florida Section below for details.  
-
->LoRa - `LongFast`
-
->Frequency Slot - `0` (default masking) * if your using a nonstandard Channel, in Channel slot - `0`, you will need to place in the correct frequency slot manually, which is slot `20`.
-
----
----
-
-## <span style="display: inline-block; width: 23px; height: 23px; background-color: #e69800; margin-right: 8px;"></span>South Florida
-
->##### Special Notes: As of 2026/21, Sebastian to Layton key is **MEDIUM_FAST** If your in range of the Eastern Seaboard in this region, Medium_Fast is the frequency you'll want to be on. 
-
-  >LoRa - `MediumFast`
-
-  >Frequency Slot - `0` (default masking) * if your using a nonstandard Channel, in Channel slot - `0`, you will need to place in the correct frequency slot manually, which is slot `45`.
+- LoRa: `MediumFast` (*For Jacksonville & Duval County*)
+- Frequency Slot: `0` (default masking)[^mediumfast]
 
 ---
 
->##### All other South Florida Areas:
+### All other North Florida Areas
 
->LoRa - `LongFast`
-
->Frequency Slot - `0` (default masking) * if your using a nonstandard Channel, in Channel slot - `0`, you will need to place in the correct frequency slot manually, which is slot `20`.
+- LoRa: `LongFast`
+- Frequency Slot: `0` (default masking)[^longfast]
 
 ---
+
+## 🔵 Central West Florida
+
+**Special Notes**: There is no standardized alternative modes here.  
+
+- LoRa: - `LongFast`
+- Frequency Slot: `0` (default masking)[^longfast]
+
 ---
+
+## 🟡 Central East Florida
+
+**Special Notes**: As of 2026/21, Sebastian to Layton key is **MEDIUM_FAST** If your in range of the Eastern Seaboard in this region, please see the South Florida Section below for details
+
+- LoRa: - `LongFast`
+- Frequency Slot: `0` (default masking)[^longfast]
+
+---
+
+## 🟠 South Florida
+
+### Sebastian to Layton key
+
+**Special Notes**: As of 2026/21, Sebastian to Layton key is **MEDIUM_FAST** If your in range of the Eastern Seaboard in this region, Medium_Fast is the frequency you'll want to be on.
+
+- LoRa: - `MediumFast`
+- Frequency Slot: `0` (default masking)[^mediumfast]
+
+---
+
+### All other South Florida Areas
+
+- LoRa: - `LongFast`
+- Frequency Slot: `0` (default masking)[^longfast]
+
+[^longfast]: If your using a non-default channel name, in channel slot `0`, you will need to place in the correct frequency slot manually, which is slot `20`.
+[^mediumfast]: If your using a non-default channel name, in channel slot `0`, you will need to place in the correct frequency slot manually, which is slot `45`.
