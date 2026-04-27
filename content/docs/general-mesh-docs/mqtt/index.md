@@ -2,17 +2,16 @@
 title: "MQTT Server"
 # linkTitle:
 date: 2026-04-27T11:05:52-04:00
-draft: true
-description: 
+description: The Florida Mesh MQTT server supports individual account credentials.
 noindex: false
 # comments: false
 nav_weight: 1000
 authors:
   - jbouse
-# nav_icon:
-#   vendor: bootstrap
-#   name: toggles
-#   color: '#e24d0e'
+nav_icon:
+  vendor: bootstrap
+  name: hdd-network
+  color: '#e24d0e'
 series:
   - Docs
 categories:
@@ -21,29 +20,30 @@ tags:
 #  - 
 images:
 #  - 
-# menu:
-#   main:
-#     weight: 100
-#     params:
-#       icon:
-#         vendor: bs
-#         name: book
-#         color: '#e24d0e'
 ---
 
-The Florida Mesh MQTT server now supports individual account credentials.
-
-<!--more-->
-
 This is meant to enable Florida Mesh to provide better stability for the MQTT server and easier to identify responsible
-parties if there an issue pops up.
+parties if there an issue pops up that is not possible using shared credentials as originally launched. At a date in the
+future, currently still to be determined, the shared credentials will be deprecated and removed completely but for now
+only allow channel `uplink` and deny `downlink`.
+
+{{< notice warning >}}
+If you are trying to connect to the Florida Mesh MQTT server with anything other than a Meshtastic node, you **must** create
+an account.
+
+This includes but is not limited to: a private MQTT Broker/Bridge, Node Red, or any custom application.
+
+Shared credentials do not work for non-nodes at all now.
+{{< /notice >}}
 
 To facilitate this, Florida Mesh is utilizing a custom Discord server bot, `@MeshBot`, that can accept commands in
 the [#mqtt](https://discord.com/channels/1235735441592942602/1372379064106483843) channel. Once MeshBot has direct
-messaged (DM) you, commands can then be sent back via DM rather than in the channel and do not require you to `@`
-mention the bot by name.
+messaged (DM) you, commands can then be sent back via DM rather than in the channel and do not require you to
+`@`-mention the bot by name.
 
 You must allow direct messages from server members in Discord before requesting an account. If this privacy setting is disabled, MeshBot will not be able to DM you.
+
+{{< figure src="allow-direct-message.png" alt="Discord User Settings" >}}
 
 ## Requesting an MQTT Account
 
