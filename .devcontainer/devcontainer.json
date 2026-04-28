@@ -7,7 +7,7 @@
     },
     "ghcr.io/devcontainers/features/terraform:1": {},
     "ghcr.io/prplecake/devcontainer-features/dart-sass:1": {},
-    "ghcr.io/devcontainers/features/node:1": {}
+    "ghcr.io/devcontainers/features/node:2": {}
   },
   "forwardPorts": [
     1313
