@@ -102,11 +102,13 @@ Common aliases:
 
 ### mqtt.my-account
 
-Shows the MQTT account linked to your Discord account, including username, status, profile, and creation time.
+Shows the MQTT account linked to your Discord account, including username, status, profile, active broker connections, and creation time.
 
 {{< notice tip >}}
 @MeshBot mqtt.my-account
 {{< /notice >}}
+
+The active connections field shows MQTT clients currently connected with your account when MeshBot can reach the EMQX API. It will show `none` when no clients are connected, or `unavailable` if active connection lookup is not available.
 
 Common aliases:
 
