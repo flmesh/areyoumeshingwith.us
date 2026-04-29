@@ -52,13 +52,11 @@ jobs:
       run: terraform fmt -no-color -check
       continue-on-error: true
 
-    - name: Terraform Init
+    - name: Terraform Init & Validate
       id: init
-      run: terraform init -no-color -backend-config="key=${{ github.repository }}/terraform.tfstate"
-    
-    - name: Terraform Validate
-      id: validate
-      run: terraform validate -no-color
+      run: |
+        terraform init -no-color -backend-config="key=${{ github.repository }}/terraform.tfstate"
+        terraform validate -no-color
     
     - name: Terraform Plan
       id: plan
