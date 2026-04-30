@@ -15,6 +15,42 @@ resource "aws_amplify_app" "website" {
   }
 
   custom_rule {
+    source = "/docs/general-mesh-docs"
+    status = "301"
+    target = "/docs/general/"
+  }
+
+  custom_rule {
+    source = "/docs/general-mesh-docs/<*>"
+    status = "301"
+    target = "/docs/general/<*>"
+  }
+
+  custom_rule {
+    source = "/docs/meshcore-docs"
+    status = "301"
+    target = "/docs/meshcore/"
+  }
+
+  custom_rule {
+    source = "/docs/meshcore-docs/<*>"
+    status = "301"
+    target = "/docs/meshcore/<*>"
+  }
+
+  custom_rule {
+    source = "/docs/meshtastic-docs"
+    status = "301"
+    target = "/docs/meshtastic/"
+  }
+
+  custom_rule {
+    source = "/docs/meshtastic-docs/<*>"
+    status = "301"
+    target = "/docs/meshtastic/<*>"
+  }
+
+  custom_rule {
     source = "/<*>"
     status = "404"
     target = "/404.html"

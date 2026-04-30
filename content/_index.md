@@ -11,7 +11,7 @@ menu:
         name: house
 ---
 
-# Welcome to the Florida Mesh User Community
+## Welcome to the Florida Mesh User Community
 
 ### *Are you meshing with us?*
 
@@ -21,9 +21,9 @@ Have a new node and want to get meshing right away? Or do you have an existing n
 
 Want to get a feel for who's established in your area? The [Florida Mesh Map][MESHMAP] shows active nodes in the Florida mesh. Note that this doesn't show every single node around, but it will show nodes configured to share telemetry with the Florida Mesh User Community, which can be viewed in-depth at [Florida Mesh Telemetry][MeshTelemetry]. You may find there are many more nodes you can see from your location!
 
-New to all of this and want to know what's going on? There are quick [introduction videos][STARTERVIDEO], [overviews][OFFICIALINTRO], and you can take a look at what meshing can [actually do][USECASES]. 
+New to all of this and want to know what's going on? There are quick [introduction videos][STARTERVIDEO], [overviews][OFFICIALINTRO], and you can take a look at what meshing can [actually do][USECASES].
 
-[CONFIGURATION]: https://areyoumeshingwith.us/docs/meshtastic-docs/configuration/ "Docs - Configuration"
+[CONFIGURATION]: https://areyoumeshingwith.us/docs/meshtastic/configuration/ "Docs - Configuration"
 [MESHMAP]: https://map.areyoumeshingwith.us "Florida Mesh Map"
 [MeshTelemetry]: https://malla.areyoumeshingwith.us "Florida Mesh Telemetry"
 [STARTERVIDEO]: https://youtu.be/oAo2sb8LpFc "Meshtastic Introduction Video"
