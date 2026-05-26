@@ -30,7 +30,7 @@ parties if there an issue pops up that was not possible using shared credentials
 If you are trying to connect to the Florida Mesh MQTT server, you **must** create an account. Shared credentials do not work at all now.
 {{< /notice >}}
 
-To facilitate this, Florida Mesh is utilizing a custom Discord server bot, `@MeshBot`, that can accept [commands]({{< relref "meshbot-commands/index.md" >}}) in
+To facilitate this, Florida Mesh is utilizing a custom [Discord server][DISCORD] bot, `@MeshBot`, that can accept [commands]({{< relref "meshbot-commands/index.md" >}}) in
 the [#mqtt](https://discord.com/channels/1235735441592942602/1372379064106483843) channel.
 
 Once MeshBot has direct messaged (DM) you, commands can then be sent via DM rather than in the channel and do not require you to `@`-mention the bot by name.
@@ -89,3 +89,5 @@ Some MeshBot commands like `mqtt.rotate` that make changes require confirmation 
 MeshBot will DM the replacement credentials to you. After receiving them, update the MQTT password on every node using that account. Old passwords should be considered inactive after a rotation.
 
 If you cannot rotate your own password, ask an Admin to reset it for you.
+
+[DISCORD]: https://discord.gg/floridamesh "Florida Mesh Discord Server"
