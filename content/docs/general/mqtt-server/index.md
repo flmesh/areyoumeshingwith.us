@@ -24,17 +24,10 @@ images:
 ---
 
 This is meant to enable Florida Mesh to provide better stability for the MQTT server and easier to identify responsible
-parties if there an issue pops up that is not possible using shared credentials as originally launched. At a date in the
-future, currently still to be determined, the shared credentials will be deprecated and removed completely but for now
-only allow channel `uplink` and deny `downlink`.
+parties if there an issue pops up that was not possible using shared credentials as originally launched. The shared credentials have been deprecated and removed completely.
 
 {{< notice warning >}}
-If you are trying to connect to the Florida Mesh MQTT server with anything other than a Meshtastic node, you **must** create
-an account.
-
-This includes but is not limited to: a private MQTT Broker/Bridge, Node Red, or any custom application.
-
-Shared credentials do not work for non-nodes at all now.
+If you are trying to connect to the Florida Mesh MQTT server, you **must** create an account. Shared credentials do not work at all now.
 {{< /notice >}}
 
 To facilitate this, Florida Mesh is utilizing a custom Discord server bot, `@MeshBot`, that can accept [commands]({{< relref "meshbot-commands/index.md" >}}) in
