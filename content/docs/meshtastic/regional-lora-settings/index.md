@@ -66,7 +66,7 @@ There is no standardized alternative modes here
 **Special Notes**: There is no standardized alternative modes here.  
 {{< /notice >}}
 
-- LoRa: - `LongFast`
+- LoRa: `LongFast`
 - Frequency Slot: `0` (default masking)[^longfast]
 
 ---
@@ -77,7 +77,7 @@ There is no standardized alternative modes here
 As of 2026/21, Sebastian to Layton key is **MEDIUM_FAST** If your in range of the Eastern Seaboard in this region, please see the [South Florida]({{< relref "regional-lora-settings/index.md#sebastian-to-layton-key" >}}) Section below for details
 {{< /notice >}}
 
-- LoRa: - `LongFast`
+- LoRa: `LongFast`
 - Frequency Slot: `0` (default masking)[^longfast]
 
 ---
@@ -90,14 +90,14 @@ As of 2026/21, Sebastian to Layton key is **MEDIUM_FAST** If your in range of th
 As of 2026/21, Sebastian to Layton key is **MEDIUM_FAST** If your in range of the Eastern Seaboard in this region, Medium_Fast is the frequency you'll want to be on.
 {{< /notice >}}
 
-- LoRa: - `MediumFast`
+- LoRa: `MediumFast`
 - Frequency Slot: `0` (default masking)[^mediumfast]
 
 ---
 
 ### All other South Florida Areas
 
-- LoRa: - `LongFast`
+- LoRa: `LongFast`
 - Frequency Slot: `0` (default masking)[^longfast]
 
 [^longfast]: If your using a non-default channel name, in channel slot `0`, you will need to place in the correct frequency slot manually, which is slot `20`.
