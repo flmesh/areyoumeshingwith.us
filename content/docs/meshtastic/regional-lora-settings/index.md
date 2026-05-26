@@ -52,7 +52,7 @@ There is no standardized alternative modes here
 ## 🔴 North Florida
 
 {{< notice info >}}
-**Special Notes**: There is no standardized alternative modes here.  
+There is no standardized alternative modes here.  
 {{< /notice >}}
 
 - LoRa: `LongFast`
@@ -63,7 +63,7 @@ There is no standardized alternative modes here
 ## 🔵 Central West Florida
 
 {{< notice info >}}
-**Special Notes**: There is no standardized alternative modes here.  
+There is no standardized alternative modes here.  
 {{< /notice >}}
 
 - LoRa: `LongFast`
