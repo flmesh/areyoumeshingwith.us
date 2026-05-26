@@ -51,18 +51,9 @@ There is no standardized alternative modes here
 
 ## 🔴 North Florida
 
-### Jacksonville & Duval Counties
-
-{{< notice >}}
-As of 3/28/26 Jacksonville & Duval Counties are **MEDIUM_FAST**
+{{< notice info >}}
+**Special Notes**: There is no standardized alternative modes here.  
 {{< /notice >}}
-
-- LoRa: `MediumFast` (*For Jacksonville & Duval County*)
-- Frequency Slot: `0` (default masking)[^mediumfast]
-
----
-
-### All other North Florida Areas
 
 - LoRa: `LongFast`
 - Frequency Slot: `0` (default masking)[^longfast]
