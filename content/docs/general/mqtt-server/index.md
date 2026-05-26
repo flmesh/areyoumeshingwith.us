@@ -34,6 +34,7 @@ To facilitate this, Florida Mesh is utilizing a custom [Discord server][DISCORD]
 the [#mqtt](https://discord.com/channels/1235735441592942602/1372379064106483843) channel.
 
 Once MeshBot has direct messaged (DM) you, commands can then be sent via DM rather than in the channel and do not require you to `@`-mention the bot by name.
+
 You must allow direct messages from server members in Discord before requesting an account. If this privacy setting is disabled, MeshBot will not be able to DM you.
 
 {{< figure src="allow-direct-message.png" alt="Discord User Settings" width="75%" >}}
