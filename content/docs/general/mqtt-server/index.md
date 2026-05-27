@@ -24,23 +24,17 @@ images:
 ---
 
 This is meant to enable Florida Mesh to provide better stability for the MQTT server and easier to identify responsible
-parties if there an issue pops up that is not possible using shared credentials as originally launched. At a date in the
-future, currently still to be determined, the shared credentials will be deprecated and removed completely but for now
-only allow channel `uplink` and deny `downlink`.
+parties if there an issue pops up that was not possible using shared credentials as originally launched. The shared credentials have been deprecated and removed completely.
 
 {{< notice warning >}}
-If you are trying to connect to the Florida Mesh MQTT server with anything other than a Meshtastic node, you **must** create
-an account.
-
-This includes but is not limited to: a private MQTT Broker/Bridge, Node Red, or any custom application.
-
-Shared credentials do not work for non-nodes at all now.
+If you are trying to connect to the Florida Mesh MQTT server, you **must** create an account. Shared credentials do not work at all now.
 {{< /notice >}}
 
-To facilitate this, Florida Mesh is utilizing a custom Discord server bot, `@MeshBot`, that can accept [commands]({{< relref "meshbot-commands/index.md" >}}) in
+To facilitate this, Florida Mesh is utilizing a custom [Discord server][DISCORD] bot, `@MeshBot`, that can accept [commands]({{< relref "meshbot-commands/index.md" >}}) in
 the [#mqtt](https://discord.com/channels/1235735441592942602/1372379064106483843) channel.
 
 Once MeshBot has direct messaged (DM) you, commands can then be sent via DM rather than in the channel and do not require you to `@`-mention the bot by name.
+
 You must allow direct messages from server members in Discord before requesting an account. If this privacy setting is disabled, MeshBot will not be able to DM you.
 
 {{< figure src="allow-direct-message.png" alt="Discord User Settings" width="75%" >}}
@@ -96,3 +90,5 @@ Some MeshBot commands like `mqtt.rotate` that make changes require confirmation 
 MeshBot will DM the replacement credentials to you. After receiving them, update the MQTT password on every node using that account. Old passwords should be considered inactive after a rotation.
 
 If you cannot rotate your own password, ask an Admin to reset it for you.
+
+[DISCORD]: https://discord.gg/floridamesh "Florida Mesh Discord Server"

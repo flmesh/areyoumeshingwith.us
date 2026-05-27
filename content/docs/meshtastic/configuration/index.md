@@ -34,8 +34,13 @@ If you would like to help feed the map yourself, or are in an area with limited 
 
 If you would like to connect your nodes to the MQTT broker and provide telemetry to both the [Florida Mesh Map][MESHMAP] & [Florida Mesh Telemetry][MALLA], you will need to configure the following settings:
 
-{{< notice info >}}
-The Florida Mesh MQTT Server Primary purpose is to provide data to help build and grow the Mesh across the state of Florida; hence this server is set to only allow Uplinking (meaning comunication via this mqtt won't work). The data is available to be viewed on both the [Florida Mesh Map](https://map.areyoumeshingwith.us) & [Florida Mesh Telemetry](https://malla.areyoumeshingwith.us).
+{{< notice note >}}
+The Florida Mesh MQTT Server Primary purpose has been to provide data to help build and grow the Mesh across the state of Florida; hence this server from the start only allowed Uplinking
+(meaning comunication via this mqtt would not work). The data has been available to be viewed on both the [Florida Mesh Map](https://map.areyoumeshingwith.us) &
+[Florida Mesh Telemetry](https://malla.areyoumeshingwith.us).
+
+Due to demand of users and need to be able to quickly identify and address issues, the Florida Mesh MQTT Server has moved to individual MQTT accounts rather than a singular shared credential.
+This now means you will need to use `@MeshBot` on the Discord server to [request your account]({{< relref "docs/general/mqtt-server/index.md" >}}) in order to connect to the Florida Mesh MQTT Server.
 {{< /notice >}}
 
 ### Radio Configuration
@@ -44,7 +49,7 @@ Channels:
 
 - LongFast (primary)
   - Uplink Enabled: `Checked`
-  - Downlink Enabled: `Unchecked`
+  - Downlink Enabled: `Unchecked`[^downlink]
   - Position enabled: `Checked`
   - Precise Location: *user preference*
   - Precision Slider: *user preference*
@@ -66,8 +71,8 @@ MQTT:
 
 - Enabled: `Checked`
 - MQTT Server Address: `mqtt.areyoumeshingwith.us`
-- MQTT Username: `uplink`[^hubot]
-- MQTT Password: `uplink`[^hubot]
+- MQTT Username: *your MQTT account credentials*[^hubot]
+- MQTT Password: *your MQTT account credentials*[^hubot]
 - Encryption Enabled: `Checked`
 - JSON Enabled: `Unchecked`
 - TLS Enabled: *user preference*[^tls]
@@ -122,14 +127,14 @@ If your node is not appearing on the map:
 - Verify the MQTT module is enabled and properly configured
 
 [^presets]: Please reference [Regional LoRa Settings]({{< relref "regional-lora-settings/index.md" >}}) for up to date modem presets for each area of the state.
-[^tls]: TLS encrypts data transmitted between MQTT clients and the broker for increased security, but may not supported on all platforms.
+[^tls]: TLS encrypts data transmitted between MQTT clients and the broker for increased security, but may not supported on all platforms. It is known that the Android App version above 2.7.13 may have issues with TLS enabled.
 [^ninfo]: Please only enable Neighbor Info on Basestation and stationary nodes, when enabled on mobile nodes it causes a lot of noise and clutter to the map. Thank you.
 [^role]: CLIENT, CLIENT_BASE, or CLIENT_MUTE unless you have a different use case. **Never set this to ROUTER or REPEATER**.
 [^hops]: Except in specific use cases *(user preference: but do not set to higher than 5)*.
-[^hubot]: Florida Mesh has begun testing on a new feature to allow for individual MQTT accounts which allow both channel uplink & downlink ability.
-[^ignore-mqtt]: Can be Checked to stop rouge MQTT data from appearing on your node and hopping though.
-[^ok-mqtt]: This gives others permission to uplink your node to MQTT Servers.
+[^downlink]: If you wish to receive traffic from MQTT and not just send traffic to MQTT then you may enable with your individual MQTT account credentials.
+[^hubot]: Florida Mesh has a new requirement to [request an individual MQTT account]({{< relref "docs/general/mqtt-server/index.md" >}}) which allow both channel `uplink` & `downlink` ability.
+[^ignore-mqtt]: Can be Checked to stop rouge MQTT data from appearing on your node and hopping though. Consider unchecking if you uncheck `downlink`.
+[^ok-mqtt]: This gives permission to uplink your node to MQTT Servers. You will not appear on the Meshtastic Map if this is not enabled.
 
 [MESHMAP]: https://map.areyoumeshingwith.us "Florida Mesh Map"
 [MALLA]: https://malla.areyoumeshingwith.us/ "Florida Mesh Telemetry"
-[LORA-PRESETS]: {{< relref "regional-lora-settings/index.md" >}} "Regional LoRa Mesh Presets"

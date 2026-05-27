@@ -1,4 +1,9 @@
-meshmap:
-  title: The Florida Mesh Telemetry going live!
-  url: mesh-telemetry
+mqtt-server:
+  title: Florida Mesh MQTT Server now requires accounts to connect!
+  url: docs/general/mqtt-server/index.md
   weight: 5
+
+meshbot:
+  title: MeshBot is now generally available on Discord!
+  url: docs/general/meshbot-commands/index.md
+  weight: 10
