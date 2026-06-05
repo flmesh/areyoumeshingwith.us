@@ -1,0 +1,14 @@
+{{- $url := printf "https://api.github.com/repos/%s" . -}}
+{{- $data := dict -}}
+
+{{- with try (resources.GetRemote $url) -}}
+  {{- with .Err -}}
+    {{- errorf "%s" . -}}
+  {{- else with .Value -}}
+    {{- $data = . | transform.Unmarshal -}}
+  {{- else -}}
+    {{- errorf "Unable to get remote resource %q" $url -}}
+  {{- end -}}
+{{- end -}}
+
+{{- return $data.node_id -}}
