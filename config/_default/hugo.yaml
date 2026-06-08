@@ -67,3 +67,7 @@ security:
       - CI$
       - PWD
 
+  node:
+    permissions:
+      allowRead:
+        - "*"
