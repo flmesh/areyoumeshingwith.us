@@ -114,7 +114,7 @@ regions:
 
 ## Regions
 
-{{< figure src="regional-lora-settings.webP" alt="Florida Mesh Regions" width="50%" class="float-end me-3" >}}
+{{< figure src="regional-lora-settings.svg" alt="Florida Mesh Regions" width="50%" class="float-end me-3" >}}
 
 Here at Florida Mesh we've divided up the State into Five distinct regions. They are as follows:
 
