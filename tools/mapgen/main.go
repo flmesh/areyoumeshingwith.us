@@ -17,7 +17,7 @@ const (
 	padding     = 20.0
 	strokeColor = "#222222"
 	strokeWidth = 0.4
-	outputFile  = "assets/images/regional-lora-settings/regional-lora-settings.svg"
+	outputFile = "content/docs/meshtastic/regional-lora-settings/regional-lora-settings.svg"
 	contentFile = "content/docs/meshtastic/regional-lora-settings/index.md"
 	geoJSONFile = "assets/gis/counties.geojson"
 )
