@@ -17,7 +17,7 @@ const (
 	padding     = 20.0
 	strokeColor = "#222222"
 	strokeWidth = 0.4
-	outputFile = "content/docs/meshtastic/regional-lora-settings/regional-lora-settings.svg"
+	outputFile  = "content/docs/meshtastic/regional-lora-settings/regional-lora-settings.svg"
 	contentFile = "content/docs/meshtastic/regional-lora-settings/index.md"
 	geoJSONFile = "assets/gis/counties.geojson"
 )
@@ -53,6 +53,11 @@ type geometry struct {
 	Coordinates json.RawMessage `json:"coordinates"`
 }
 
+type label struct {
+	Text string
+	X, Y float64
+}
+
 func main() {
 	if err := run(); err != nil {
 		fmt.Fprintf(os.Stderr, "mapgen: %v\n", err)
@@ -66,7 +71,6 @@ func run() error {
 		return fmt.Errorf("finding repo root: %w", err)
 	}
 
-	// Parse frontmatter → county → colour lookup.
 	fm, err := parseFrontmatter(filepath.Join(repoRoot, contentFile))
 	if err != nil {
 		return fmt.Errorf("parsing frontmatter: %w", err)
@@ -78,13 +82,12 @@ func run() error {
 		}
 	}
 
-	// Parse GeoJSON.
 	gf, err := parseGeoJSON(filepath.Join(repoRoot, geoJSONFile))
 	if err != nil {
 		return fmt.Errorf("parsing GeoJSON: %w", err)
 	}
 
-	// Compute bounding box for all county coordinates.
+	// Compute bounding box.
 	var minLon, minLat, maxLon, maxLat float64
 	first := true
 	for _, feat := range gf.Features {
@@ -98,18 +101,10 @@ func run() error {
 					minLon, minLat, maxLon, maxLat = pt[0], pt[1], pt[0], pt[1]
 					first = false
 				} else {
-					if pt[0] < minLon {
-						minLon = pt[0]
-					}
-					if pt[0] > maxLon {
-						maxLon = pt[0]
-					}
-					if pt[1] < minLat {
-						minLat = pt[1]
-					}
-					if pt[1] > maxLat {
-						maxLat = pt[1]
-					}
+					if pt[0] < minLon { minLon = pt[0] }
+					if pt[0] > maxLon { maxLon = pt[0] }
+					if pt[1] < minLat { minLat = pt[1] }
+					if pt[1] > maxLat { maxLat = pt[1] }
 				}
 			}
 		}
@@ -123,7 +118,6 @@ func run() error {
 
 	dataW := (maxLon - minLon) * cosLat
 	dataH := maxLat - minLat
-
 	scaleX := (float64(viewBoxW) - 2*padding) / dataW
 	scaleY := (float64(viewBoxH) - 2*padding) / dataH
 	scale := math.Min(scaleX, scaleY)
@@ -137,7 +131,10 @@ func run() error {
 		return x, y
 	}
 
-	// Build SVG.
+	// --- Pass 1: build paths AND collect county centroids ---
+	var countyLabels []label
+	countyCentroid := make(map[string][2]float64)
+
 	var sb strings.Builder
 	sb.WriteString(fmt.Sprintf(
 		`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 %d %d" width="%d" height="%d">`+"\n",
@@ -152,10 +149,32 @@ func run() error {
 
 		fill := countyColor[normalizeCounty(feat.Properties.TigerName)]
 		if fill == "" {
-			fill = "#cccccc" // gray for unmatched counties
+			fill = "#cccccc"
 		}
 
-		// Build path data with pixel decimation + integer output.
+		// Centroid for this county (pick largest ring for MultiPolygon).
+		var bestCentroid [2]float64
+		bestArea := -1.0
+		for _, ring := range rings {
+			if len(ring) < 3 {
+				continue
+			}
+			c, area := polygonCentroid(ring)
+			if area > bestArea {
+				bestArea = area
+				bestCentroid = c
+			}
+		}
+		if bestArea >= 0 {
+			cx, cy := transform(bestCentroid[0], bestCentroid[1])
+			countyCentroid[normalizeCounty(feat.Properties.TigerName)] = [2]float64{cx, cy}
+			countyLabels = append(countyLabels, label{
+				Text: feat.Properties.TigerName,
+				X:    cx, Y: cy,
+			})
+		}
+
+		// Build path data.
 		var path strings.Builder
 		for _, ring := range rings {
 			if len(ring) == 0 {
@@ -164,7 +183,6 @@ func run() error {
 			x, y := transform(ring[0][0], ring[0][1])
 			px, py := int(math.Round(x)), int(math.Round(y))
 			path.WriteString(fmt.Sprintf("M%d,%d", px, py))
-
 			for i := 1; i < len(ring); i++ {
 				x, y = transform(ring[i][0], ring[i][1])
 				nx, ny := int(math.Round(x)), int(math.Round(y))
@@ -181,6 +199,45 @@ func run() error {
 			strings.TrimSpace(path.String()), fill, strokeColor, strokeWidth))
 	}
 
+	// --- County labels (small text) ---
+	sb.WriteString(`  <g font-family="Arial, sans-serif" text-anchor="middle" dominant-baseline="middle">` + "\n")
+	for _, lbl := range countyLabels {
+		sb.WriteString(fmt.Sprintf(
+			`    <text x="%.1f" y="%.1f" font-size="9" fill="white" stroke="#333" stroke-width="0.4" paint-order="stroke">%s</text>`+"\n",
+			lbl.X, lbl.Y, lbl.Text))
+	}
+	sb.WriteString("  </g>\n")
+
+	// --- Region labels (larger, on top) ---
+	var regionLabels []label
+	for _, r := range fm.Regions {
+		var rx, ry float64
+		var count int
+		for _, c := range r.Counties {
+			if centroid, ok := countyCentroid[normalizeCounty(c)]; ok {
+				rx += centroid[0]
+				ry += centroid[1]
+				count++
+			}
+		}
+		if count > 0 {
+			rx /= float64(count)
+			ry /= float64(count)
+			regionLabels = append(regionLabels, label{
+				Text: r.Name,
+				X:    rx, Y: ry,
+			})
+		}
+	}
+
+	sb.WriteString(`  <g font-family="Arial, sans-serif" text-anchor="middle" dominant-baseline="middle" font-weight="bold">` + "\n")
+	for _, lbl := range regionLabels {
+		sb.WriteString(fmt.Sprintf(
+			`    <text x="%.1f" y="%.1f" font-size="18" fill="white" stroke="#222" stroke-width="1.2" paint-order="stroke">%s</text>`+"\n",
+			lbl.X, lbl.Y, lbl.Text))
+	}
+	sb.WriteString("  </g>\n")
+
 	sb.WriteString("</svg>\n")
 
 	outPath := filepath.Join(repoRoot, outputFile)
@@ -192,6 +249,42 @@ func run() error {
 	}
 	fmt.Printf("Map generated: %s\n", outPath)
 	return nil
+}
+
+// polygonCentroid returns the centroid of a polygon ring and its unsigned area.
+func polygonCentroid(ring [][2]float64) ([2]float64, float64) {
+	n := len(ring)
+	if n < 3 {
+		var sum [2]float64
+		for _, p := range ring {
+			sum[0] += p[0]
+			sum[1] += p[1]
+		}
+		sum[0] /= float64(n)
+		sum[1] /= float64(n)
+		return sum, 0
+	}
+	var area, cx, cy float64
+	for i := 0; i < n; i++ {
+		j := (i + 1) % n
+		xi, yi := ring[i][0], ring[i][1]
+		xj, yj := ring[j][0], ring[j][1]
+		cross := xi*yj - xj*yi
+		area += cross
+		cx += (xi + xj) * cross
+		cy += (yi + yj) * cross
+	}
+	area *= 0.5
+	if area == 0 {
+		return [2]float64{ring[0][0], ring[0][1]}, 0
+	}
+	cx /= (6 * area)
+	cy /= (6 * area)
+	// Use absolute area so larger polygons rank higher.
+	if area < 0 {
+		area = -area
+	}
+	return [2]float64{cx, cy}, area
 }
 
 func parseFrontmatter(path string) (*frontMatter, error) {
