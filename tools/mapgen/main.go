@@ -199,42 +199,42 @@ func run() error {
 			strings.TrimSpace(path.String()), fill, strokeColor, strokeWidth))
 	}
 
-	// --- County labels (small text) ---
+	// --- County labels (small, white, no stroke) ---
 	sb.WriteString(`  <g font-family="Arial, sans-serif" text-anchor="middle" dominant-baseline="middle">` + "\n")
 	for _, lbl := range countyLabels {
 		sb.WriteString(fmt.Sprintf(
-			`    <text x="%.1f" y="%.1f" font-size="9" fill="white" stroke="#333" stroke-width="0.4" paint-order="stroke">%s</text>`+"\n",
+			`    <text x="%.1f" y="%.1f" font-size="9" fill="white">%s</text>`+"\n",
 			lbl.X, lbl.Y, lbl.Text))
 	}
 	sb.WriteString("  </g>\n")
 
-	// --- Region labels (larger, on top) ---
-	var regionLabels []label
-	for _, r := range fm.Regions {
-		var rx, ry float64
-		var count int
-		for _, c := range r.Counties {
-			if centroid, ok := countyCentroid[normalizeCounty(c)]; ok {
-				rx += centroid[0]
-				ry += centroid[1]
-				count++
-			}
-		}
-		if count > 0 {
-			rx /= float64(count)
-			ry /= float64(count)
-			regionLabels = append(regionLabels, label{
-				Text: r.Name,
-				X:    rx, Y: ry,
-			})
-		}
+	// --- Region labels (manually placed, black text with white stroke halo) ---
+	// Hard-coded positions for readability. Number suffix matches user spec.
+	regionPositions := map[string][2]float64{
+		"North West": {80, 110},   // #1 in Gulf, west of panhandle
+		"North":      {980, 120}, // #2 in Atlantic, east of Nassau
+		"Central East": {960, 280}, // #3 in Atlantic, east of Marion
+		"Central West": {620, 470}, // #4 in Gulf, west of Pinellas
+		"South":      {883, 835}, // #5 west of Monroe
+	}
+	regionNumbers := map[string]string{
+		"North West":   "#1",
+		"North":        "#2",
+		"Central East": "#3",
+		"Central West": "#4",
+		"South":        "#5",
 	}
 
 	sb.WriteString(`  <g font-family="Arial, sans-serif" text-anchor="middle" dominant-baseline="middle" font-weight="bold">` + "\n")
-	for _, lbl := range regionLabels {
+	for _, r := range fm.Regions {
+		pos, ok := regionPositions[r.Name]
+		if !ok {
+			continue
+		}
+		num := regionNumbers[r.Name]
 		sb.WriteString(fmt.Sprintf(
-			`    <text x="%.1f" y="%.1f" font-size="18" fill="white" stroke="#222" stroke-width="1.2" paint-order="stroke">%s</text>`+"\n",
-			lbl.X, lbl.Y, lbl.Text))
+			`    <text x="%.1f" y="%.1f" font-size="18" fill="black" stroke="white" stroke-width="2.5" paint-order="stroke">%s %s</text>`+"\n",
+			pos[0], pos[1], r.Name, num))
 	}
 	sb.WriteString("  </g>\n")
 

@@ -23,7 +23,7 @@ tags:
 images:
 #  - 
 regions:
-  - name: "North West Florida"
+  - name: "North West"
     emoji: "🟣"
     color: "#800080"
     counties:
@@ -39,7 +39,7 @@ regions:
       - Santa Rosa
       - Walton
       - Washington
-  - name: "North Florida"
+  - name: "North"
     emoji: "🔴"
     color: "#FF0000"
     counties:
@@ -67,7 +67,7 @@ regions:
       - Taylor
       - Union
       - Wakulla
-  - name: "Central West Florida"
+  - name: "Central West"
     emoji: "🔵"
     color: "#0000FF"
     counties:
@@ -78,7 +78,7 @@ regions:
       - Pasco
       - Pinellas
       - Sarasota
-  - name: "Central East Florida"
+  - name: "Central East"
     emoji: "🟡"
     color: "#FFFF00"
     counties:
@@ -93,7 +93,7 @@ regions:
       - "St. Lucie"
       - Sumter
       - Volusia
-  - name: "South Florida"
+  - name: "South"
     emoji: "🟠"
     color: "#FFA500"
     counties:
