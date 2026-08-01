@@ -22,6 +22,94 @@ tags:
 #  - 
 images:
 #  - 
+regions:
+  - name: "North West Florida"
+    emoji: "🟣"
+    color: "#800080"
+    counties:
+      - Bay
+      - Calhoun
+      - Escambia
+      - Franklin
+      - Gulf
+      - Holmes
+      - Jackson
+      - Liberty
+      - Okaloosa
+      - Santa Rosa
+      - Walton
+      - Washington
+  - name: "North Florida"
+    emoji: "🔴"
+    color: "#FF0000"
+    counties:
+      - Alachua
+      - Baker
+      - Bradford
+      - Clay
+      - Columbia
+      - Dixie
+      - Duval
+      - Flagler
+      - Gadsden
+      - Gilchrist
+      - Hamilton
+      - Jefferson
+      - Lafayette
+      - Leon
+      - Levy
+      - Madison
+      - Marion
+      - Nassau
+      - Putnam
+      - "St. Johns"
+      - Suwannee
+      - Taylor
+      - Union
+      - Wakulla
+  - name: "Central West Florida"
+    emoji: "🔵"
+    color: "#0000FF"
+    counties:
+      - Citrus
+      - Hernando
+      - Hillsborough
+      - Manatee
+      - Pasco
+      - Pinellas
+      - Sarasota
+  - name: "Central East Florida"
+    emoji: "🟡"
+    color: "#FFFF00"
+    counties:
+      - Brevard
+      - Indian River
+      - Lake
+      - Martin
+      - Orange
+      - Osceola
+      - Palm Beach
+      - Seminole
+      - "St. Lucie"
+      - Sumter
+      - Volusia
+  - name: "South Florida"
+    emoji: "🟠"
+    color: "#FFA500"
+    counties:
+      - Broward
+      - Charlotte
+      - Collier
+      - DeSoto
+      - Glades
+      - Hardee
+      - Hendry
+      - Highlands
+      - Lee
+      - Miami-Dade
+      - Monroe
+      - Okeechobee
+      - Polk
 ---
 
 ## Regions
