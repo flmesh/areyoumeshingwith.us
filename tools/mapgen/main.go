@@ -151,6 +151,10 @@ func run() error {
 		if fill == "" {
 			fill = "#cccccc"
 		}
+		// Dull down Central East yellow for white label readability.
+		if fill == "#FFFF00" {
+			fill = "#D4C44A"
+		}
 
 		// Centroid for this county (pick largest ring for MultiPolygon).
 		var bestCentroid [2]float64
