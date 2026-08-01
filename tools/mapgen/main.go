@@ -211,7 +211,7 @@ func run() error {
 	// --- Region labels (manually placed, black text with white stroke halo) ---
 	// Hard-coded positions for readability. Number suffix matches user spec.
 	regionPositions := map[string][2]float64{
-		"North West": {80, 110},   // #1 in Gulf, west of panhandle
+		"North West": {266, 95},   // #1 below Walton, centered between Okaloosa & Walton
 		"North":      {980, 120}, // #2 in Atlantic, east of Nassau
 		"Central East": {960, 280}, // #3 in Atlantic, east of Marion
 		"Central West": {620, 470}, // #4 in Gulf, west of Pinellas
@@ -233,7 +233,7 @@ func run() error {
 		}
 		num := regionNumbers[r.Name]
 		sb.WriteString(fmt.Sprintf(
-			`    <text x="%.1f" y="%.1f" font-size="18" fill="black" stroke="white" stroke-width="2.5" paint-order="stroke">%s %s</text>`+"\n",
+			`    <text x="%.1f" y="%.1f" font-size="21" fill="black" stroke="white" stroke-width="2.5" paint-order="stroke">%s %s</text>`+"\n",
 			pos[0], pos[1], r.Name, num))
 	}
 	sb.WriteString("  </g>\n")

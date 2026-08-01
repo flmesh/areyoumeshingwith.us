@@ -137,10 +137,10 @@
     <text x="866.0" y="77.8" font-size="9" fill="white">Nassau</text>
   </g>
   <g font-family="Arial, sans-serif" text-anchor="middle" dominant-baseline="middle" font-weight="bold">
-    <text x="80.0" y="110.0" font-size="18" fill="black" stroke="white" stroke-width="2.5" paint-order="stroke">North West #1</text>
-    <text x="980.0" y="120.0" font-size="18" fill="black" stroke="white" stroke-width="2.5" paint-order="stroke">North #2</text>
-    <text x="620.0" y="470.0" font-size="18" fill="black" stroke="white" stroke-width="2.5" paint-order="stroke">Central West #4</text>
-    <text x="960.0" y="280.0" font-size="18" fill="black" stroke="white" stroke-width="2.5" paint-order="stroke">Central East #3</text>
-    <text x="883.0" y="835.0" font-size="18" fill="black" stroke="white" stroke-width="2.5" paint-order="stroke">South #5</text>
+    <text x="266.0" y="95.0" font-size="21" fill="black" stroke="white" stroke-width="2.5" paint-order="stroke">North West #1</text>
+    <text x="980.0" y="120.0" font-size="21" fill="black" stroke="white" stroke-width="2.5" paint-order="stroke">North #2</text>
+    <text x="620.0" y="470.0" font-size="21" fill="black" stroke="white" stroke-width="2.5" paint-order="stroke">Central West #4</text>
+    <text x="960.0" y="280.0" font-size="21" fill="black" stroke="white" stroke-width="2.5" paint-order="stroke">Central East #3</text>
+    <text x="883.0" y="835.0" font-size="21" fill="black" stroke="white" stroke-width="2.5" paint-order="stroke">South #5</text>
   </g>
 </svg>
