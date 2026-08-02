@@ -23,9 +23,10 @@ tags:
 images:
 #  - 
 map:
-  background: "#f8f9fa"
+  background: "#1a1a2e"
   county_stroke: "#222222"
   unassigned_county: "#cccccc"
+  county_fill_opacity: 0.65
   county_label: "white"
   region_label: "black"
   region_label_halo: "white"

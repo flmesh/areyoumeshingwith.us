@@ -27,12 +27,13 @@ type frontMatter struct {
 }
 
 type mapColors struct {
-	Background       string `yaml:"background"`
-	CountyStroke     string `yaml:"county_stroke"`
-	UnassignedCounty string `yaml:"unassigned_county"`
-	CountyLabel      string `yaml:"county_label"`
-	RegionLabel      string `yaml:"region_label"`
-	RegionLabelHalo  string `yaml:"region_label_halo"`
+	Background        string  `yaml:"background"`
+	CountyStroke      string  `yaml:"county_stroke"`
+	UnassignedCounty  string  `yaml:"unassigned_county"`
+	CountyFillOpacity float64 `yaml:"county_fill_opacity"`
+	CountyLabel       string  `yaml:"county_label"`
+	RegionLabel       string  `yaml:"region_label"`
+	RegionLabelHalo   string  `yaml:"region_label_halo"`
 }
 
 type region struct {
@@ -83,6 +84,9 @@ func run() error {
 	fm, err := parseFrontmatter(filepath.Join(repoRoot, contentFile))
 	if err != nil {
 		return fmt.Errorf("parsing frontmatter: %w", err)
+	}
+	if fm.Map.CountyFillOpacity <= 0 || fm.Map.CountyFillOpacity > 1 {
+		return fmt.Errorf("map.county_fill_opacity must be in (0, 1], got %v", fm.Map.CountyFillOpacity)
 	}
 	countyColor := make(map[string]string)
 	for _, r := range fm.Regions {
@@ -212,8 +216,8 @@ func run() error {
 		}
 
 		sb.WriteString(fmt.Sprintf(
-			`  <path d="%s" fill="%s" stroke="%s" stroke-width="%.2f" stroke-linejoin="round"/>`+"\n",
-			strings.TrimSpace(path.String()), fill, fm.Map.CountyStroke, strokeWidth))
+			`  <path d="%s" fill="%s" fill-opacity="%.2f" stroke="%s" stroke-width="%.2f" stroke-linejoin="round"/>`+"\n",
+			strings.TrimSpace(path.String()), fill, fm.Map.CountyFillOpacity, fm.Map.CountyStroke, strokeWidth))
 	}
 
 	// --- County labels (small, white, no stroke) ---
