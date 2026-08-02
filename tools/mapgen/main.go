@@ -36,11 +36,18 @@ type mapColors struct {
 	RegionLabelHalo   string  `yaml:"region_label_halo"`
 }
 
+type regionLabel struct {
+	X float64 `yaml:"x"`
+	Y float64 `yaml:"y"`
+}
+
 type region struct {
-	Name     string   `yaml:"name"`
-	Emoji    string   `yaml:"emoji"`
-	Color    string   `yaml:"color"`
-	Counties []string `yaml:"counties"`
+	Name     string       `yaml:"name"`
+	Emoji    string       `yaml:"emoji"`
+	Color    string       `yaml:"color"`
+	Number   string       `yaml:"number"`
+	Label    *regionLabel `yaml:"label"`
+	Counties []string     `yaml:"counties"`
 }
 
 type geoJSON struct {
@@ -232,33 +239,15 @@ func run() error {
 	}
 	sb.WriteString("  </g>\n")
 
-	// --- Region labels (manually placed, black text with white stroke halo) ---
-	// Hard-coded positions for readability. Number suffix matches user spec.
-	regionPositions := map[string][2]float64{
-		"North West":   {266, 95},  // #1 below Walton, centered between Okaloosa & Walton
-		"North":        {980, 120}, // #2 in Atlantic, east of Nassau
-		"Central East": {960, 280}, // #3 in Atlantic, east of Marion
-		"Central West": {620, 470}, // #4 in Gulf, west of Pinellas
-		"South":        {883, 835}, // #5 west of Monroe
-	}
-	regionNumbers := map[string]string{
-		"North West":   "#1",
-		"North":        "#2",
-		"Central East": "#3",
-		"Central West": "#4",
-		"South":        "#5",
-	}
-
+	// --- Region labels (positions/numbers from frontmatter; skip if label nil) ---
 	sb.WriteString(`  <g font-family="Arial, sans-serif" text-anchor="middle" dominant-baseline="middle" font-weight="bold">` + "\n")
 	for _, r := range fm.Regions {
-		pos, ok := regionPositions[r.Name]
-		if !ok {
+		if r.Label == nil {
 			continue
 		}
-		num := regionNumbers[r.Name]
 		sb.WriteString(fmt.Sprintf(
 			`    <text x="%.1f" y="%.1f" font-size="21" fill="%s" stroke="%s" stroke-width="2.5" paint-order="stroke">%s %s</text>`+"\n",
-			pos[0], pos[1], fm.Map.RegionLabel, fm.Map.RegionLabelHalo, r.Name, num))
+			r.Label.X, r.Label.Y, fm.Map.RegionLabel, fm.Map.RegionLabelHalo, r.Name, r.Number))
 	}
 	sb.WriteString("  </g>\n")
 

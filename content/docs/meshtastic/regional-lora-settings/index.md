@@ -33,6 +33,10 @@ regions:
   - name: "North West"
     emoji: "🟣"
     color: "#5C0963"
+    number: "#1"
+    label:
+      x: 266
+      y: 95
     counties:
       - Bay
       - Calhoun
@@ -49,6 +53,10 @@ regions:
   - name: "North"
     emoji: "🔴"
     color: "#AF0910"
+    number: "#2"
+    label:
+      x: 980
+      y: 120
     counties:
       - Alachua
       - Baker
@@ -77,6 +85,10 @@ regions:
   - name: "Central West"
     emoji: "🔵"
     color: "#0909B6"
+    number: "#4"
+    label:
+      x: 620
+      y: 470
     counties:
       - Citrus
       - Hernando
@@ -88,6 +100,10 @@ regions:
   - name: "Central East"
     emoji: "🟡"
     color: "#AFAF10"
+    number: "#3"
+    label:
+      x: 960
+      y: 280
     counties:
       - Brevard
       - Indian River
@@ -103,6 +119,10 @@ regions:
   - name: "South"
     emoji: "🟠"
     color: "#AF7410"
+    number: "#5"
+    label:
+      x: 883
+      y: 835
     counties:
       - Broward
       - Charlotte
