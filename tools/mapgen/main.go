@@ -15,7 +15,6 @@ const (
 	viewBoxW    = 1200
 	viewBoxH    = 1000
 	padding     = 20.0
-	strokeColor = "#222222"
 	strokeWidth = 0.4
 	outputFile  = "content/docs/meshtastic/regional-lora-settings/regional-lora-settings.svg"
 	contentFile = "content/docs/meshtastic/regional-lora-settings/index.md"
@@ -23,7 +22,17 @@ const (
 )
 
 type frontMatter struct {
-	Regions []region `yaml:"regions"`
+	Map     mapColors `yaml:"map"`
+	Regions []region  `yaml:"regions"`
+}
+
+type mapColors struct {
+	Background       string `yaml:"background"`
+	CountyStroke     string `yaml:"county_stroke"`
+	UnassignedCounty string `yaml:"unassigned_county"`
+	CountyLabel      string `yaml:"county_label"`
+	RegionLabel      string `yaml:"region_label"`
+	RegionLabelHalo  string `yaml:"region_label_halo"`
 }
 
 type region struct {
@@ -101,10 +110,18 @@ func run() error {
 					minLon, minLat, maxLon, maxLat = pt[0], pt[1], pt[0], pt[1]
 					first = false
 				} else {
-					if pt[0] < minLon { minLon = pt[0] }
-					if pt[0] > maxLon { maxLon = pt[0] }
-					if pt[1] < minLat { minLat = pt[1] }
-					if pt[1] > maxLat { maxLat = pt[1] }
+					if pt[0] < minLon {
+						minLon = pt[0]
+					}
+					if pt[0] > maxLon {
+						maxLon = pt[0]
+					}
+					if pt[1] < minLat {
+						minLat = pt[1]
+					}
+					if pt[1] > maxLat {
+						maxLat = pt[1]
+					}
 				}
 			}
 		}
@@ -127,7 +144,7 @@ func run() error {
 
 	transform := func(lon, lat float64) (float64, float64) {
 		x := (lon-minLon)*cosLat*scale + offsetX
-		y := float64(viewBoxH) - ((lat-minLat)*scale+offsetY)
+		y := float64(viewBoxH) - ((lat-minLat)*scale + offsetY)
 		return x, y
 	}
 
@@ -139,7 +156,7 @@ func run() error {
 	sb.WriteString(fmt.Sprintf(
 		`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 %d %d" width="%d" height="%d">`+"\n",
 		viewBoxW, viewBoxH, viewBoxW, viewBoxH))
-	sb.WriteString(fmt.Sprintf(`  <rect width="%d" height="%d" fill="#f8f9fa"/>`+"\n", viewBoxW, viewBoxH))
+	sb.WriteString(fmt.Sprintf(`  <rect width="%d" height="%d" fill="%s"/>`+"\n", viewBoxW, viewBoxH, fm.Map.Background))
 
 	for _, feat := range gf.Features {
 		rings, err := extractRings(feat.Geometry)
@@ -149,7 +166,7 @@ func run() error {
 
 		fill := countyColor[normalizeCounty(feat.Properties.TigerName)]
 		if fill == "" {
-			fill = "#cccccc"
+			fill = fm.Map.UnassignedCounty
 		}
 
 		// Centroid for this county (pick largest ring for MultiPolygon).
@@ -196,26 +213,26 @@ func run() error {
 
 		sb.WriteString(fmt.Sprintf(
 			`  <path d="%s" fill="%s" stroke="%s" stroke-width="%.2f" stroke-linejoin="round"/>`+"\n",
-			strings.TrimSpace(path.String()), fill, strokeColor, strokeWidth))
+			strings.TrimSpace(path.String()), fill, fm.Map.CountyStroke, strokeWidth))
 	}
 
 	// --- County labels (small, white, no stroke) ---
 	sb.WriteString(`  <g font-family="Arial, sans-serif" text-anchor="middle" dominant-baseline="middle">` + "\n")
 	for _, lbl := range countyLabels {
 		sb.WriteString(fmt.Sprintf(
-			`    <text x="%.1f" y="%.1f" font-size="9" fill="white">%s</text>`+"\n",
-			lbl.X, lbl.Y, lbl.Text))
+			`    <text x="%.1f" y="%.1f" font-size="9" fill="%s">%s</text>`+"\n",
+			lbl.X, lbl.Y, fm.Map.CountyLabel, lbl.Text))
 	}
 	sb.WriteString("  </g>\n")
 
 	// --- Region labels (manually placed, black text with white stroke halo) ---
 	// Hard-coded positions for readability. Number suffix matches user spec.
 	regionPositions := map[string][2]float64{
-		"North West": {266, 95},   // #1 below Walton, centered between Okaloosa & Walton
-		"North":      {980, 120}, // #2 in Atlantic, east of Nassau
+		"North West":   {266, 95},  // #1 below Walton, centered between Okaloosa & Walton
+		"North":        {980, 120}, // #2 in Atlantic, east of Nassau
 		"Central East": {960, 280}, // #3 in Atlantic, east of Marion
 		"Central West": {620, 470}, // #4 in Gulf, west of Pinellas
-		"South":      {883, 835}, // #5 west of Monroe
+		"South":        {883, 835}, // #5 west of Monroe
 	}
 	regionNumbers := map[string]string{
 		"North West":   "#1",
@@ -233,8 +250,8 @@ func run() error {
 		}
 		num := regionNumbers[r.Name]
 		sb.WriteString(fmt.Sprintf(
-			`    <text x="%.1f" y="%.1f" font-size="21" fill="black" stroke="white" stroke-width="2.5" paint-order="stroke">%s %s</text>`+"\n",
-			pos[0], pos[1], r.Name, num))
+			`    <text x="%.1f" y="%.1f" font-size="21" fill="%s" stroke="%s" stroke-width="2.5" paint-order="stroke">%s %s</text>`+"\n",
+			pos[0], pos[1], fm.Map.RegionLabel, fm.Map.RegionLabelHalo, r.Name, num))
 	}
 	sb.WriteString("  </g>\n")
 

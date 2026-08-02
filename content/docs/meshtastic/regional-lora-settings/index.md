@@ -22,6 +22,13 @@ tags:
 #  - 
 images:
 #  - 
+map:
+  background: "#f8f9fa"
+  county_stroke: "#222222"
+  unassigned_county: "#cccccc"
+  county_label: "white"
+  region_label: "black"
+  region_label_halo: "white"
 regions:
   - name: "North West"
     emoji: "🟣"
