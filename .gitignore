@@ -37,3 +37,6 @@ package-json.lock
 public/
 node_modules/
 resources/
+
+# Compiled Go binaries
+tools/mapgen/bin/
