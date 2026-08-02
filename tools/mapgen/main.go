@@ -160,7 +160,10 @@ func run() error {
 	sb.WriteString(fmt.Sprintf(
 		`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 %d %d" width="%d" height="%d">`+"\n",
 		viewBoxW, viewBoxH, viewBoxW, viewBoxH))
-	sb.WriteString(fmt.Sprintf(`  <rect width="%d" height="%d" fill="%s"/>`+"\n", viewBoxW, viewBoxH, fm.Map.Background))
+	background := strings.ToLower(strings.TrimSpace(fm.Map.Background))
+	if background != "" && background != "none" && background != "transparent" {
+		sb.WriteString(fmt.Sprintf(`  <rect width="%d" height="%d" fill="%s"/>`+"\n", viewBoxW, viewBoxH, fm.Map.Background))
+	}
 
 	for _, feat := range gf.Features {
 		rings, err := extractRings(feat.Geometry)

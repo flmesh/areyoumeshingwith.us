@@ -23,17 +23,16 @@ tags:
 images:
 #  - 
 map:
-  background: "#1a1a2e"
   county_stroke: "#222222"
-  unassigned_county: "#cccccc"
-  county_fill_opacity: 0.65
+  unassigned_county: "#8E8E95"
+  county_fill_opacity: 1.0
   county_label: "white"
   region_label: "black"
   region_label_halo: "white"
 regions:
   - name: "North West"
     emoji: "🟣"
-    color: "#800080"
+    color: "#5C0963"
     counties:
       - Bay
       - Calhoun
@@ -49,7 +48,7 @@ regions:
       - Washington
   - name: "North"
     emoji: "🔴"
-    color: "#FF0000"
+    color: "#AF0910"
     counties:
       - Alachua
       - Baker
@@ -77,7 +76,7 @@ regions:
       - Wakulla
   - name: "Central West"
     emoji: "🔵"
-    color: "#0000FF"
+    color: "#0909B6"
     counties:
       - Citrus
       - Hernando
@@ -88,7 +87,7 @@ regions:
       - Sarasota
   - name: "Central East"
     emoji: "🟡"
-    color: "#FFFF00"
+    color: "#AFAF10"
     counties:
       - Brevard
       - Indian River
@@ -103,7 +102,7 @@ regions:
       - Volusia
   - name: "South"
     emoji: "🟠"
-    color: "#FFA500"
+    color: "#AF7410"
     counties:
       - Broward
       - Charlotte
