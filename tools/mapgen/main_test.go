@@ -519,3 +519,321 @@ func TestBuildSVG_DuplicateCountyLastRegionWins(t *testing.T) {
 		t.Errorf("earlier region color should not win; got:\n%s", svg)
 	}
 }
+
+func TestNormalizeCounty(t *testing.T) {
+	cases := []struct {
+		in, want string
+	}{
+		{"De Soto", "desoto"},
+		{"St. Lucie", "st.lucie"},
+		{"Miami-Dade", "miami-dade"},
+		{"broward", "broward"},
+		{"", ""},
+	}
+	for _, tc := range cases {
+		if got := normalizeCounty(tc.in); got != tc.want {
+			t.Errorf("normalizeCounty(%q) = %q, want %q", tc.in, got, tc.want)
+		}
+	}
+}
+
+func TestWarnDuplicateCounties_NormalizedNames(t *testing.T) {
+	regions := []region{
+		{Name: "Alpha", Color: "#aa0000", Counties: []string{"De Soto"}},
+		{Name: "Beta", Color: "#00bb00", Counties: []string{"desoto"}},
+	}
+	var buf bytes.Buffer
+	warnDuplicateCounties(regions, &buf)
+	got := buf.String()
+	if !strings.Contains(got, "De Soto") {
+		t.Errorf("warning should name first-seen county spelling; got %q", got)
+	}
+	if !strings.Contains(got, "Alpha") || !strings.Contains(got, "Beta") {
+		t.Errorf("warning should name both regions; got %q", got)
+	}
+}
+
+// writeTempFile writes content to a named file in the test's temp dir.
+func writeTempFile(t *testing.T, name, content string) string {
+	t.Helper()
+	path := filepath.Join(t.TempDir(), name)
+	if err := os.WriteFile(path, []byte(content), 0644); err != nil {
+		t.Fatalf("write temp file: %v", err)
+	}
+	return path
+}
+
+func TestParseFrontmatter_Valid(t *testing.T) {
+	path := writeTempFile(t, "index.md", `---
+map:
+  background: "#112233"
+  county_stroke: "#000000"
+  unassigned_county: "#cccccc"
+  county_fill_opacity: 0.85
+  county_label: white
+  region_label: black
+  region_label_halo: white
+regions:
+  - name: Test
+    emoji: 🌴
+    color: "#ff0000"
+    number: "#1"
+    label:
+      x: 100
+      y: 200
+    counties:
+      - Square
+      - Tri
+  - name: NoLabel
+    color: "#00bb00"
+    number: "#2"
+    counties:
+      - Other
+---
+Body below the frontmatter is ignored.
+`)
+
+	fm, err := parseFrontmatter(path)
+	if err != nil {
+		t.Fatalf("parseFrontmatter: %v", err)
+	}
+	if fm.Map.Background != "#112233" {
+		t.Errorf("background = %q, want #112233", fm.Map.Background)
+	}
+	if fm.Map.CountyFillOpacity != 0.85 {
+		t.Errorf("county_fill_opacity = %v, want 0.85", fm.Map.CountyFillOpacity)
+	}
+	if len(fm.Regions) != 2 {
+		t.Fatalf("regions = %d, want 2", len(fm.Regions))
+	}
+	r := fm.Regions[0]
+	if r.Name != "Test" || r.Emoji != "🌴" || r.Color != "#ff0000" || r.Number != "#1" {
+		t.Errorf("region 0 = %+v", r)
+	}
+	if r.Label == nil || r.Label.X != 100 || r.Label.Y != 200 {
+		t.Errorf("region 0 label = %+v, want (100, 200)", r.Label)
+	}
+	if len(r.Counties) != 2 || r.Counties[0] != "Square" || r.Counties[1] != "Tri" {
+		t.Errorf("region 0 counties = %v, want [Square Tri]", r.Counties)
+	}
+	if fm.Regions[1].Label != nil {
+		t.Errorf("region without label key should have nil Label, got %+v", fm.Regions[1].Label)
+	}
+}
+
+func TestParseFrontmatter_Errors(t *testing.T) {
+	cases := []struct {
+		name    string
+		content string
+		wantErr string
+	}{
+		{"no opening delimiter", "no frontmatter here", "no YAML frontmatter found"},
+		{"unclosed frontmatter", "---\nmap:\n  background: x\n", "unclosed YAML frontmatter"},
+		{"malformed YAML", "---\nmap: [unclosed\n---\n", "parsing YAML"},
+	}
+	for _, tc := range cases {
+		t.Run(tc.name, func(t *testing.T) {
+			path := writeTempFile(t, "index.md", tc.content)
+			_, err := parseFrontmatter(path)
+			if err == nil {
+				t.Fatal("expected error")
+			}
+			if !strings.Contains(err.Error(), tc.wantErr) {
+				t.Errorf("error %q should mention %q", err, tc.wantErr)
+			}
+		})
+	}
+}
+
+func TestParseFrontmatter_MissingFile(t *testing.T) {
+	_, err := parseFrontmatter(filepath.Join(t.TempDir(), "nope.md"))
+	if err == nil {
+		t.Fatal("expected error for missing file")
+	}
+}
+
+func TestParseGeoJSON_Valid(t *testing.T) {
+	path := writeTempFile(t, "counties.geojson", `{"type":"FeatureCollection","features":[{"type":"Feature","properties":{"TIGERNAME":"Square"},"geometry":{"type":"Polygon","coordinates":[[[-1,-1],[1,-1],[1,1],[-1,1],[-1,-1]]]}}]}`)
+
+	fc, err := parseGeoJSON(path)
+	if err != nil {
+		t.Fatalf("parseGeoJSON: %v", err)
+	}
+	if len(fc.Features) != 1 {
+		t.Fatalf("features = %d, want 1", len(fc.Features))
+	}
+	if fc.Features[0].Properties.TigerName != "Square" {
+		t.Errorf("TIGERNAME = %q, want Square", fc.Features[0].Properties.TigerName)
+	}
+	if fc.Features[0].Geometry == nil {
+		t.Error("expected geometry to be parsed")
+	}
+}
+
+func TestParseGeoJSON_Errors(t *testing.T) {
+	t.Run("missing file", func(t *testing.T) {
+		_, err := parseGeoJSON(filepath.Join(t.TempDir(), "nope.geojson"))
+		if err == nil {
+			t.Fatal("expected error for missing file")
+		}
+	})
+	t.Run("invalid JSON", func(t *testing.T) {
+		path := writeTempFile(t, "bad.geojson", "{not json")
+		_, err := parseGeoJSON(path)
+		if err == nil {
+			t.Fatal("expected error for invalid JSON")
+		}
+	})
+}
+
+func TestGeometryRings(t *testing.T) {
+	square := orb.Ring{{-1, -1}, {1, -1}, {1, 1}, {-1, 1}, {-1, -1}}
+	tri := orb.Ring{{0, 0}, {0.5, 0}, {0.25, 0.5}, {0, 0}}
+
+	t.Run("polygon returns its rings", func(t *testing.T) {
+		rings, err := geometryRings(orb.Polygon{square})
+		if err != nil {
+			t.Fatalf("geometryRings: %v", err)
+		}
+		if len(rings) != 1 {
+			t.Errorf("rings = %d, want 1", len(rings))
+		}
+	})
+	t.Run("multipolygon flattens rings", func(t *testing.T) {
+		rings, err := geometryRings(orb.MultiPolygon{{square}, {tri}})
+		if err != nil {
+			t.Fatalf("geometryRings: %v", err)
+		}
+		if len(rings) != 2 {
+			t.Errorf("rings = %d, want 2", len(rings))
+		}
+	})
+	t.Run("nil geometry errors", func(t *testing.T) {
+		_, err := geometryRings(nil)
+		if err == nil {
+			t.Fatal("expected error for nil geometry")
+		}
+		if !strings.Contains(err.Error(), "unsupported geometry type") {
+			t.Errorf("error %q should mention unsupported geometry type", err)
+		}
+	})
+	t.Run("non-polygon type errors", func(t *testing.T) {
+		_, err := geometryRings(orb.Point{0, 0})
+		if err == nil {
+			t.Fatal("expected error for Point geometry")
+		}
+		if !strings.Contains(err.Error(), "Point") {
+			t.Errorf("error %q should name the geometry type", err)
+		}
+	})
+}
+
+// chdir switches the working directory for the duration of a test.
+func chdir(t *testing.T, dir string) {
+	t.Helper()
+	orig, err := os.Getwd()
+	if err != nil {
+		t.Fatalf("getwd: %v", err)
+	}
+	if err := os.Chdir(dir); err != nil {
+		t.Fatalf("chdir %s: %v", dir, err)
+	}
+	t.Cleanup(func() {
+		if err := os.Chdir(orig); err != nil {
+			t.Errorf("restore cwd: %v", err)
+		}
+	})
+}
+
+func TestFindRepoRoot_FromNestedSubdir(t *testing.T) {
+	// Tests run with cwd = package dir (tools/mapgen), below the repo root.
+	root, err := findRepoRoot()
+	if err != nil {
+		t.Fatalf("findRepoRoot: %v", err)
+	}
+	if _, err := os.Stat(filepath.Join(root, ".git")); err != nil {
+		t.Errorf("returned root %q has no .git: %v", root, err)
+	}
+	cwd, err := os.Getwd()
+	if err != nil {
+		t.Fatalf("getwd: %v", err)
+	}
+	if cwd == root {
+		t.Error("expected findRepoRoot to walk up from the nested package dir")
+	}
+}
+
+func TestFindRepoRoot_FromRepoRoot(t *testing.T) {
+	root, err := findRepoRoot()
+	if err != nil {
+		t.Fatalf("findRepoRoot: %v", err)
+	}
+	chdir(t, root)
+	got, err := findRepoRoot()
+	if err != nil {
+		t.Fatalf("findRepoRoot from root: %v", err)
+	}
+	if got != root {
+		t.Errorf("findRepoRoot from root = %q, want %q", got, root)
+	}
+}
+
+func TestFindRepoRoot_OutsideRepoErrors(t *testing.T) {
+	chdir(t, t.TempDir())
+	_, err := findRepoRoot()
+	if err == nil {
+		t.Fatal("expected error outside any repository")
+	}
+	if !strings.Contains(err.Error(), "cannot find repository root") {
+		t.Errorf("error %q should mention cannot find repository root", err)
+	}
+}
+
+// A collinear ring has zero area; planar.CentroidArea reports area 0, so the
+// county still gets a path but no label.
+func TestBuildSVG_DegenerateGeometryGetsNoLabel(t *testing.T) {
+	fm, gf := squareCountyFixture()
+	gf.Features = append(gf.Features, &geojson.FeatureOf[countyProps]{
+		Type:       "Feature",
+		Properties: countyProps{TigerName: "Line"},
+		Geometry: orb.Polygon{
+			{{-1, 0}, {0, 0}, {1, 0}, {-1, 0}},
+		},
+	})
+
+	svg, err := buildSVG(fm, gf)
+	if err != nil {
+		t.Fatalf("buildSVG: %v", err)
+	}
+	if strings.Contains(svg, ">Line</text>") {
+		t.Errorf("zero-area county should get no label\n got:\n%s", svg)
+	}
+	if n := strings.Count(svg, "<path "); n != 2 {
+		t.Errorf("expected 2 county paths, got %d\n got:\n%s", n, svg)
+	}
+}
+
+func TestBuildSVG_BackgroundVariantsNoRect(t *testing.T) {
+	cases := []struct {
+		name       string
+		background string
+	}{
+		{"empty", ""},
+		{"whitespace padded none", " None "},
+		{"uppercase transparent", "TRANSPARENT"},
+	}
+	for _, tc := range cases {
+		t.Run(tc.name, func(t *testing.T) {
+			fm, gf := squareCountyFixture()
+			fm.Map.Background = tc.background
+
+			svg, err := buildSVG(fm, gf)
+			if err != nil {
+				t.Fatalf("buildSVG: %v", err)
+			}
+			if strings.Contains(svg, "<rect ") {
+				t.Errorf("background %q should produce no rect\n got:\n%s", tc.background, svg)
+			}
+		})
+	}
+}
