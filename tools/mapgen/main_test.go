@@ -491,6 +491,19 @@ func TestWarnUnmatchedCounties_CurrentRepoDataIsClean(t *testing.T) {
 	}
 }
 
+func TestBuildSVG_PhantomCountyStillGenerates(t *testing.T) {
+	fm, gf := squareCountyFixture()
+	fm.Regions[0].Counties = append(fm.Regions[0].Counties, "Phantom")
+
+	svg, err := buildSVG(fm, gf)
+	if err != nil {
+		t.Fatalf("buildSVG with phantom county: %v", err)
+	}
+	if !strings.Contains(svg, "<svg") {
+		t.Errorf("expected SVG output despite phantom county\n got:\n%s", svg)
+	}
+}
+
 func TestWarnUnmatchedCounties_AllNamesMatch(t *testing.T) {
 	fm, gf := squareCountyFixture()
 
