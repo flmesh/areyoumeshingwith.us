@@ -267,16 +267,13 @@ func TestBuildSVG_MultiPolygon(t *testing.T) {
 		t.Fatalf("buildSVG: %v", err)
 	}
 
-	// Large square path present.
-	wantSquare := `d="M120,980L1080,980L1080,20L120,20L120,980Z"`
-	if !strings.Contains(svg, wantSquare) {
+	// Both rings concatenated into a single d attribute.
+	// Large square: M120,980L1080,980L1080,20L120,20L120,980Z
+	// Small triangle: M840,260L984,260L912,116L840,260Z
+	if !strings.Contains(svg, `M120,980L1080,980L1080,20L120,20L120,980Z`) {
 		t.Errorf("MultiPolygon missing large square path\n got:\n%s", svg)
 	}
-
-	// Small triangle path present (rounded: (0.5,0.5)→(840,260),
-	// (0.8,0.5)→(984,260), (0.65,0.8)→(912,116)).
-	wantTri := `M840,260L984,260L912,116L840,260Z`
-	if !strings.Contains(svg, wantTri) {
+	if !strings.Contains(svg, `M840,260L984,260L912,116L840,260Z`) {
 		t.Errorf("MultiPolygon missing small triangle path\n got:\n%s", svg)
 	}
 

@@ -92,19 +92,40 @@ func run() error {
 	if err != nil {
 		return fmt.Errorf("parsing frontmatter: %w", err)
 	}
-	if fm.Map.CountyFillOpacity <= 0 || fm.Map.CountyFillOpacity > 1 {
-		return fmt.Errorf("map.county_fill_opacity must be in (0, 1], got %v", fm.Map.CountyFillOpacity)
+
+	gf, err := parseGeoJSON(filepath.Join(repoRoot, geoJSONFile))
+	if err != nil {
+		return fmt.Errorf("parsing GeoJSON: %w", err)
 	}
+
+	svg, err := buildSVG(fm, gf)
+	if err != nil {
+		return err
+	}
+
+	outPath := filepath.Join(repoRoot, outputFile)
+	if err := os.MkdirAll(filepath.Dir(outPath), 0755); err != nil {
+		return fmt.Errorf("creating output dir: %w", err)
+	}
+	if err := os.WriteFile(outPath, []byte(svg), 0644); err != nil {
+		return fmt.Errorf("writing SVG: %w", err)
+	}
+	fmt.Printf("Map generated: %s\n", outPath)
+	return nil
+}
+
+// buildSVG generates the regional map SVG from frontmatter and GeoJSON.
+// Pure function: no file I/O, no side effects.
+func buildSVG(fm *frontMatter, gf *geoJSON) (string, error) {
+	if fm.Map.CountyFillOpacity <= 0 || fm.Map.CountyFillOpacity > 1 {
+		return "", fmt.Errorf("map.county_fill_opacity must be in (0, 1], got %v", fm.Map.CountyFillOpacity)
+	}
+
 	countyColor := make(map[string]string)
 	for _, r := range fm.Regions {
 		for _, c := range r.Counties {
 			countyColor[normalizeCounty(c)] = r.Color
 		}
-	}
-
-	gf, err := parseGeoJSON(filepath.Join(repoRoot, geoJSONFile))
-	if err != nil {
-		return fmt.Errorf("parsing GeoJSON: %w", err)
 	}
 
 	// Compute bounding box.
@@ -113,7 +134,7 @@ func run() error {
 	for _, feat := range gf.Features {
 		rings, err := extractRings(feat.Geometry)
 		if err != nil {
-			return fmt.Errorf("feature %q: %w", feat.Properties.TigerName, err)
+			return "", fmt.Errorf("feature %q: %w", feat.Properties.TigerName, err)
 		}
 		for _, ring := range rings {
 			for _, pt := range ring {
@@ -138,7 +159,7 @@ func run() error {
 		}
 	}
 	if first {
-		return fmt.Errorf("no coordinates found in GeoJSON")
+		return "", fmt.Errorf("no coordinates found in GeoJSON")
 	}
 
 	avgLat := (minLat + maxLat) / 2 * math.Pi / 180
@@ -175,7 +196,7 @@ func run() error {
 	for _, feat := range gf.Features {
 		rings, err := extractRings(feat.Geometry)
 		if err != nil {
-			return fmt.Errorf("feature %q: %w", feat.Properties.TigerName, err)
+			return "", fmt.Errorf("feature %q: %w", feat.Properties.TigerName, err)
 		}
 
 		fill := countyColor[normalizeCounty(feat.Properties.TigerName)]
@@ -252,16 +273,7 @@ func run() error {
 	sb.WriteString("  </g>\n")
 
 	sb.WriteString("</svg>\n")
-
-	outPath := filepath.Join(repoRoot, outputFile)
-	if err := os.MkdirAll(filepath.Dir(outPath), 0755); err != nil {
-		return fmt.Errorf("creating output dir: %w", err)
-	}
-	if err := os.WriteFile(outPath, []byte(sb.String()), 0644); err != nil {
-		return fmt.Errorf("writing SVG: %w", err)
-	}
-	fmt.Printf("Map generated: %s\n", outPath)
-	return nil
+	return sb.String(), nil
 }
 
 // polygonCentroid returns the centroid of a polygon ring and its unsigned area.
