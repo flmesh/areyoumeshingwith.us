@@ -150,6 +150,23 @@ func warnDuplicateCounties(regions []region, w io.Writer) {
 	}
 }
 
+// warnUnmatchedCounties writes a warning for each frontmatter county whose
+// normalized name matches no GeoJSON TIGERNAME. Generation continues; the
+// county simply renders with the unassigned color.
+func warnUnmatchedCounties(fm *frontMatter, gf *geoJSON, w io.Writer) {
+	geoNames := make(map[string]bool)
+	for _, f := range gf.Features {
+		geoNames[normalizeCounty(f.Properties.TigerName)] = true
+	}
+	for _, r := range fm.Regions {
+		for _, c := range r.Counties {
+			if !geoNames[normalizeCounty(c)] {
+				fmt.Fprintf(w, "mapgen: warning: county %q (region %q) matches no GeoJSON feature\n", c, r.Name)
+			}
+		}
+	}
+}
+
 // buildSVG generates the regional map SVG from frontmatter and GeoJSON.
 // Pure function: no file I/O, no side effects.
 func buildSVG(fm *frontMatter, gf *geoJSON) (string, error) {

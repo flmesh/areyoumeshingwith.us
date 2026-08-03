@@ -438,6 +438,22 @@ func TestWarnDuplicateCounties_NoDuplicates(t *testing.T) {
 	}
 }
 
+func TestWarnUnmatchedCounties_FrontmatterCountyMissingFromGeoJSON(t *testing.T) {
+	fm, gf := squareCountyFixture()
+	fm.Regions[0].Counties = append(fm.Regions[0].Counties, "Phantom")
+
+	var buf bytes.Buffer
+	warnUnmatchedCounties(fm, gf, &buf)
+	got := buf.String()
+
+	if !strings.Contains(got, "Phantom") {
+		t.Errorf("warning should name county Phantom; got %q", got)
+	}
+	if !strings.Contains(got, "Test") {
+		t.Errorf("warning should name region Test; got %q", got)
+	}
+}
+
 func TestBuildSVG_DuplicateCountyLastRegionWins(t *testing.T) {
 	fm, gf := squareCountyFixture()
 	fm.Regions = []region{
