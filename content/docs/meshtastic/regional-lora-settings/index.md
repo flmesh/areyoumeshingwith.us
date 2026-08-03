@@ -35,8 +35,8 @@ regions:
     color: "#5C0963"
     number: "#1"
     label:
-      x: 266
-      y: 95
+      x: 318
+      y: 252
     counties:
       - Bay
       - Calhoun
