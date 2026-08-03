@@ -151,18 +151,27 @@ func warnDuplicateCounties(regions []region, w io.Writer) {
 }
 
 // warnUnmatchedCounties writes a warning for each frontmatter county whose
-// normalized name matches no GeoJSON TIGERNAME. Generation continues; the
-// county simply renders with the unassigned color.
+// normalized name matches no GeoJSON TIGERNAME, and for each GeoJSON feature
+// matched by no frontmatter county. Generation continues either way; the pair
+// of warnings makes spelling drift between the two sources obvious.
 func warnUnmatchedCounties(fm *frontMatter, gf *geoJSON, w io.Writer) {
 	geoNames := make(map[string]bool)
 	for _, f := range gf.Features {
 		geoNames[normalizeCounty(f.Properties.TigerName)] = true
 	}
+	assigned := make(map[string]bool)
 	for _, r := range fm.Regions {
 		for _, c := range r.Counties {
-			if !geoNames[normalizeCounty(c)] {
+			key := normalizeCounty(c)
+			assigned[key] = true
+			if !geoNames[key] {
 				fmt.Fprintf(w, "mapgen: warning: county %q (region %q) matches no GeoJSON feature\n", c, r.Name)
 			}
+		}
+	}
+	for _, f := range gf.Features {
+		if !assigned[normalizeCounty(f.Properties.TigerName)] {
+			fmt.Fprintf(w, "mapgen: warning: GeoJSON feature %q matched by no frontmatter county\n", f.Properties.TigerName)
 		}
 	}
 }

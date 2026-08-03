@@ -454,6 +454,21 @@ func TestWarnUnmatchedCounties_FrontmatterCountyMissingFromGeoJSON(t *testing.T)
 	}
 }
 
+func TestWarnUnmatchedCounties_GeoJSONFeatureMatchedByNoCounty(t *testing.T) {
+	fm, gf := twoCountyFixture() // "Square" assigned; "Tri" is GeoJSON-only
+
+	var buf bytes.Buffer
+	warnUnmatchedCounties(fm, gf, &buf)
+	got := buf.String()
+
+	if !strings.Contains(got, "Tri") {
+		t.Errorf("warning should name TIGERNAME Tri; got %q", got)
+	}
+	if strings.Contains(got, "Square") {
+		t.Errorf("matched county Square should not warn; got %q", got)
+	}
+}
+
 func TestWarnUnmatchedCounties_AllNamesMatch(t *testing.T) {
 	fm, gf := squareCountyFixture()
 
