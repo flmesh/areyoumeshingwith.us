@@ -469,6 +469,28 @@ func TestWarnUnmatchedCounties_GeoJSONFeatureMatchedByNoCounty(t *testing.T) {
 	}
 }
 
+func TestWarnUnmatchedCounties_CurrentRepoDataIsClean(t *testing.T) {
+	repoRoot, err := findRepoRoot()
+	if err != nil {
+		t.Fatalf("findRepoRoot: %v", err)
+	}
+	fm, err := parseFrontmatter(filepath.Join(repoRoot, contentFile))
+	if err != nil {
+		t.Fatalf("parseFrontmatter: %v", err)
+	}
+	gf, err := parseGeoJSON(filepath.Join(repoRoot, geoJSONFile))
+	if err != nil {
+		t.Fatalf("parseGeoJSON: %v", err)
+	}
+
+	var buf bytes.Buffer
+	warnUnmatchedCounties(fm, gf, &buf)
+
+	if buf.Len() != 0 {
+		t.Errorf("expected no warnings for current repo data; got:\n%s", buf.String())
+	}
+}
+
 func TestWarnUnmatchedCounties_AllNamesMatch(t *testing.T) {
 	fm, gf := squareCountyFixture()
 
