@@ -3,6 +3,7 @@ package main
 import (
 	"encoding/json"
 	"fmt"
+	"io"
 	"math"
 	"os"
 	"path/filepath"
@@ -98,6 +99,8 @@ func run() error {
 		return fmt.Errorf("parsing GeoJSON: %w", err)
 	}
 
+	warnDuplicateCounties(fm.Regions, os.Stderr)
+
 	svg, err := buildSVG(fm, gf)
 	if err != nil {
 		return err
@@ -112,6 +115,39 @@ func run() error {
 	}
 	fmt.Printf("Map generated: %s\n", outPath)
 	return nil
+}
+
+// warnDuplicateCounties writes a warning for each normalized county name that
+// appears more than once across region county lists (cross-region or within one
+// region). Generation continues; last region in YAML order still wins the fill.
+func warnDuplicateCounties(regions []region, w io.Writer) {
+	type occurrence struct {
+		county string
+		region string
+	}
+	seen := make(map[string][]occurrence)
+	order := make([]string, 0)
+	for _, r := range regions {
+		for _, c := range r.Counties {
+			key := normalizeCounty(c)
+			if _, ok := seen[key]; !ok {
+				order = append(order, key)
+			}
+			seen[key] = append(seen[key], occurrence{county: c, region: r.Name})
+		}
+	}
+	for _, key := range order {
+		occs := seen[key]
+		if len(occs) < 2 {
+			continue
+		}
+		regionNames := make([]string, len(occs))
+		for i, o := range occs {
+			regionNames[i] = o.region
+		}
+		fmt.Fprintf(w, "mapgen: warning: county %q assigned more than once (regions: %s)\n",
+			occs[0].county, strings.Join(regionNames, ", "))
+	}
 }
 
 // buildSVG generates the regional map SVG from frontmatter and GeoJSON.

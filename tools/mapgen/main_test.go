@@ -391,3 +391,67 @@ func TestBuildSVG_UnsupportedGeometryType(t *testing.T) {
 		t.Errorf("error %q should mention unsupported geometry type", err)
 	}
 }
+
+func TestWarnDuplicateCounties_CrossRegion(t *testing.T) {
+	regions := []region{
+		{Name: "Alpha", Color: "#aa0000", Counties: []string{"Square"}},
+		{Name: "Beta", Color: "#00bb00", Counties: []string{"Square"}},
+	}
+	var buf bytes.Buffer
+	warnDuplicateCounties(regions, &buf)
+	got := buf.String()
+	if !strings.Contains(got, "Square") {
+		t.Errorf("warning should name county Square; got %q", got)
+	}
+	if !strings.Contains(got, "Alpha") || !strings.Contains(got, "Beta") {
+		t.Errorf("warning should name both regions; got %q", got)
+	}
+}
+
+func TestWarnDuplicateCounties_WithinRegion(t *testing.T) {
+	regions := []region{
+		{Name: "Solo", Color: "#aa0000", Counties: []string{"Square", "Square"}},
+	}
+	var buf bytes.Buffer
+	warnDuplicateCounties(regions, &buf)
+	got := buf.String()
+	if got == "" {
+		t.Fatal("expected stderr warning for county repeated within one region")
+	}
+	if !strings.Contains(got, "Square") {
+		t.Errorf("warning should name county Square; got %q", got)
+	}
+	if !strings.Contains(got, "Solo") {
+		t.Errorf("warning should name region Solo; got %q", got)
+	}
+}
+
+func TestWarnDuplicateCounties_NoDuplicates(t *testing.T) {
+	regions := []region{
+		{Name: "Alpha", Color: "#aa0000", Counties: []string{"Square"}},
+		{Name: "Beta", Color: "#00bb00", Counties: []string{"Tri"}},
+	}
+	var buf bytes.Buffer
+	warnDuplicateCounties(regions, &buf)
+	if buf.Len() != 0 {
+		t.Errorf("expected no warning; got %q", buf.String())
+	}
+}
+
+func TestBuildSVG_DuplicateCountyLastRegionWins(t *testing.T) {
+	fm, gf := squareCountyFixture()
+	fm.Regions = []region{
+		{Name: "Alpha", Color: "#aa0000", Number: "#1", Counties: []string{"Square"}},
+		{Name: "Beta", Color: "#00bb00", Number: "#2", Counties: []string{"Square"}},
+	}
+	svg, err := buildSVG(fm, gf)
+	if err != nil {
+		t.Fatalf("buildSVG: %v", err)
+	}
+	if !strings.Contains(svg, `fill="#00bb00"`) {
+		t.Errorf("expected later region color #00bb00; got:\n%s", svg)
+	}
+	if strings.Contains(svg, `fill="#aa0000"`) {
+		t.Errorf("earlier region color should not win; got:\n%s", svg)
+	}
+}
