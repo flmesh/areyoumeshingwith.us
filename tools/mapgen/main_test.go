@@ -454,6 +454,17 @@ func TestWarnUnmatchedCounties_FrontmatterCountyMissingFromGeoJSON(t *testing.T)
 	}
 }
 
+func TestWarnUnmatchedCounties_AllNamesMatch(t *testing.T) {
+	fm, gf := squareCountyFixture()
+
+	var buf bytes.Buffer
+	warnUnmatchedCounties(fm, gf, &buf)
+
+	if buf.Len() != 0 {
+		t.Errorf("expected no warning when all names match; got %q", buf.String())
+	}
+}
+
 func TestBuildSVG_DuplicateCountyLastRegionWins(t *testing.T) {
 	fm, gf := squareCountyFixture()
 	fm.Regions = []region{
