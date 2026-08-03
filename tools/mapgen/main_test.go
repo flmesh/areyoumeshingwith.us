@@ -2,11 +2,13 @@ package main
 
 import (
 	"bytes"
-	"encoding/json"
 	"os"
 	"path/filepath"
 	"strings"
 	"testing"
+
+	"github.com/paulmach/orb"
+	"github.com/paulmach/orb/geojson"
 )
 
 // Characterization: run() regenerates the committed SVG byte-identically.
@@ -50,7 +52,7 @@ func TestRun_RegeneratesCommittedSVG(t *testing.T) {
 //	offsetX=120, offsetY=20
 //	transform(lon,lat) = ((lon+1)*480+120, 1000-((lat+1)*480+20))
 //	corners → (120,980),(1080,980),(1080,20),(120,20); centroid → (600,500)
-func squareCountyFixture() (*frontMatter, *geoJSON) {
+func squareCountyFixture() (*frontMatter, *countyCollection) {
 	fm := &frontMatter{
 		Map: mapColors{
 			Background:        "none",
@@ -73,24 +75,14 @@ func squareCountyFixture() (*frontMatter, *geoJSON) {
 	}
 
 	// Closed ring, CCW: SW → SE → NE → NW → SW
-	coords, _ := json.Marshal([][][]float64{
-		{
-			{-1, -1},
-			{1, -1},
-			{1, 1},
-			{-1, 1},
-			{-1, -1},
-		},
-	})
-	gf := &geoJSON{
+	gf := &countyCollection{
 		Type: "FeatureCollection",
-		Features: []feature{
+		Features: []*geojson.FeatureOf[countyProps]{
 			{
 				Type:       "Feature",
-				Properties: properties{TigerName: "Square"},
-				Geometry: geometry{
-					Type:        "Polygon",
-					Coordinates: coords,
+				Properties: countyProps{TigerName: "Square"},
+				Geometry: orb.Polygon{
+					{{-1, -1}, {1, -1}, {1, 1}, {-1, 1}, {-1, -1}},
 				},
 			},
 		},
@@ -201,7 +193,7 @@ func TestBuildSVG_RejectsInvalidOpacity(t *testing.T) {
 
 func TestBuildSVG_EmptyGeoJSON(t *testing.T) {
 	fm, _ := squareCountyFixture()
-	gf := &geoJSON{Type: "FeatureCollection", Features: nil}
+	gf := &countyCollection{Type: "FeatureCollection", Features: nil}
 	_, err := buildSVG(fm, gf)
 	if err == nil {
 		t.Fatal("expected error for empty GeoJSON")
@@ -213,10 +205,11 @@ func TestBuildSVG_EmptyGeoJSON(t *testing.T) {
 
 // multiPolygonFixture is a single feature with two polygons: a large square
 // [-1,-1]→[1,1] (area=4, centroid=(0,0)) and a small triangle inside it
-// (area=0.045, centroid=(0.65,0.6)). The centroid-picking logic selects the
-// larger ring, so the label stays at the square's centroid (600,500).
+// (area=0.045, centroid=(0.65,0.6)). planar.CentroidArea returns the
+// area-weighted centroid of both polygons: ((0*4+0.65*0.045)/4.045,
+// (0*4+0.6*0.045)/4.045) ≈ (0.00723, 0.00667) → SVG (603.5, 496.8).
 // Bbox is still [-1,1]² so the transform is unchanged from squareCountyFixture.
-func multiPolygonFixture() (*frontMatter, *geoJSON) {
+func multiPolygonFixture() (*frontMatter, *countyCollection) {
 	fm := &frontMatter{
 		Map: mapColors{
 			Background:        "none",
@@ -241,18 +234,15 @@ func multiPolygonFixture() (*frontMatter, *geoJSON) {
 	// MultiPolygon: two polygons, one ring each.
 	// Polygon 1 (large): square [-1,-1]→[1,1]
 	// Polygon 2 (small): triangle (0.5,0.5)→(0.8,0.5)→(0.65,0.8)
-	ring1 := [][]float64{{-1, -1}, {1, -1}, {1, 1}, {-1, 1}, {-1, -1}}
-	ring2 := [][]float64{{0.5, 0.5}, {0.8, 0.5}, {0.65, 0.8}, {0.5, 0.5}}
-	coords, _ := json.Marshal([][][][]float64{{ring1}, {ring2}})
-	gf := &geoJSON{
+	gf := &countyCollection{
 		Type: "FeatureCollection",
-		Features: []feature{
+		Features: []*geojson.FeatureOf[countyProps]{
 			{
 				Type:       "Feature",
-				Properties: properties{TigerName: "Multi"},
-				Geometry: geometry{
-					Type:        "MultiPolygon",
-					Coordinates: coords,
+				Properties: countyProps{TigerName: "Multi"},
+				Geometry: orb.MultiPolygon{
+					{{{-1, -1}, {1, -1}, {1, 1}, {-1, 1}, {-1, -1}}},
+					{{{0.5, 0.5}, {0.8, 0.5}, {0.65, 0.8}, {0.5, 0.5}}},
 				},
 			},
 		},
@@ -277,15 +267,15 @@ func TestBuildSVG_MultiPolygon(t *testing.T) {
 		t.Errorf("MultiPolygon missing small triangle path\n got:\n%s", svg)
 	}
 
-	// Label at largest ring's centroid (square centre (0,0) → (600,500)).
-	if !strings.Contains(svg, `<text x="600.0" y="500.0" font-size="9" fill="white">Multi</text>`) {
+	// Label at the area-weighted centroid (see multiPolygonFixture comment).
+	if !strings.Contains(svg, `<text x="603.5" y="496.8" font-size="9" fill="white">Multi</text>`) {
 		t.Errorf("MultiPolygon label at wrong position\n got:\n%s", svg)
 	}
 }
 
 // twoCountyFixture is a single square (assigned to "Test") and a small
 // triangle ("Tri", unassigned). Bbox stays [-1,1]², transform unchanged.
-func twoCountyFixture() (*frontMatter, *geoJSON) {
+func twoCountyFixture() (*frontMatter, *countyCollection) {
 	fm := &frontMatter{
 		Map: mapColors{
 			Background:        "none",
@@ -307,24 +297,22 @@ func twoCountyFixture() (*frontMatter, *geoJSON) {
 		},
 	}
 
-	squareCoords, _ := json.Marshal([][][]float64{
-		{{-1, -1}, {1, -1}, {1, 1}, {-1, 1}, {-1, -1}},
-	})
-	triCoords, _ := json.Marshal([][][]float64{
-		{{0.5, 0.5}, {0.8, 0.5}, {0.65, 0.8}, {0.5, 0.5}},
-	})
-	gf := &geoJSON{
+	gf := &countyCollection{
 		Type: "FeatureCollection",
-		Features: []feature{
+		Features: []*geojson.FeatureOf[countyProps]{
 			{
 				Type:       "Feature",
-				Properties: properties{TigerName: "Square"},
-				Geometry:   geometry{Type: "Polygon", Coordinates: squareCoords},
+				Properties: countyProps{TigerName: "Square"},
+				Geometry: orb.Polygon{
+					{{-1, -1}, {1, -1}, {1, 1}, {-1, 1}, {-1, -1}},
+				},
 			},
 			{
 				Type:       "Feature",
-				Properties: properties{TigerName: "Tri"},
-				Geometry:   geometry{Type: "Polygon", Coordinates: triCoords},
+				Properties: countyProps{TigerName: "Tri"},
+				Geometry: orb.Polygon{
+					{{0.5, 0.5}, {0.8, 0.5}, {0.65, 0.8}, {0.5, 0.5}},
+				},
 			},
 		},
 	}
@@ -372,14 +360,13 @@ func TestBuildSVG_TransparentBackground(t *testing.T) {
 
 func TestBuildSVG_UnsupportedGeometryType(t *testing.T) {
 	fm, _ := squareCountyFixture()
-	coords, _ := json.Marshal([]float64{0, 0})
-	gf := &geoJSON{
+	gf := &countyCollection{
 		Type: "FeatureCollection",
-		Features: []feature{
+		Features: []*geojson.FeatureOf[countyProps]{
 			{
 				Type:       "Feature",
-				Properties: properties{TigerName: "Bad"},
-				Geometry:   geometry{Type: "Point", Coordinates: coords},
+				Properties: countyProps{TigerName: "Bad"},
+				Geometry:   orb.Point{0, 0},
 			},
 		},
 	}

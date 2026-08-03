@@ -9,6 +9,9 @@ import (
 	"path/filepath"
 	"strings"
 
+	"github.com/paulmach/orb"
+	"github.com/paulmach/orb/geojson"
+	"github.com/paulmach/orb/planar"
 	"gopkg.in/yaml.v3"
 )
 
@@ -51,25 +54,11 @@ type region struct {
 	Counties []string     `yaml:"counties"`
 }
 
-type geoJSON struct {
-	Type     string    `json:"type"`
-	Features []feature `json:"features"`
-}
-
-type feature struct {
-	Type       string     `json:"type"`
-	Properties properties `json:"properties"`
-	Geometry   geometry   `json:"geometry"`
-}
-
-type properties struct {
+type countyProps struct {
 	TigerName string `json:"TIGERNAME"`
 }
 
-type geometry struct {
-	Type        string          `json:"type"`
-	Coordinates json.RawMessage `json:"coordinates"`
-}
+type countyCollection = geojson.FeatureCollectionOf[countyProps]
 
 type label struct {
 	Text string
@@ -155,9 +144,9 @@ func warnDuplicateCounties(regions []region, w io.Writer) {
 // normalized name matches no GeoJSON TIGERNAME, and for each GeoJSON feature
 // matched by no frontmatter county. Generation continues either way; the pair
 // of warnings makes spelling drift between the two sources obvious.
-func warnUnmatchedCounties(fm *frontMatter, gf *geoJSON, w io.Writer) {
+func warnUnmatchedCounties(fm *frontMatter, fc *countyCollection, w io.Writer) {
 	geoNames := make(map[string]bool)
-	for _, f := range gf.Features {
+	for _, f := range fc.Features {
 		geoNames[normalizeCounty(f.Properties.TigerName)] = true
 	}
 	assigned := make(map[string]bool)
@@ -170,7 +159,7 @@ func warnUnmatchedCounties(fm *frontMatter, gf *geoJSON, w io.Writer) {
 			}
 		}
 	}
-	for _, f := range gf.Features {
+	for _, f := range fc.Features {
 		if !assigned[normalizeCounty(f.Properties.TigerName)] {
 			fmt.Fprintf(w, "mapgen: warning: GeoJSON feature %q matched by no frontmatter county\n", f.Properties.TigerName)
 		}
@@ -179,7 +168,7 @@ func warnUnmatchedCounties(fm *frontMatter, gf *geoJSON, w io.Writer) {
 
 // buildSVG generates the regional map SVG from frontmatter and GeoJSON.
 // Pure function: no file I/O, no side effects.
-func buildSVG(fm *frontMatter, gf *geoJSON) (string, error) {
+func buildSVG(fm *frontMatter, fc *countyCollection) (string, error) {
 	if fm.Map.CountyFillOpacity <= 0 || fm.Map.CountyFillOpacity > 1 {
 		return "", fmt.Errorf("map.county_fill_opacity must be in (0, 1], got %v", fm.Map.CountyFillOpacity)
 	}
@@ -191,39 +180,24 @@ func buildSVG(fm *frontMatter, gf *geoJSON) (string, error) {
 		}
 	}
 
-	// Compute bounding box.
-	var minLon, minLat, maxLon, maxLat float64
+	var bound orb.Bound
 	first := true
-	for _, feat := range gf.Features {
-		rings, err := extractRings(feat.Geometry)
-		if err != nil {
-			return "", fmt.Errorf("feature %q: %w", feat.Properties.TigerName, err)
+	for _, feat := range fc.Features {
+		if feat.Geometry == nil {
+			continue
 		}
-		for _, ring := range rings {
-			for _, pt := range ring {
-				if first {
-					minLon, minLat, maxLon, maxLat = pt[0], pt[1], pt[0], pt[1]
-					first = false
-				} else {
-					if pt[0] < minLon {
-						minLon = pt[0]
-					}
-					if pt[0] > maxLon {
-						maxLon = pt[0]
-					}
-					if pt[1] < minLat {
-						minLat = pt[1]
-					}
-					if pt[1] > maxLat {
-						maxLat = pt[1]
-					}
-				}
-			}
+		if first {
+			bound = feat.Geometry.Bound()
+			first = false
+		} else {
+			bound = bound.Union(feat.Geometry.Bound())
 		}
 	}
 	if first {
 		return "", fmt.Errorf("no coordinates found in GeoJSON")
 	}
+	minLon, minLat := bound.Min[0], bound.Min[1]
+	maxLon, maxLat := bound.Max[0], bound.Max[1]
 
 	avgLat := (minLat + maxLat) / 2 * math.Pi / 180
 	cosLat := math.Cos(avgLat)
@@ -256,8 +230,8 @@ func buildSVG(fm *frontMatter, gf *geoJSON) (string, error) {
 		sb.WriteString(fmt.Sprintf(`  <rect width="%d" height="%d" fill="%s"/>`+"\n", viewBoxW, viewBoxH, fm.Map.Background))
 	}
 
-	for _, feat := range gf.Features {
-		rings, err := extractRings(feat.Geometry)
+	for _, feat := range fc.Features {
+		rings, err := geometryRings(feat.Geometry)
 		if err != nil {
 			return "", fmt.Errorf("feature %q: %w", feat.Properties.TigerName, err)
 		}
@@ -267,21 +241,11 @@ func buildSVG(fm *frontMatter, gf *geoJSON) (string, error) {
 			fill = fm.Map.UnassignedCounty
 		}
 
-		// Centroid for this county (pick largest ring for MultiPolygon).
-		var bestCentroid [2]float64
-		bestArea := -1.0
-		for _, ring := range rings {
-			if len(ring) < 3 {
-				continue
-			}
-			c, area := polygonCentroid(ring)
-			if area > bestArea {
-				bestArea = area
-				bestCentroid = c
-			}
-		}
-		if bestArea >= 0 {
-			cx, cy := transform(bestCentroid[0], bestCentroid[1])
+		// Centroid for the county label; degenerate (zero-area) geometries
+		// get no label.
+		centroid, area := planar.CentroidArea(feat.Geometry)
+		if area > 0 {
+			cx, cy := transform(centroid[0], centroid[1])
 			countyCentroid[normalizeCounty(feat.Properties.TigerName)] = [2]float64{cx, cy}
 			countyLabels = append(countyLabels, label{
 				Text: feat.Properties.TigerName,
@@ -339,42 +303,6 @@ func buildSVG(fm *frontMatter, gf *geoJSON) (string, error) {
 	return sb.String(), nil
 }
 
-// polygonCentroid returns the centroid of a polygon ring and its unsigned area.
-func polygonCentroid(ring [][2]float64) ([2]float64, float64) {
-	n := len(ring)
-	if n < 3 {
-		var sum [2]float64
-		for _, p := range ring {
-			sum[0] += p[0]
-			sum[1] += p[1]
-		}
-		sum[0] /= float64(n)
-		sum[1] /= float64(n)
-		return sum, 0
-	}
-	var area, cx, cy float64
-	for i := 0; i < n; i++ {
-		j := (i + 1) % n
-		xi, yi := ring[i][0], ring[i][1]
-		xj, yj := ring[j][0], ring[j][1]
-		cross := xi*yj - xj*yi
-		area += cross
-		cx += (xi + xj) * cross
-		cy += (yi + yj) * cross
-	}
-	area *= 0.5
-	if area == 0 {
-		return [2]float64{ring[0][0], ring[0][1]}, 0
-	}
-	cx /= (6 * area)
-	cy /= (6 * area)
-	// Use absolute area so larger polygons rank higher.
-	if area < 0 {
-		area = -area
-	}
-	return [2]float64{cx, cy}, area
-}
-
 func parseFrontmatter(path string) (*frontMatter, error) {
 	data, err := os.ReadFile(path)
 	if err != nil {
@@ -396,53 +324,35 @@ func parseFrontmatter(path string) (*frontMatter, error) {
 	return &fm, nil
 }
 
-func parseGeoJSON(path string) (*geoJSON, error) {
+func parseGeoJSON(path string) (*countyCollection, error) {
 	data, err := os.ReadFile(path)
 	if err != nil {
 		return nil, err
 	}
-	var gf geoJSON
-	if err := json.Unmarshal(data, &gf); err != nil {
+	var fc countyCollection
+	if err := json.Unmarshal(data, &fc); err != nil {
 		return nil, err
 	}
-	return &gf, nil
+	return &fc, nil
 }
 
-func extractRings(g geometry) ([][][2]float64, error) {
-	switch g.Type {
-	case "Polygon":
-		var coords [][][]float64
-		if err := json.Unmarshal(g.Coordinates, &coords); err != nil {
-			return nil, err
-		}
-		return toPointRings(coords), nil
-	case "MultiPolygon":
-		var coords [][][][]float64
-		if err := json.Unmarshal(g.Coordinates, &coords); err != nil {
-			return nil, err
-		}
-		var rings [][][2]float64
-		for _, poly := range coords {
-			rings = append(rings, toPointRings(poly)...)
+// geometryRings flattens a Polygon or MultiPolygon into its rings so each can
+// be emitted as a closed subpath.
+func geometryRings(g orb.Geometry) ([]orb.Ring, error) {
+	switch geom := g.(type) {
+	case orb.Polygon:
+		return geom, nil
+	case orb.MultiPolygon:
+		var rings []orb.Ring
+		for _, poly := range geom {
+			rings = append(rings, poly...)
 		}
 		return rings, nil
+	case nil:
+		return nil, fmt.Errorf("unsupported geometry type: <nil>")
 	default:
-		return nil, fmt.Errorf("unsupported geometry type: %s", g.Type)
+		return nil, fmt.Errorf("unsupported geometry type: %s", g.GeoJSONType())
 	}
-}
-
-func toPointRings(coords [][][]float64) [][][2]float64 {
-	var rings [][][2]float64
-	for _, ring := range coords {
-		pts := make([][2]float64, len(ring))
-		for i, p := range ring {
-			if len(p) >= 2 {
-				pts[i] = [2]float64{p[0], p[1]}
-			}
-		}
-		rings = append(rings, pts)
-	}
-	return rings
 }
 
 func normalizeCounty(s string) string {
