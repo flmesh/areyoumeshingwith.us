@@ -100,6 +100,7 @@ func run() error {
 	}
 
 	warnDuplicateCounties(fm.Regions, os.Stderr)
+	warnUnmatchedCounties(fm, gf, os.Stderr)
 
 	svg, err := buildSVG(fm, gf)
 	if err != nil {
