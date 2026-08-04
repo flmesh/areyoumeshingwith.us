@@ -30,9 +30,8 @@ map:
   region_label: "black"
   region_label_halo: "white"
 regions:
-  - name: "North West"
+  - name: "North West #1"
     color: "#5C0963"
-    number: "#1"
     label:
       x: 290
       y: 195
@@ -49,9 +48,8 @@ regions:
       - Santa Rosa
       - Walton
       - Washington
-  - name: "North"
+  - name: "North #2"
     color: "#AF0910"
-    number: "#2"
     label:
       x: 980
       y: 120
@@ -80,9 +78,8 @@ regions:
       - Taylor
       - Union
       - Wakulla
-  - name: "Central West"
+  - name: "Central West #4"
     color: "#0909B6"
-    number: "#4"
     label:
       x: 620
       y: 470
@@ -94,9 +91,8 @@ regions:
       - Pasco
       - Pinellas
       - Sarasota
-  - name: "Central East"
+  - name: "Central East #3"
     color: "#AFAF10"
-    number: "#3"
     label:
       x: 960
       y: 280
@@ -112,9 +108,8 @@ regions:
       - "St. Lucie"
       - Sumter
       - Volusia
-  - name: "South"
+  - name: "South #5"
     color: "#AF7410"
-    number: "#5"
     label:
       x: 883
       y: 835

@@ -48,7 +48,6 @@ type regionLabel struct {
 type region struct {
 	Name     string       `yaml:"name"`
 	Color    string       `yaml:"color"`
-	Number   string       `yaml:"number"`
 	Label    *regionLabel `yaml:"label"`
 	Counties []string     `yaml:"counties"`
 }
@@ -286,15 +285,15 @@ func buildSVG(fm *frontMatter, fc *countyCollection) (string, error) {
 	}
 	sb.WriteString("  </g>\n")
 
-	// --- Region labels (positions/numbers from frontmatter; skip if label nil) ---
+	// --- Region labels (positions from frontmatter; skip if label nil) ---
 	sb.WriteString(`  <g font-family="Arial, sans-serif" text-anchor="middle" dominant-baseline="middle" font-weight="bold">` + "\n")
 	for _, r := range fm.Regions {
 		if r.Label == nil {
 			continue
 		}
 		sb.WriteString(fmt.Sprintf(
-			`    <text x="%.1f" y="%.1f" font-size="21" fill="%s" stroke="%s" stroke-width="2.5" paint-order="stroke">%s %s</text>`+"\n",
-			r.Label.X, r.Label.Y, fm.Map.RegionLabel, fm.Map.RegionLabelHalo, r.Name, r.Number))
+			`    <text x="%.1f" y="%.1f" font-size="21" fill="%s" stroke="%s" stroke-width="2.5" paint-order="stroke">%s</text>`+"\n",
+			r.Label.X, r.Label.Y, fm.Map.RegionLabel, fm.Map.RegionLabelHalo, r.Name))
 	}
 	sb.WriteString("  </g>\n")
 

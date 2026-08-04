@@ -65,9 +65,8 @@ func squareCountyFixture() (*frontMatter, *countyCollection) {
 		},
 		Regions: []region{
 			{
-				Name:     "Test",
+				Name:     "Test #1",
 				Color:    "#ff0000",
-				Number:   "#1",
 				Label:    &regionLabel{X: 100, Y: 200},
 				Counties: []string{"Square"},
 			},
@@ -222,9 +221,8 @@ func multiPolygonFixture() (*frontMatter, *countyCollection) {
 		},
 		Regions: []region{
 			{
-				Name:     "Test",
+				Name:     "Test #1",
 				Color:    "#ff0000",
-				Number:   "#1",
 				Label:    &regionLabel{X: 100, Y: 200},
 				Counties: []string{"Multi"},
 			},
@@ -288,9 +286,8 @@ func twoCountyFixture() (*frontMatter, *countyCollection) {
 		},
 		Regions: []region{
 			{
-				Name:     "Test",
+				Name:     "Test #1",
 				Color:    "#ff0000",
-				Number:   "#1",
 				Label:    &regionLabel{X: 100, Y: 200},
 				Counties: []string{"Square"},
 			},
@@ -505,8 +502,8 @@ func TestWarnUnmatchedCounties_AllNamesMatch(t *testing.T) {
 func TestBuildSVG_DuplicateCountyLastRegionWins(t *testing.T) {
 	fm, gf := squareCountyFixture()
 	fm.Regions = []region{
-		{Name: "Alpha", Color: "#aa0000", Number: "#1", Counties: []string{"Square"}},
-		{Name: "Beta", Color: "#00bb00", Number: "#2", Counties: []string{"Square"}},
+		{Name: "Alpha #1", Color: "#aa0000", Counties: []string{"Square"}},
+		{Name: "Beta #2", Color: "#00bb00", Counties: []string{"Square"}},
 	}
 	svg, err := buildSVG(fm, gf)
 	if err != nil {
@@ -605,18 +602,16 @@ map:
   region_label: black
   region_label_halo: white
 regions:
-  - name: Test
+  - name: "Test #1"
     color: "#ff0000"
-    number: "#1"
     label:
       x: 100
       y: 200
     counties:
       - Square
       - Tri
-  - name: NoLabel
+  - name: "NoLabel #2"
     color: "#00bb00"
-    number: "#2"
     counties:
       - Other
 ---
@@ -637,7 +632,7 @@ Body below the frontmatter is ignored.
 		t.Fatalf("regions = %d, want 2", len(fm.Regions))
 	}
 	r := fm.Regions[0]
-	if r.Name != "Test" || r.Color != "#ff0000" || r.Number != "#1" {
+	if r.Name != "Test #1" || r.Color != "#ff0000" {
 		t.Errorf("region 0 = %+v", r)
 	}
 	if r.Label == nil || r.Label.X != 100 || r.Label.Y != 200 {
