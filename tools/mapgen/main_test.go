@@ -475,6 +475,35 @@ func TestWarnUnmatchedCounties_CurrentRepoDataIsClean(t *testing.T) {
 	}
 }
 
+// aym-tws: the committed frontmatter must use the agreed regional palette.
+func TestFrontmatter_RegionPalette(t *testing.T) {
+	repoRoot, err := findRepoRoot()
+	if err != nil {
+		t.Fatalf("findRepoRoot: %v", err)
+	}
+	fm, err := parseFrontmatter(filepath.Join(repoRoot, contentFile))
+	if err != nil {
+		t.Fatalf("parseFrontmatter: %v", err)
+	}
+
+	want := map[string]string{
+		"North West #1":   "#AB65CD",
+		"North #2":        "#A80000",
+		"Central East #3": "#D1C901",
+		"Central West #4": "#0084A9",
+		"South #5":        "#E69801",
+	}
+	got := make(map[string]string, len(fm.Regions))
+	for _, r := range fm.Regions {
+		got[r.Name] = r.Color
+	}
+	for name, color := range want {
+		if got[name] != color {
+			t.Errorf("region %q color = %q, want %q", name, got[name], color)
+		}
+	}
+}
+
 func TestBuildSVG_PhantomCountyStillGenerates(t *testing.T) {
 	fm, gf := squareCountyFixture()
 	fm.Regions[0].Counties = append(fm.Regions[0].Counties, "Phantom")
