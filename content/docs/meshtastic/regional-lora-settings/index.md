@@ -31,7 +31,6 @@ map:
   region_label_halo: "white"
 regions:
   - name: "North West"
-    emoji: "🟣"
     color: "#5C0963"
     number: "#1"
     label:
@@ -51,7 +50,6 @@ regions:
       - Walton
       - Washington
   - name: "North"
-    emoji: "🔴"
     color: "#AF0910"
     number: "#2"
     label:
@@ -83,7 +81,6 @@ regions:
       - Union
       - Wakulla
   - name: "Central West"
-    emoji: "🔵"
     color: "#0909B6"
     number: "#4"
     label:
@@ -98,7 +95,6 @@ regions:
       - Pinellas
       - Sarasota
   - name: "Central East"
-    emoji: "🟡"
     color: "#AFAF10"
     number: "#3"
     label:
@@ -117,7 +113,6 @@ regions:
       - Sumter
       - Volusia
   - name: "South"
-    emoji: "🟠"
     color: "#AF7410"
     number: "#5"
     label:
