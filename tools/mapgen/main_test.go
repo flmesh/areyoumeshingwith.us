@@ -606,7 +606,6 @@ map:
   region_label_halo: white
 regions:
   - name: Test
-    emoji: 🌴
     color: "#ff0000"
     number: "#1"
     label:
@@ -638,7 +637,7 @@ Body below the frontmatter is ignored.
 		t.Fatalf("regions = %d, want 2", len(fm.Regions))
 	}
 	r := fm.Regions[0]
-	if r.Name != "Test" || r.Emoji != "🌴" || r.Color != "#ff0000" || r.Number != "#1" {
+	if r.Name != "Test" || r.Color != "#ff0000" || r.Number != "#1" {
 		t.Errorf("region 0 = %+v", r)
 	}
 	if r.Label == nil || r.Label.X != 100 || r.Label.Y != 200 {
@@ -649,6 +648,26 @@ Body below the frontmatter is ignored.
 	}
 	if fm.Regions[1].Label != nil {
 		t.Errorf("region without label key should have nil Label, got %+v", fm.Regions[1].Label)
+	}
+}
+
+func TestParseFrontmatter_UnknownKeysIgnored(t *testing.T) {
+	path := writeTempFile(t, "index.md", `---
+regions:
+  - name: Test
+    emoji: 🌴
+    color: "#ff0000"
+    counties:
+      - Square
+---
+`)
+
+	fm, err := parseFrontmatter(path)
+	if err != nil {
+		t.Fatalf("parseFrontmatter with unknown key: %v", err)
+	}
+	if len(fm.Regions) != 1 || fm.Regions[0].Name != "Test" {
+		t.Errorf("regions = %+v, want single region named Test", fm.Regions)
 	}
 }
 

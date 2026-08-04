@@ -47,11 +47,13 @@ Each entry in the `regions` list defines one region:
 | Key        | Required | Meaning                                                        |
 | ---------- | -------- | -------------------------------------------------------------- |
 | `name`     | yes      | Region name, shown in the region label.                        |
-| `emoji`    | no       | Region emoji (parsed but not currently used in the SVG).       |
 | `color`    | no       | Fill color for the region's counties (see resolution below).   |
 | `number`   | no       | Region number, shown after the name in the region label.       |
 | `label`    | no       | `{x, y}` position of the region label; omit to skip the label. |
 | `counties` | yes      | County names assigned to this region.                          |
+
+Region fill color is read only from `regions[].color`; see the resolution
+order below. Unknown keys are ignored, so stale frontmatter still parses.
 
 County names are matched case-insensitively with spaces removed, so
 `De Soto`, `DeSoto`, and `desoto` are equivalent.

@@ -47,7 +47,6 @@ type regionLabel struct {
 
 type region struct {
 	Name     string       `yaml:"name"`
-	Emoji    string       `yaml:"emoji"`
 	Color    string       `yaml:"color"`
 	Number   string       `yaml:"number"`
 	Label    *regionLabel `yaml:"label"`
