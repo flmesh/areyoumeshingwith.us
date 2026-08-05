@@ -475,8 +475,9 @@ func TestWarnUnmatchedCounties_CurrentRepoDataIsClean(t *testing.T) {
 	}
 }
 
-// aym-tws: the committed frontmatter must use the agreed regional palette.
-func TestFrontmatter_RegionPalette(t *testing.T) {
+// aym-jha: every committed regions[].color must be a well-formed color
+// string; the specific palette is data, not test-pinned.
+func TestFrontmatter_RegionColorFormat(t *testing.T) {
 	repoRoot, err := findRepoRoot()
 	if err != nil {
 		t.Fatalf("findRepoRoot: %v", err)
@@ -486,21 +487,58 @@ func TestFrontmatter_RegionPalette(t *testing.T) {
 		t.Fatalf("parseFrontmatter: %v", err)
 	}
 
-	want := map[string]string{
-		"North West #1":   "#AB65CD",
-		"North #2":        "#A80000",
-		"Central East #3": "#D1C901",
-		"Central West #4": "#0084A9",
-		"South #5":        "#E69801",
-	}
-	got := make(map[string]string, len(fm.Regions))
 	for _, r := range fm.Regions {
-		got[r.Name] = r.Color
-	}
-	for name, color := range want {
-		if got[name] != color {
-			t.Errorf("region %q color = %q, want %q", name, got[name], color)
+		if !isWellFormedRegionColor(r.Color) {
+			t.Errorf("region %q color %q is not a well-formed color string", r.Name, r.Color)
 		}
+	}
+}
+
+// isWellFormedRegionColor reports whether s is a well-formed regions[].color
+// value.
+func isWellFormedRegionColor(s string) bool {
+	if s == "" {
+		return true
+	}
+	if len(s) != 4 && len(s) != 7 || s[0] != '#' {
+		return false
+	}
+	for _, c := range s[1:] {
+		if !('0' <= c && c <= '9' || 'a' <= c && c <= 'f' || 'A' <= c && c <= 'F') {
+			return false
+		}
+	}
+	return true
+}
+
+// aym-jha: regions[].color must be a well-formed color string; the palette
+// itself is no longer pinned.
+func TestIsWellFormedRegionColor(t *testing.T) {
+	cases := []struct {
+		name  string
+		color string
+		want  bool
+	}{
+		{"rrggbb lowercase", "#ff0000", true},
+		{"empty falls back to unassigned_county", "", true},
+		{"rgb shorthand", "#f00", true},
+		{"rrggbb uppercase", "#FF0000", true},
+		{"rrggbb mixed case", "#aB65cD", true},
+		{"missing hash", "ff0000", false},
+		{"too short", "#12", false},
+		{"length five", "#1234", false},
+		{"length six", "#12345", false},
+		{"too long", "#1234567", false},
+		{"non-hex digit", "#gg0000", false},
+		{"trailing non-hex", "#12345g", false},
+		{"css named color", "red", false},
+	}
+	for _, tc := range cases {
+		t.Run(tc.name, func(t *testing.T) {
+			if got := isWellFormedRegionColor(tc.color); got != tc.want {
+				t.Errorf("isWellFormedRegionColor(%q) = %v, want %v", tc.color, got, tc.want)
+			}
+		})
 	}
 }
 
