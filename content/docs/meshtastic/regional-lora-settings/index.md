@@ -84,13 +84,19 @@ regions:
       x: 620
       y: 470
     counties:
+      - Charlotte
       - Citrus
+      - DeSoto
+      - Hardee
       - Hernando
       - Hillsborough
+      - Lee
       - Manatee
       - Pasco
       - Pinellas
+      - Polk
       - Sarasota
+      - Sumter
   - name: "Central East #3"
     color: "#D1C901"
     label:
@@ -98,15 +104,13 @@ regions:
       y: 280
     counties:
       - Brevard
+      - Highlands
       - Indian River
       - Lake
-      - Martin
+      - Okeechobee
       - Orange
       - Osceola
-      - Palm Beach
       - Seminole
-      - "St. Lucie"
-      - Sumter
       - Volusia
   - name: "South #5"
     color: "#E69801"
@@ -115,18 +119,14 @@ regions:
       y: 835
     counties:
       - Broward
-      - Charlotte
       - Collier
-      - DeSoto
       - Glades
-      - Hardee
       - Hendry
-      - Highlands
-      - Lee
+      - Martin
       - Miami-Dade
       - Monroe
-      - Okeechobee
-      - Polk
+      - Palm Beach
+      - "St. Lucie"
 ---
 
 ## Regions
