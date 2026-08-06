@@ -49,8 +49,7 @@ ESP32 (developed by Espressif Systems) is a versatile microcontroller platform t
 
 - Due to the onboard WiFi these boards make for an easy and cheap MQTT feeder node
 
-![M5 Stack C6L](/images/Hardware/M5STACK_C6L.webp)
-
+{{< figure src="M5STACK_C6L.webp" alt="M5 Stack C6L" width="30%" class="d-block mx-auto" >}}
 
 #### What is the hardware good for?
 
@@ -70,6 +69,7 @@ NRF52 devices (developed by Nordic Semiconductor) are another versatile microcon
 - Memory is far smaller than ESP32, usually averaging around 256 KB to 1 MB of flash and 64 KB of RAM
 - Uses a Bootloader and needs to be mounted like a portable storage device to be able to have new firmware added on. This allows firmware to be remotely uploaded to the device via BT. But if the bootloader becomes corrupted due to flakey power supplies or other issues it will require reformatting of the MBR (master boot record). 
 - Can run for multiple days at a high duty cycle off of a single 18650 battery cell.
+{{< figure src="RAK4631.webp" alt="RAK 4631" width="30%" class="d-block mx-auto" >}} 
 
 #### What is the hardware good for?
 
@@ -86,6 +86,8 @@ Linux based systems are far more advanced then regular development boards, requi
 - Is power efficient when running on low power boards
 - Doesn't need firmware updates but updates in place using `sudo apt update`
 - Has higher storage and ram limits, removing the need for database entry limits.
+
+{{< figure src="PORTDUINO.webp" alt="Portdunio" width="30%" class="d-block mx-auto" >}}
 
 #### What is the hardware good for?
 
