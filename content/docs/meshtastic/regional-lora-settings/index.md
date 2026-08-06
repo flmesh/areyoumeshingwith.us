@@ -14,6 +14,7 @@ nav_icon:
 authors:
   - Json_18
   - jbouse
+  - meh098
 series:
   - Docs
 categories:

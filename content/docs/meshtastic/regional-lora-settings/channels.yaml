@@ -1,0 +1,35 @@
+map:
+  county_stroke: "#222222"
+  unassigned_county: "#8E8E95"
+  county_fill_opacity: 1.0
+  county_label: "white"
+  region_label: "black"
+  region_label_halo: "white"
+channels:
+  - name: LongFast
+    color: "#3B82C4"
+    label:
+      x: 640
+      y: 480
+    catchall: true
+  - name: "MediumFast"
+    color: "#FF00FF"
+    label:
+      x: 1120
+      y: 620
+    counties:
+      - Monroe
+      - Miami-Dade
+      - Broward
+      - Palm Beach
+      - Martin
+      - St. Lucie
+      - Indian River
+      - Okeechobee
+  - name: "LongFast\nMediumFast"
+    color: "#8E44AD"
+    label:
+      x: 1110
+      y: 425
+    counties:
+      - Brevard

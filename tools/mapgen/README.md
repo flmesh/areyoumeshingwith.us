@@ -1,11 +1,14 @@
 # mapgen
 
-mapgen generates the regional SVG map for the
+mapgen generates the SVG maps for the
 [Regional LoRa Settings](../../content/docs/meshtastic/regional-lora-settings/index.md)
-page. It reads county boundaries from `assets/gis/counties.geojson` and colors
-each county according to the `regions` and `map` keys in that page's YAML
-frontmatter, then writes
-`content/docs/meshtastic/regional-lora-settings/regional-lora-settings.svg`.
+page. It reads county boundaries from `assets/gis/counties.geojson` and writes
+two maps:
+
+- `regional-lora-settings.svg` — counties colored by region, from the
+  `regions` and `map` keys in that page's YAML frontmatter.
+- `channel-lora-settings.svg` — counties colored by LoRa channel, from
+  `channels.yaml` next to the page (see the sidecar section below).
 
 ## Running
 
@@ -26,13 +29,13 @@ Run tests with:
 go -C tools/mapgen test ./...
 ```
 
-## The generated SVG is never hand-edited
+## The generated SVGs are never hand-edited
 
-`regional-lora-settings.svg` is generated output. To change anything about the
-map — colors, region labels, county assignments — edit the frontmatter in
-`content/docs/meshtastic/regional-lora-settings/index.md`, re-run
-`go -C tools/mapgen run .`, and commit the regenerated SVG. Never edit the SVG
-by hand; the next run will overwrite manual changes.
+Both SVGs are generated output. To change anything about the maps — colors,
+labels, county assignments — edit the frontmatter in
+`content/docs/meshtastic/regional-lora-settings/index.md` or `channels.yaml`,
+re-run `go -C tools/mapgen run .`, and commit the regenerated SVGs. Never edit
+an SVG by hand; the next run will overwrite manual changes.
 
 ## Frontmatter contract
 
@@ -48,7 +51,7 @@ Each entry in the `regions` list defines one region:
 | ---------- | -------- | -------------------------------------------------------------- |
 | `name`     | yes      | Region label text (include number if desired, e.g. `North West #1`). |
 | `color`    | no       | Fill color for the region's counties (see resolution below).   |
-| `label`    | no       | `{x, y}` position of the region label; omit to skip the label. |
+| `label`    | no       | `{x, y}` position of the region label, plus optional `fontsize` (default 21); omit to skip the label. |
 | `counties` | yes      | County names assigned to this region.                          |
 
 Region fill color is read only from `regions[].color`; see the resolution
@@ -82,12 +85,37 @@ is a hard error.
 2. `map.unassigned_county` if no region claims the county (or the region's
    `color` is empty).
 
+## Channels sidecar (`channels.yaml`)
+
+`channels.yaml`, next to `index.md`, drives the channel map. It has the same
+shape as the frontmatter contract: a `map` block (same keys as above) plus a
+`channels` list. Each entry is a group:
+
+| Key        | Required | Meaning                                                        |
+| ---------- | -------- | -------------------------------------------------------------- |
+| `name`     | yes      | Channel label text. A literal `\n` renders as a line break (e.g. `"LongFast\nMediumFast"` for a county shared by two channels). |
+| `color`    | yes      | Fill color for the channel's counties.                         |
+| `label`    | no       | `{x, y}` position of the channel label, plus optional `fontsize` (default 21); omit to skip the label. |
+| `counties` | no       | County names assigned to this channel.                         |
+| `catchall` | no       | At most one channel may set `catchall: true`; see below.       |
+
+### Catchall
+
+A channel with `catchall: true` and no `counties` list colors every county not
+claimed by another channel — use it for the default channel so uncovered
+counties never render as `unassigned_county`. A catchall group also tells
+mapgen the uncovered counties are intentional, suppressing the GeoJSON-side
+"matched by no county list" warning (the county-side direction, which catches
+spelling drift, always fires). Two catchall groups is a hard error.
+
 ## Warnings
 
-mapgen prints warnings to stderr but still generates the SVG and exits 0:
+mapgen prints warnings to stderr but still generates both SVGs and exits 0.
+The checks run on the frontmatter regions and on `channels.yaml` alike:
 
-- **Duplicate county**: a county appearing in more than one region's
+- **Duplicate county**: a county appearing in more than one group's
   `counties` list, or twice in the same list. The warning names the county and
-  all regions involved; the **last** region in YAML order wins the fill.
-- **Unmatched county**: a frontmatter county matching no GeoJSON `TIGERNAME`
-  (spelling drift), or a GeoJSON feature matched by no frontmatter county.
+  all groups involved; the **last** group in YAML order wins the fill.
+- **Unmatched county**: a listed county matching no GeoJSON `TIGERNAME`
+  (spelling drift) always warns. The reverse direction — a GeoJSON feature
+  matched by no county list — warns only when no group is a catchall.

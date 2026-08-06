@@ -16,13 +16,15 @@ import (
 )
 
 const (
-	viewBoxW    = 1200
-	viewBoxH    = 1000
-	padding     = 20.0
-	strokeWidth = 0.4
-	outputFile  = "content/docs/meshtastic/regional-lora-settings/regional-lora-settings.svg"
-	contentFile = "content/docs/meshtastic/regional-lora-settings/index.md"
-	geoJSONFile = "assets/gis/counties.geojson"
+	viewBoxW     = 1200
+	viewBoxH     = 1000
+	padding      = 20.0
+	strokeWidth  = 0.4
+	outputFile        = "content/docs/meshtastic/regional-lora-settings/regional-lora-settings.svg"
+	channelOutputFile = "content/docs/meshtastic/regional-lora-settings/channel-lora-settings.svg"
+	contentFile       = "content/docs/meshtastic/regional-lora-settings/index.md"
+	channelsFile      = "content/docs/meshtastic/regional-lora-settings/channels.yaml"
+	geoJSONFile       = "assets/gis/counties.geojson"
 )
 
 type frontMatter struct {
@@ -41,8 +43,9 @@ type mapColors struct {
 }
 
 type regionLabel struct {
-	X float64 `yaml:"x"`
-	Y float64 `yaml:"y"`
+	X        float64 `yaml:"x"`
+	Y        float64 `yaml:"y"`
+	FontSize float64 `yaml:"fontsize"`
 }
 
 type region struct {
@@ -86,8 +89,8 @@ func run() error {
 		return fmt.Errorf("parsing GeoJSON: %w", err)
 	}
 
-	warnDuplicateCounties(fm.Regions, os.Stderr)
-	warnUnmatchedCounties(fm, gf, os.Stderr)
+	warnDuplicateCounties(regionsToGroups(fm.Regions), os.Stderr)
+	warnUnmatchedCounties(regionsToGroups(fm.Regions), gf, os.Stderr)
 
 	svg, err := buildSVG(fm, gf)
 	if err != nil {
@@ -102,26 +105,45 @@ func run() error {
 		return fmt.Errorf("writing SVG: %w", err)
 	}
 	fmt.Printf("Map generated: %s\n", outPath)
+
+	sc, err := parseSidecar(filepath.Join(repoRoot, channelsFile))
+	if err != nil {
+		return fmt.Errorf("parsing channels sidecar: %w", err)
+	}
+
+	warnDuplicateCounties(sc.Channels, os.Stderr)
+	warnUnmatchedCounties(sc.Channels, gf, os.Stderr)
+
+	channelSVG, err := renderMap(&sc.Map, sc.Channels, gf)
+	if err != nil {
+		return fmt.Errorf("rendering channel map: %w", err)
+	}
+
+	channelPath := filepath.Join(repoRoot, channelOutputFile)
+	if err := os.WriteFile(channelPath, []byte(channelSVG), 0644); err != nil {
+		return fmt.Errorf("writing channel SVG: %w", err)
+	}
+	fmt.Printf("Map generated: %s\n", channelPath)
 	return nil
 }
 
 // warnDuplicateCounties writes a warning for each normalized county name that
-// appears more than once across region county lists (cross-region or within one
-// region). Generation continues; last region in YAML order still wins the fill.
-func warnDuplicateCounties(regions []region, w io.Writer) {
+// appears more than once across group county lists (cross-group or within one
+// group). Generation continues; last group in YAML order still wins the fill.
+func warnDuplicateCounties(groups []group, w io.Writer) {
 	type occurrence struct {
 		county string
-		region string
+		group  string
 	}
 	seen := make(map[string][]occurrence)
 	order := make([]string, 0)
-	for _, r := range regions {
-		for _, c := range r.Counties {
+	for _, g := range groups {
+		for _, c := range g.Counties {
 			key := normalizeCounty(c)
 			if _, ok := seen[key]; !ok {
 				order = append(order, key)
 			}
-			seen[key] = append(seen[key], occurrence{county: c, region: r.Name})
+			seen[key] = append(seen[key], occurrence{county: c, group: g.Name})
 		}
 	}
 	for _, key := range order {
@@ -129,50 +151,82 @@ func warnDuplicateCounties(regions []region, w io.Writer) {
 		if len(occs) < 2 {
 			continue
 		}
-		regionNames := make([]string, len(occs))
+		groupNames := make([]string, len(occs))
 		for i, o := range occs {
-			regionNames[i] = o.region
+			groupNames[i] = o.group
 		}
-		fmt.Fprintf(w, "mapgen: warning: county %q assigned more than once (regions: %s)\n",
-			occs[0].county, strings.Join(regionNames, ", "))
+		fmt.Fprintf(w, "mapgen: warning: county %q assigned more than once (groups: %s)\n",
+			occs[0].county, strings.Join(groupNames, ", "))
 	}
 }
 
-// warnUnmatchedCounties writes a warning for each frontmatter county whose
+// warnUnmatchedCounties writes a warning for each county-list entry whose
 // normalized name matches no GeoJSON TIGERNAME, and for each GeoJSON feature
-// matched by no frontmatter county. Generation continues either way; the pair
-// of warnings makes spelling drift between the two sources obvious.
-func warnUnmatchedCounties(fm *frontMatter, fc *countyCollection, w io.Writer) {
+// matched by no county list. Generation continues either way; the pair of
+// warnings makes spelling drift between the two sources obvious. When any
+// group is marked catchall, uncovered GeoJSON features are intentional and
+// the GeoJSON-side warning is suppressed.
+func warnUnmatchedCounties(groups []group, fc *countyCollection, w io.Writer) {
 	geoNames := make(map[string]bool)
 	for _, f := range fc.Features {
 		geoNames[normalizeCounty(f.Properties.TigerName)] = true
 	}
 	assigned := make(map[string]bool)
-	for _, r := range fm.Regions {
-		for _, c := range r.Counties {
+	for _, g := range groups {
+		for _, c := range g.Counties {
 			key := normalizeCounty(c)
 			assigned[key] = true
 			if !geoNames[key] {
-				fmt.Fprintf(w, "mapgen: warning: county %q (region %q) matches no GeoJSON feature\n", c, r.Name)
+				fmt.Fprintf(w, "mapgen: warning: county %q (group %q) matches no GeoJSON feature\n", c, g.Name)
 			}
 		}
 	}
+	if hasCatchall(groups) {
+		return
+	}
 	for _, f := range fc.Features {
 		if !assigned[normalizeCounty(f.Properties.TigerName)] {
-			fmt.Fprintf(w, "mapgen: warning: GeoJSON feature %q matched by no frontmatter county\n", f.Properties.TigerName)
+			fmt.Fprintf(w, "mapgen: warning: GeoJSON feature %q matched by no county list\n", f.Properties.TigerName)
 		}
 	}
+}
+
+func hasCatchall(groups []group) bool {
+	for _, g := range groups {
+		if g.Catchall {
+			return true
+		}
+	}
+	return false
 }
 
 // buildSVG generates the regional map SVG from frontmatter and GeoJSON.
 // Pure function: no file I/O, no side effects.
 func buildSVG(fm *frontMatter, fc *countyCollection) (string, error) {
-	if fm.Map.CountyFillOpacity <= 0 || fm.Map.CountyFillOpacity > 1 {
-		return "", fmt.Errorf("map.county_fill_opacity must be in (0, 1], got %v", fm.Map.CountyFillOpacity)
+	return renderMap(&fm.Map, regionsToGroups(fm.Regions), fc)
+}
+
+func regionsToGroups(regions []region) []group {
+	groups := make([]group, len(regions))
+	for i, r := range regions {
+		groups[i] = group{Name: r.Name, Color: r.Color, Label: r.Label, Counties: r.Counties}
+	}
+	return groups
+}
+
+// renderMap generates an SVG county map from shared map colors and a list of
+// county groups (regions or channels). Pure function: no file I/O.
+func renderMap(colors *mapColors, groups []group, fc *countyCollection) (string, error) {
+	if colors.CountyFillOpacity <= 0 || colors.CountyFillOpacity > 1 {
+		return "", fmt.Errorf("map.county_fill_opacity must be in (0, 1], got %v", colors.CountyFillOpacity)
 	}
 
 	countyColor := make(map[string]string)
-	for _, r := range fm.Regions {
+	catchallColor := ""
+	for _, r := range groups {
+		if r.Catchall {
+			catchallColor = r.Color
+		}
 		for _, c := range r.Counties {
 			countyColor[normalizeCounty(c)] = r.Color
 		}
@@ -223,9 +277,9 @@ func buildSVG(fm *frontMatter, fc *countyCollection) (string, error) {
 	sb.WriteString(fmt.Sprintf(
 		`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 %d %d" width="%d" height="%d">`+"\n",
 		viewBoxW, viewBoxH, viewBoxW, viewBoxH))
-	background := strings.ToLower(strings.TrimSpace(fm.Map.Background))
+	background := strings.ToLower(strings.TrimSpace(colors.Background))
 	if background != "" && background != "none" && background != "transparent" {
-		sb.WriteString(fmt.Sprintf(`  <rect width="%d" height="%d" fill="%s"/>`+"\n", viewBoxW, viewBoxH, fm.Map.Background))
+		sb.WriteString(fmt.Sprintf(`  <rect width="%d" height="%d" fill="%s"/>`+"\n", viewBoxW, viewBoxH, colors.Background))
 	}
 
 	for _, feat := range fc.Features {
@@ -236,7 +290,10 @@ func buildSVG(fm *frontMatter, fc *countyCollection) (string, error) {
 
 		fill := countyColor[normalizeCounty(feat.Properties.TigerName)]
 		if fill == "" {
-			fill = fm.Map.UnassignedCounty
+			fill = catchallColor
+		}
+		if fill == "" {
+			fill = colors.UnassignedCounty
 		}
 
 		// Centroid for the county label; degenerate (zero-area) geometries
@@ -273,7 +330,7 @@ func buildSVG(fm *frontMatter, fc *countyCollection) (string, error) {
 
 		sb.WriteString(fmt.Sprintf(
 			`  <path d="%s" fill="%s" fill-opacity="%.2f" stroke="%s" stroke-width="%.2f" stroke-linejoin="round"/>`+"\n",
-			strings.TrimSpace(path.String()), fill, fm.Map.CountyFillOpacity, fm.Map.CountyStroke, strokeWidth))
+			strings.TrimSpace(path.String()), fill, colors.CountyFillOpacity, colors.CountyStroke, strokeWidth))
 	}
 
 	// --- County labels (small, white, no stroke) ---
@@ -281,19 +338,38 @@ func buildSVG(fm *frontMatter, fc *countyCollection) (string, error) {
 	for _, lbl := range countyLabels {
 		sb.WriteString(fmt.Sprintf(
 			`    <text x="%.1f" y="%.1f" font-size="9" fill="%s">%s</text>`+"\n",
-			lbl.X, lbl.Y, fm.Map.CountyLabel, lbl.Text))
+			lbl.X, lbl.Y, colors.CountyLabel, lbl.Text))
 	}
 	sb.WriteString("  </g>\n")
 
-	// --- Region labels (positions from frontmatter; skip if label nil) ---
+	// --- Group labels (positions from config; skip if label nil) ---
 	sb.WriteString(`  <g font-family="Arial, sans-serif" text-anchor="middle" dominant-baseline="middle" font-weight="bold">` + "\n")
-	for _, r := range fm.Regions {
+	for _, r := range groups {
 		if r.Label == nil {
 			continue
 		}
+		fontSize := r.Label.FontSize
+		if fontSize == 0 {
+			fontSize = 21
+		}
+		lines := strings.Split(r.Name, "\n")
+		if len(lines) == 1 {
+			sb.WriteString(fmt.Sprintf(
+				`    <text x="%.1f" y="%.1f" font-size="%v" fill="%s" stroke="%s" stroke-width="2.5" paint-order="stroke">%s</text>`+"\n",
+				r.Label.X, r.Label.Y, fontSize, colors.RegionLabel, colors.RegionLabelHalo, r.Name))
+			continue
+		}
 		sb.WriteString(fmt.Sprintf(
-			`    <text x="%.1f" y="%.1f" font-size="21" fill="%s" stroke="%s" stroke-width="2.5" paint-order="stroke">%s</text>`+"\n",
-			r.Label.X, r.Label.Y, fm.Map.RegionLabel, fm.Map.RegionLabelHalo, r.Name))
+			`    <text x="%.1f" y="%.1f" font-size="%v" fill="%s" stroke="%s" stroke-width="2.5" paint-order="stroke">`,
+			r.Label.X, r.Label.Y, fontSize, colors.RegionLabel, colors.RegionLabelHalo))
+		for i, line := range lines {
+			if i == 0 {
+				sb.WriteString(fmt.Sprintf(`<tspan x="%.1f">%s</tspan>`, r.Label.X, line))
+			} else {
+				sb.WriteString(fmt.Sprintf(`<tspan x="%.1f" dy="1.2em">%s</tspan>`, r.Label.X, line))
+			}
+		}
+		sb.WriteString("</text>\n")
 	}
 	sb.WriteString("  </g>\n")
 
@@ -320,6 +396,44 @@ func parseFrontmatter(path string) (*frontMatter, error) {
 		return nil, fmt.Errorf("parsing YAML: %w", err)
 	}
 	return &fm, nil
+}
+
+type sidecar struct {
+	Map      mapColors `yaml:"map"`
+	Channels []group   `yaml:"channels"`
+}
+
+type group struct {
+	Name     string       `yaml:"name"`
+	Color    string       `yaml:"color"`
+	Label    *regionLabel `yaml:"label"`
+	Counties []string     `yaml:"counties"`
+	Catchall bool         `yaml:"catchall"`
+}
+
+func parseSidecar(path string) (*sidecar, error) {
+	data, err := os.ReadFile(path)
+	if err != nil {
+		return nil, err
+	}
+	return unmarshalSidecar(data)
+}
+
+func unmarshalSidecar(data []byte) (*sidecar, error) {
+	var sc sidecar
+	if err := yaml.Unmarshal(data, &sc); err != nil {
+		return nil, fmt.Errorf("parsing YAML: %w", err)
+	}
+	catchalls := 0
+	for _, g := range sc.Channels {
+		if g.Catchall {
+			catchalls++
+		}
+	}
+	if catchalls > 1 {
+		return nil, fmt.Errorf("at most one channel group may set catchall, got %d", catchalls)
+	}
+	return &sc, nil
 }
 
 func parseGeoJSON(path string) (*countyCollection, error) {

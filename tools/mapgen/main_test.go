@@ -44,6 +44,72 @@ func TestRun_RegeneratesCommittedSVG(t *testing.T) {
 	}
 }
 
+// Characterization: run() regenerates the committed channel SVG
+// byte-identically. Mirrors TestRun_RegeneratesCommittedSVG.
+func TestRun_RegeneratesCommittedChannelSVG(t *testing.T) {
+	repoRoot, err := findRepoRoot()
+	if err != nil {
+		t.Fatalf("findRepoRoot: %v", err)
+	}
+	outPath := filepath.Join(repoRoot, channelOutputFile)
+
+	original, err := os.ReadFile(outPath)
+	if err != nil {
+		t.Fatalf("read committed channel SVG: %v", err)
+	}
+	t.Cleanup(func() {
+		if err := os.WriteFile(outPath, original, 0644); err != nil {
+			t.Errorf("restore committed channel SVG: %v", err)
+		}
+	})
+
+	if err := run(); err != nil {
+		t.Fatalf("run: %v", err)
+	}
+
+	got, err := os.ReadFile(outPath)
+	if err != nil {
+		t.Fatalf("read regenerated channel SVG: %v", err)
+	}
+	if !bytes.Equal(got, original) {
+		t.Errorf("regenerated channel SVG differs from committed (%d bytes vs %d bytes)", len(got), len(original))
+	}
+}
+
+// aym-nfs.2: run() writes the channel map alongside the regional map.
+// Removes the generated file in cleanup if it did not exist before the test,
+// so a failed assertion cannot leave the working tree dirty.
+func TestRun_WritesChannelSVG(t *testing.T) {
+	repoRoot, err := findRepoRoot()
+	if err != nil {
+		t.Fatalf("findRepoRoot: %v", err)
+	}
+	outPath := filepath.Join(repoRoot, channelOutputFile)
+
+	original, readErr := os.ReadFile(outPath)
+	t.Cleanup(func() {
+		if readErr != nil {
+			os.Remove(outPath)
+			return
+		}
+		if err := os.WriteFile(outPath, original, 0644); err != nil {
+			t.Errorf("restore channel SVG: %v", err)
+		}
+	})
+
+	if err := run(); err != nil {
+		t.Fatalf("run: %v", err)
+	}
+
+	got, err := os.ReadFile(outPath)
+	if err != nil {
+		t.Fatalf("read channel SVG: %v", err)
+	}
+	if !bytes.HasPrefix(got, []byte("<svg")) {
+		t.Errorf("channel SVG does not start with <svg; got %.40q", got)
+	}
+}
+
 // squareCountyFixture is a single unit square centered on the equator so
 // cosLat=1 and every transform is hand-computable:
 //
@@ -87,6 +153,83 @@ func squareCountyFixture() (*frontMatter, *countyCollection) {
 		},
 	}
 	return fm, gf
+}
+
+// groupFixture reuses the square county geography but expresses the
+// assignment as a channel-style group, for renderMap tests.
+func groupFixture() (*mapColors, []group, *countyCollection) {
+	fm, gf := squareCountyFixture()
+	groups := []group{
+		{
+			Name:     "MediumFast",
+			Color:    "#ff8800",
+			Label:    &regionLabel{X: 100, Y: 200},
+			Counties: []string{"Square"},
+		},
+	}
+	return &fm.Map, groups, gf
+}
+
+func TestRenderMap_GroupCountyColored(t *testing.T) {
+	colors, groups, gf := groupFixture()
+	svg, err := renderMap(colors, groups, gf)
+	if err != nil {
+		t.Fatalf("renderMap: %v", err)
+	}
+	if !strings.Contains(svg, `fill="#ff8800"`) {
+		t.Errorf("group county missing group fill\n got:\n%s", svg)
+	}
+}
+
+func TestRenderMap_CatchallColorsUnmatched(t *testing.T) {
+	fm, gf := twoCountyFixture() // "Square" assigned below; "Tri" unmatched
+	groups := []group{
+		{Name: "MediumFast", Color: "#ff8800", Counties: []string{"Square"}},
+		{Name: "LongFast", Color: "#3b82c4", Catchall: true},
+	}
+	svg, err := renderMap(&fm.Map, groups, gf)
+	if err != nil {
+		t.Fatalf("renderMap: %v", err)
+	}
+	if !strings.Contains(svg, `fill="#ff8800"`) {
+		t.Errorf("assigned county missing group fill\n got:\n%s", svg)
+	}
+	if !strings.Contains(svg, `fill="#3b82c4"`) {
+		t.Errorf("unmatched county missing catchall fill\n got:\n%s", svg)
+	}
+	if strings.Contains(svg, `fill="#cccccc"`) {
+		t.Errorf("catchall present: no county should use unassigned_county\n got:\n%s", svg)
+	}
+}
+
+func TestRenderMap_LabelFontsize(t *testing.T) {
+	colors, groups, gf := groupFixture()
+	groups[0].Label.FontSize = 14
+	svg, err := renderMap(colors, groups, gf)
+	if err != nil {
+		t.Fatalf("renderMap: %v", err)
+	}
+	if !strings.Contains(svg, `font-size="14"`) {
+		t.Errorf("non-default fontsize missing from group label\n got:\n%s", svg)
+	}
+	if strings.Contains(svg, `font-size="21"`) {
+		t.Errorf("default fontsize should not appear when fontsize is set\n got:\n%s", svg)
+	}
+}
+
+func TestRenderMap_MultiLineGroupName(t *testing.T) {
+	colors, groups, gf := groupFixture()
+	groups[0].Name = "LongFast\nMediumFast"
+	svg, err := renderMap(colors, groups, gf)
+	if err != nil {
+		t.Fatalf("renderMap: %v", err)
+	}
+	if !strings.Contains(svg, ">LongFast</tspan>") {
+		t.Errorf("missing first line tspan\n got:\n%s", svg)
+	}
+	if !strings.Contains(svg, ">MediumFast</tspan>") {
+		t.Errorf("missing second line tspan\n got:\n%s", svg)
+	}
 }
 
 func TestBuildSVG_SquareCounty(t *testing.T) {
@@ -377,12 +520,12 @@ func TestBuildSVG_UnsupportedGeometryType(t *testing.T) {
 }
 
 func TestWarnDuplicateCounties_CrossRegion(t *testing.T) {
-	regions := []region{
+	groups := []group{
 		{Name: "Alpha", Color: "#aa0000", Counties: []string{"Square"}},
 		{Name: "Beta", Color: "#00bb00", Counties: []string{"Square"}},
 	}
 	var buf bytes.Buffer
-	warnDuplicateCounties(regions, &buf)
+	warnDuplicateCounties(groups, &buf)
 	got := buf.String()
 	if !strings.Contains(got, "Square") {
 		t.Errorf("warning should name county Square; got %q", got)
@@ -393,11 +536,11 @@ func TestWarnDuplicateCounties_CrossRegion(t *testing.T) {
 }
 
 func TestWarnDuplicateCounties_WithinRegion(t *testing.T) {
-	regions := []region{
+	groups := []group{
 		{Name: "Solo", Color: "#aa0000", Counties: []string{"Square", "Square"}},
 	}
 	var buf bytes.Buffer
-	warnDuplicateCounties(regions, &buf)
+	warnDuplicateCounties(groups, &buf)
 	got := buf.String()
 	if got == "" {
 		t.Fatal("expected stderr warning for county repeated within one region")
@@ -411,12 +554,12 @@ func TestWarnDuplicateCounties_WithinRegion(t *testing.T) {
 }
 
 func TestWarnDuplicateCounties_NoDuplicates(t *testing.T) {
-	regions := []region{
+	groups := []group{
 		{Name: "Alpha", Color: "#aa0000", Counties: []string{"Square"}},
 		{Name: "Beta", Color: "#00bb00", Counties: []string{"Tri"}},
 	}
 	var buf bytes.Buffer
-	warnDuplicateCounties(regions, &buf)
+	warnDuplicateCounties(groups, &buf)
 	if buf.Len() != 0 {
 		t.Errorf("expected no warning; got %q", buf.String())
 	}
@@ -427,7 +570,7 @@ func TestWarnUnmatchedCounties_FrontmatterCountyMissingFromGeoJSON(t *testing.T)
 	fm.Regions[0].Counties = append(fm.Regions[0].Counties, "Phantom")
 
 	var buf bytes.Buffer
-	warnUnmatchedCounties(fm, gf, &buf)
+	warnUnmatchedCounties(regionsToGroups(fm.Regions), gf, &buf)
 	got := buf.String()
 
 	if !strings.Contains(got, "Phantom") {
@@ -442,7 +585,7 @@ func TestWarnUnmatchedCounties_GeoJSONFeatureMatchedByNoCounty(t *testing.T) {
 	fm, gf := twoCountyFixture() // "Square" assigned; "Tri" is GeoJSON-only
 
 	var buf bytes.Buffer
-	warnUnmatchedCounties(fm, gf, &buf)
+	warnUnmatchedCounties(regionsToGroups(fm.Regions), gf, &buf)
 	got := buf.String()
 
 	if !strings.Contains(got, "Tri") {
@@ -468,10 +611,55 @@ func TestWarnUnmatchedCounties_CurrentRepoDataIsClean(t *testing.T) {
 	}
 
 	var buf bytes.Buffer
-	warnUnmatchedCounties(fm, gf, &buf)
+	warnUnmatchedCounties(regionsToGroups(fm.Regions), gf, &buf)
 
 	if buf.Len() != 0 {
 		t.Errorf("expected no warnings for current repo data; got:\n%s", buf.String())
+	}
+}
+
+// aym-nfs.2: a group set containing a catchall group suppresses the
+// GeoJSON-side "matched by no county list" warning — uncovered counties are
+// intentional there. The county-side direction (typo detection) always fires.
+func TestWarnUnmatchedCounties_CatchallSuppressesGeoJSONSide(t *testing.T) {
+	_, gf := twoCountyFixture() // "Tri" is GeoJSON-only
+	groups := []group{{
+		Name:     "Test",
+		Color:    "#aa0000",
+		Catchall: true,
+		Counties: []string{"Square"},
+	}}
+
+	var buf bytes.Buffer
+	warnUnmatchedCounties(groups, gf, &buf)
+
+	if strings.Contains(buf.String(), "Tri") {
+		t.Errorf("catchall group set should suppress GeoJSON-side warning; got %q", buf.String())
+	}
+}
+
+// aym-nfs.2: committed channels.yaml produces no duplicate or unmatched
+// county warnings; mirrors TestWarnUnmatchedCounties_CurrentRepoDataIsClean.
+func TestSidecar_CurrentRepoChannelsClean(t *testing.T) {
+	repoRoot, err := findRepoRoot()
+	if err != nil {
+		t.Fatalf("findRepoRoot: %v", err)
+	}
+	sc, err := parseSidecar(filepath.Join(repoRoot, channelsFile))
+	if err != nil {
+		t.Fatalf("parseSidecar: %v", err)
+	}
+	gf, err := parseGeoJSON(filepath.Join(repoRoot, geoJSONFile))
+	if err != nil {
+		t.Fatalf("parseGeoJSON: %v", err)
+	}
+
+	var buf bytes.Buffer
+	warnDuplicateCounties(sc.Channels, &buf)
+	warnUnmatchedCounties(sc.Channels, gf, &buf)
+
+	if buf.Len() != 0 {
+		t.Errorf("expected no warnings for committed channels.yaml; got:\n%s", buf.String())
 	}
 }
 
@@ -490,6 +678,25 @@ func TestFrontmatter_RegionColorFormat(t *testing.T) {
 	for _, r := range fm.Regions {
 		if !isWellFormedRegionColor(r.Color) {
 			t.Errorf("region %q color %q is not a well-formed color string", r.Name, r.Color)
+		}
+	}
+}
+
+// aym-nfs.2: every committed channels[].color must be a well-formed color
+// string; mirrors TestFrontmatter_RegionColorFormat.
+func TestSidecar_ChannelColorFormat(t *testing.T) {
+	repoRoot, err := findRepoRoot()
+	if err != nil {
+		t.Fatalf("findRepoRoot: %v", err)
+	}
+	sc, err := parseSidecar(filepath.Join(repoRoot, channelsFile))
+	if err != nil {
+		t.Fatalf("parseSidecar: %v", err)
+	}
+
+	for _, ch := range sc.Channels {
+		if !isWellFormedRegionColor(ch.Color) {
+			t.Errorf("channel %q color %q is not a well-formed color string", ch.Name, ch.Color)
 		}
 	}
 }
@@ -559,7 +766,7 @@ func TestWarnUnmatchedCounties_AllNamesMatch(t *testing.T) {
 	fm, gf := squareCountyFixture()
 
 	var buf bytes.Buffer
-	warnUnmatchedCounties(fm, gf, &buf)
+	warnUnmatchedCounties(regionsToGroups(fm.Regions), gf, &buf)
 
 	if buf.Len() != 0 {
 		t.Errorf("expected no warning when all names match; got %q", buf.String())
@@ -607,6 +814,9 @@ func TestREADME_DocumentsMapgen(t *testing.T) {
 		"region_label_halo",
 		"background",
 		"never hand-edit",
+		"channels.yaml",
+		"channel-lora-settings.svg",
+		"catchall",
 	}
 	for _, want := range required {
 		if !strings.Contains(readme, want) {
@@ -633,12 +843,12 @@ func TestNormalizeCounty(t *testing.T) {
 }
 
 func TestWarnDuplicateCounties_NormalizedNames(t *testing.T) {
-	regions := []region{
+	groups := []group{
 		{Name: "Alpha", Color: "#aa0000", Counties: []string{"De Soto"}},
 		{Name: "Beta", Color: "#00bb00", Counties: []string{"desoto"}},
 	}
 	var buf bytes.Buffer
-	warnDuplicateCounties(regions, &buf)
+	warnDuplicateCounties(groups, &buf)
 	got := buf.String()
 	if !strings.Contains(got, "De Soto") {
 		t.Errorf("warning should name first-seen county spelling; got %q", got)
@@ -761,6 +971,173 @@ func TestParseFrontmatter_MissingFile(t *testing.T) {
 	_, err := parseFrontmatter(filepath.Join(t.TempDir(), "nope.md"))
 	if err == nil {
 		t.Fatal("expected error for missing file")
+	}
+}
+
+func TestParseSidecar_Valid(t *testing.T) {
+	sc, err := unmarshalSidecar([]byte(`map:
+  background: "#112233"
+  county_stroke: "#000000"
+  unassigned_county: "#cccccc"
+  county_fill_opacity: 0.85
+  county_label: white
+  region_label: black
+  region_label_halo: "#f8f8f8"
+`))
+	if err != nil {
+		t.Fatalf("unmarshalSidecar: %v", err)
+	}
+	m := sc.Map
+	if m.Background != "#112233" {
+		t.Errorf("background = %q, want #112233", m.Background)
+	}
+	if m.CountyStroke != "#000000" {
+		t.Errorf("county_stroke = %q, want #000000", m.CountyStroke)
+	}
+	if m.UnassignedCounty != "#cccccc" {
+		t.Errorf("unassigned_county = %q, want #cccccc", m.UnassignedCounty)
+	}
+	if m.CountyFillOpacity != 0.85 {
+		t.Errorf("county_fill_opacity = %v, want 0.85", m.CountyFillOpacity)
+	}
+	if m.CountyLabel != "white" {
+		t.Errorf("county_label = %q, want white", m.CountyLabel)
+	}
+	if m.RegionLabel != "black" {
+		t.Errorf("region_label = %q, want black", m.RegionLabel)
+	}
+	if m.RegionLabelHalo != "#f8f8f8" {
+		t.Errorf("region_label_halo = %q, want #f8f8f8", m.RegionLabelHalo)
+	}
+}
+
+func TestParseSidecar_Channels(t *testing.T) {
+	sc, err := unmarshalSidecar([]byte(`map:
+  background: none
+channels:
+  - name: MediumFast
+    color: "#ff8800"
+    label:
+      x: 700
+      y: 800
+    counties:
+      - Miami-Dade
+      - Broward
+  - name: LongFast
+    color: "#0066ff"
+    counties:
+      - Alachua
+`))
+	if err != nil {
+		t.Fatalf("unmarshalSidecar: %v", err)
+	}
+	if len(sc.Channels) != 2 {
+		t.Fatalf("channels = %d, want 2", len(sc.Channels))
+	}
+	ch := sc.Channels[0]
+	if ch.Name != "MediumFast" || ch.Color != "#ff8800" {
+		t.Errorf("channel 0 = %+v", ch)
+	}
+	if ch.Label == nil || ch.Label.X != 700 || ch.Label.Y != 800 {
+		t.Errorf("channel 0 label = %+v, want (700, 800)", ch.Label)
+	}
+	if len(ch.Counties) != 2 || ch.Counties[0] != "Miami-Dade" || ch.Counties[1] != "Broward" {
+		t.Errorf("channel 0 counties = %v, want [Miami-Dade Broward]", ch.Counties)
+	}
+	if sc.Channels[1].Label != nil {
+		t.Errorf("channel without label key should have nil Label, got %+v", sc.Channels[1].Label)
+	}
+}
+
+func TestParseSidecar_LabelFontsize(t *testing.T) {
+	sc, err := unmarshalSidecar([]byte(`channels:
+  - name: MediumFast
+    label:
+      x: 700
+      y: 800
+      fontsize: 14
+  - name: LongFast
+    label:
+      x: 500
+      y: 400
+`))
+	if err != nil {
+		t.Fatalf("unmarshalSidecar: %v", err)
+	}
+	if got := sc.Channels[0].Label.FontSize; got != 14 {
+		t.Errorf("fontsize = %v, want 14", got)
+	}
+	if got := sc.Channels[1].Label.FontSize; got != 0 {
+		t.Errorf("omitted fontsize = %v, want 0", got)
+	}
+}
+
+func TestParseSidecar_Catchall(t *testing.T) {
+	sc, err := unmarshalSidecar([]byte(`channels:
+  - name: LongFast
+    catchall: true
+  - name: MediumFast
+`))
+	if err != nil {
+		t.Fatalf("unmarshalSidecar: %v", err)
+	}
+	if !sc.Channels[0].Catchall {
+		t.Error("catchall: true should parse as true")
+	}
+	if sc.Channels[1].Catchall {
+		t.Error("omitted catchall should default to false")
+	}
+}
+
+func TestParseSidecar_TwoCatchallsError(t *testing.T) {
+	_, err := unmarshalSidecar([]byte(`channels:
+  - name: LongFast
+    catchall: true
+  - name: MediumFast
+    catchall: true
+`))
+	if err == nil {
+		t.Fatal("expected error for two catchall groups")
+	}
+	if !strings.Contains(err.Error(), "catchall") {
+		t.Errorf("error %q should mention catchall", err)
+	}
+}
+
+func TestParseSidecar_MissingFile(t *testing.T) {
+	_, err := parseSidecar(filepath.Join(t.TempDir(), "nope.yaml"))
+	if err == nil {
+		t.Fatal("expected error for missing file")
+	}
+}
+
+func TestParseSidecar_MalformedYAML(t *testing.T) {
+	_, err := unmarshalSidecar([]byte("map: [unclosed\n"))
+	if err == nil {
+		t.Fatal("expected error for malformed YAML")
+	}
+	if !strings.Contains(err.Error(), "parsing YAML") {
+		t.Errorf("error %q should mention parsing YAML", err)
+	}
+}
+
+func TestParseSidecar_CurrentRepoDataIsClean(t *testing.T) {
+	repoRoot, err := findRepoRoot()
+	if err != nil {
+		t.Fatalf("findRepoRoot: %v", err)
+	}
+	sc, err := parseSidecar(filepath.Join(repoRoot, channelsFile))
+	if err != nil {
+		t.Fatalf("parseSidecar channels.yaml: %v", err)
+	}
+	catchalls := 0
+	for _, ch := range sc.Channels {
+		if ch.Catchall {
+			catchalls++
+		}
+	}
+	if catchalls != 1 {
+		t.Errorf("channels.yaml catchall groups = %d, want exactly 1", catchalls)
 	}
 }
 
