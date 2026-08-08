@@ -16,21 +16,17 @@ import (
 )
 
 const (
-	viewBoxW     = 1200
-	viewBoxH     = 1000
-	padding      = 20.0
-	strokeWidth  = 0.4
+	viewBoxW          = 1200
+	viewBoxH          = 1000
+	padding           = 20.0
+	strokeWidth       = 0.4
 	outputFile        = "content/docs/meshtastic/regional-lora-settings/regional-lora-settings.svg"
 	channelOutputFile = "content/docs/meshtastic/regional-lora-settings/channel-lora-settings.svg"
 	contentFile       = "content/docs/meshtastic/regional-lora-settings/index.md"
 	channelsFile      = "content/docs/meshtastic/regional-lora-settings/channels.yaml"
+	regionsFile       = "content/docs/meshtastic/regional-lora-settings/regions.yaml"
 	geoJSONFile       = "assets/gis/counties.geojson"
 )
-
-type frontMatter struct {
-	Map     mapColors `yaml:"map"`
-	Regions []region  `yaml:"regions"`
-}
 
 type mapColors struct {
 	Background        string  `yaml:"background"`
@@ -46,13 +42,6 @@ type regionLabel struct {
 	X        float64 `yaml:"x"`
 	Y        float64 `yaml:"y"`
 	FontSize float64 `yaml:"fontsize"`
-}
-
-type region struct {
-	Name     string       `yaml:"name"`
-	Color    string       `yaml:"color"`
-	Label    *regionLabel `yaml:"label"`
-	Counties []string     `yaml:"counties"`
 }
 
 type countyProps struct {
@@ -79,9 +68,9 @@ func run() error {
 		return fmt.Errorf("finding repo root: %w", err)
 	}
 
-	fm, err := parseFrontmatter(filepath.Join(repoRoot, contentFile))
+	rsc, err := parseSidecar(filepath.Join(repoRoot, regionsFile))
 	if err != nil {
-		return fmt.Errorf("parsing frontmatter: %w", err)
+		return fmt.Errorf("parsing regions sidecar: %w", err)
 	}
 
 	gf, err := parseGeoJSON(filepath.Join(repoRoot, geoJSONFile))
@@ -89,10 +78,10 @@ func run() error {
 		return fmt.Errorf("parsing GeoJSON: %w", err)
 	}
 
-	warnDuplicateCounties(regionsToGroups(fm.Regions), os.Stderr)
-	warnUnmatchedCounties(regionsToGroups(fm.Regions), gf, os.Stderr)
+	warnDuplicateCounties(rsc.Regions, os.Stderr)
+	warnUnmatchedCounties(rsc.Regions, gf, os.Stderr)
 
-	svg, err := buildSVG(fm, gf)
+	svg, err := renderMap(&rsc.Map, rsc.Regions, gf)
 	if err != nil {
 		return err
 	}
@@ -198,20 +187,6 @@ func hasCatchall(groups []group) bool {
 		}
 	}
 	return false
-}
-
-// buildSVG generates the regional map SVG from frontmatter and GeoJSON.
-// Pure function: no file I/O, no side effects.
-func buildSVG(fm *frontMatter, fc *countyCollection) (string, error) {
-	return renderMap(&fm.Map, regionsToGroups(fm.Regions), fc)
-}
-
-func regionsToGroups(regions []region) []group {
-	groups := make([]group, len(regions))
-	for i, r := range regions {
-		groups[i] = group{Name: r.Name, Color: r.Color, Label: r.Label, Counties: r.Counties}
-	}
-	return groups
 }
 
 // renderMap generates an SVG county map from shared map colors and a list of
@@ -377,30 +352,10 @@ func renderMap(colors *mapColors, groups []group, fc *countyCollection) (string,
 	return sb.String(), nil
 }
 
-func parseFrontmatter(path string) (*frontMatter, error) {
-	data, err := os.ReadFile(path)
-	if err != nil {
-		return nil, err
-	}
-	content := string(data)
-	if !strings.HasPrefix(content, "---") {
-		return nil, fmt.Errorf("no YAML frontmatter found")
-	}
-	end := strings.Index(content[3:], "---")
-	if end == -1 {
-		return nil, fmt.Errorf("unclosed YAML frontmatter")
-	}
-	yamlData := content[3 : 3+end]
-	var fm frontMatter
-	if err := yaml.Unmarshal([]byte(yamlData), &fm); err != nil {
-		return nil, fmt.Errorf("parsing YAML: %w", err)
-	}
-	return &fm, nil
-}
-
 type sidecar struct {
 	Map      mapColors `yaml:"map"`
 	Channels []group   `yaml:"channels"`
+	Regions  []group   `yaml:"regions"`
 }
 
 type group struct {

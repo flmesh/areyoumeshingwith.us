@@ -1,0 +1,105 @@
+map:
+  county_stroke: "#222222"
+  unassigned_county: "#8E8E95"
+  county_fill_opacity: 1.0
+  county_label: "white"
+  region_label: "black"
+  region_label_halo: "white"
+regions:
+  - name: "North West #1"
+    color: "#AB65CD"
+    label:
+      x: 290
+      y: 195
+    counties:
+      - Bay
+      - Calhoun
+      - Escambia
+      - Franklin
+      - Gulf
+      - Holmes
+      - Jackson
+      - Liberty
+      - Okaloosa
+      - Santa Rosa
+      - Walton
+      - Washington
+  - name: "North #2"
+    color: "#A80000"
+    label:
+      x: 980
+      y: 120
+    counties:
+      - Alachua
+      - Baker
+      - Bradford
+      - Clay
+      - Columbia
+      - Dixie
+      - Duval
+      - Flagler
+      - Gadsden
+      - Gilchrist
+      - Hamilton
+      - Jefferson
+      - Lafayette
+      - Leon
+      - Levy
+      - Madison
+      - Marion
+      - Nassau
+      - Putnam
+      - "St. Johns"
+      - Suwannee
+      - Taylor
+      - Union
+      - Wakulla
+  - name: "Central West #4"
+    color: "#0084A9"
+    label:
+      x: 620
+      y: 470
+    counties:
+      - Charlotte
+      - Citrus
+      - DeSoto
+      - Hardee
+      - Hernando
+      - Hillsborough
+      - Lee
+      - Manatee
+      - Pasco
+      - Pinellas
+      - Polk
+      - Sarasota
+      - Sumter
+  - name: "Central East #3"
+    color: "#D1C901"
+    label:
+      x: 960
+      y: 280
+    counties:
+      - Brevard
+      - Highlands
+      - Indian River
+      - Lake
+      - Okeechobee
+      - Orange
+      - Osceola
+      - Seminole
+      - Volusia
+  - name: "South #5"
+    color: "#E69801"
+    label:
+      x: 883
+      y: 835
+    counties:
+      - Broward
+      - Collier
+      - Glades
+      - Hendry
+      - Martin
+      - Miami-Dade
+      - Monroe
+      - Palm Beach
+      - "St. Lucie"

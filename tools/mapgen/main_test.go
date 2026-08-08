@@ -596,14 +596,14 @@ func TestWarnUnmatchedCounties_GeoJSONFeatureMatchedByNoCounty(t *testing.T) {
 	}
 }
 
-func TestWarnUnmatchedCounties_CurrentRepoDataIsClean(t *testing.T) {
+func TestWarnUnmatchedCounties_CurrentRepoRegionalDataIsClean(t *testing.T) {
 	repoRoot, err := findRepoRoot()
 	if err != nil {
 		t.Fatalf("findRepoRoot: %v", err)
 	}
-	fm, err := parseFrontmatter(filepath.Join(repoRoot, contentFile))
+	sc, err := parseSidecar(filepath.Join(repoRoot, regionsFile))
 	if err != nil {
-		t.Fatalf("parseFrontmatter: %v", err)
+		t.Fatalf("parseSidecar regions.yaml: %v", err)
 	}
 	gf, err := parseGeoJSON(filepath.Join(repoRoot, geoJSONFile))
 	if err != nil {
@@ -611,7 +611,7 @@ func TestWarnUnmatchedCounties_CurrentRepoDataIsClean(t *testing.T) {
 	}
 
 	var buf bytes.Buffer
-	warnUnmatchedCounties(regionsToGroups(fm.Regions), gf, &buf)
+	warnUnmatchedCounties(sc.Regions, gf, &buf)
 
 	if buf.Len() != 0 {
 		t.Errorf("expected no warnings for current repo data; got:\n%s", buf.String())
@@ -1118,6 +1118,82 @@ func TestParseSidecar_MalformedYAML(t *testing.T) {
 	}
 	if !strings.Contains(err.Error(), "parsing YAML") {
 		t.Errorf("error %q should mention parsing YAML", err)
+	}
+}
+
+// aym-nfs.7: unmarshalSidecar parses a regions.yaml-style document,
+// populating Regions on the shared sidecar struct.
+func TestParseSidecar_Regions(t *testing.T) {
+	sc, err := unmarshalSidecar([]byte(`map:
+  background: "#112233"
+  county_stroke: "#000000"
+  unassigned_county: "#cccccc"
+  county_fill_opacity: 0.85
+  county_label: white
+  region_label: black
+  region_label_halo: "#f8f8f8"
+regions:
+  - name: "North #1"
+    color: "#ff0000"
+    label:
+      x: 100
+      y: 200
+    counties:
+      - Square
+      - Tri
+  - name: "South #2"
+    color: "#00bb00"
+    counties:
+      - Other
+`))
+	if err != nil {
+		t.Fatalf("unmarshalSidecar: %v", err)
+	}
+	if len(sc.Regions) != 2 {
+		t.Fatalf("regions = %d, want 2", len(sc.Regions))
+	}
+	r := sc.Regions[0]
+	if r.Name != "North #1" || r.Color != "#ff0000" {
+		t.Errorf("region 0 = %+v", r)
+	}
+	if r.Label == nil || r.Label.X != 100 || r.Label.Y != 200 {
+		t.Errorf("region 0 label = %+v, want (100, 200)", r.Label)
+	}
+	if len(r.Counties) != 2 || r.Counties[0] != "Square" || r.Counties[1] != "Tri" {
+		t.Errorf("region 0 counties = %v, want [Square Tri]", r.Counties)
+	}
+	if sc.Regions[1].Label != nil {
+		t.Errorf("region without label key should have nil Label, got %+v", sc.Regions[1].Label)
+	}
+	if sc.Regions[1].Catchall {
+		t.Error("region should default Catchall to false")
+	}
+	if sc.Channels != nil {
+		t.Errorf("regions YAML should not populate Channels, got %v", sc.Channels)
+	}
+}
+
+// aym-nfs.7: the committed regions.yaml parses cleanly via the shared
+// sidecar struct and unmarshalSidecar function.
+func TestParseSidecar_RegionsCurrentRepoDataIsClean(t *testing.T) {
+	repoRoot, err := findRepoRoot()
+	if err != nil {
+		t.Fatalf("findRepoRoot: %v", err)
+	}
+	sc, err := parseSidecar(filepath.Join(repoRoot, regionsFile))
+	if err != nil {
+		t.Fatalf("parseSidecar regions.yaml: %v", err)
+	}
+	if len(sc.Regions) == 0 {
+		t.Fatal("committed regions.yaml should contain at least one region")
+	}
+	for _, r := range sc.Regions {
+		if !isWellFormedRegionColor(r.Color) {
+			t.Errorf("region %q color %q is not a well-formed color string", r.Name, r.Color)
+		}
+		if r.Catchall {
+			t.Errorf("region %q should not set catchall", r.Name)
+		}
 	}
 }
 
