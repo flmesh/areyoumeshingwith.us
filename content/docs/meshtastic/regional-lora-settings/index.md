@@ -1,5 +1,5 @@
 ---
-title: "Regional LoRa Settings"
+title: "Regional Settings"
 # linkTitle:
 date: 2026-01-21T03:31:13Z
 draft: false

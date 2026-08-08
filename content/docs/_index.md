@@ -14,5 +14,8 @@ Florida Mesh Documentations, How-tos and Configuration Setup Guides.
 
 For [Meshtastic][meshtastic-docs] & [Meshcore][meshcore-docs], and any other LoRa based Mesh system.
 
+The [Weekly Mesh Net][weekly-net] runs on both networks at the same time.
+
 [meshtastic-docs]: meshtastic
 [meshcore-docs]: meshcore
+[weekly-net]: weekly-mesh-net
