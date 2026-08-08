@@ -108,7 +108,7 @@ Firmware update example, tested on StationG2:
 
 Once the upgrade is complete, your station g2 should automatically reboot with the updated firmware. 
 
-``` shell
+```shell {linenos=false}
 (meshtastic-venv) ubuntu@rpi-g2admin:/tmp/firmware-esp32s3-2.7.7.5ae4ff9 $ python -m esptool --baud 1200 write-flash 0x10000  firmware-station-g2-2.7.7.5ae4ff9-update.bin 
 esptool v5.1.0
 Connected to ESP32-S3 on /dev/ttyACM0:
@@ -144,12 +144,12 @@ Reactivating: The next time you want to use the Meshtastic CLI, you must navigat
 
 Downloading: The latest stable (beta) or alpha firmware is in the `Firmware` section at the bottom of the [downloads](https://meshtastic.org/downloads/) page.  Once you select the version, you will be redirected to the github page for that release.  Scroll down to the bottom `Assets` section, right click on the `firmware-esp32s3-{version}.zip` link, and select `copy link address` from your browser’s drop down to get the full link in your clipboard. Then go to your ssh session on the raspberry pi and download it to an appropriate location of your choosing, unzip it, and continue with the install. For example, to download 2.6.11 into /tmp (non-persistent storage):
 
-``` shell
+```shell {linenos=false}
 cd /tmp
 wget https://github.com/meshtastic/firmware/releases/download/v2.6.11.60ec05e/firmware-esp32s3-2.6.11.60ec05e.zip  
 unzip -d firmware-esp32s3-2.6.11.60ec05e firmware-esp32s3-2.6.11.60ec05e.zip
 cd firmware-esp32s3-2.6.11.60ec05e
-	```
+```
 
 
 Note: the example above downloads firmware to /tmp which is not persisted if the node is rebooted. If you would like to keep firmware long term for an emergency offline recovery / rollback, choose another location.  
