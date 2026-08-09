@@ -118,24 +118,22 @@ func TestRun_WritesChannelSVG(t *testing.T) {
 //	offsetX=120, offsetY=20
 //	transform(lon,lat) = ((lon+1)*480+120, 1000-((lat+1)*480+20))
 //	corners → (120,980),(1080,980),(1080,20),(120,20); centroid → (600,500)
-func squareCountyFixture() (*frontMatter, *countyCollection) {
-	fm := &frontMatter{
-		Map: mapColors{
-			Background:        "none",
-			CountyStroke:      "#000000",
-			UnassignedCounty:  "#cccccc",
-			CountyFillOpacity: 1.0,
-			CountyLabel:       "white",
-			RegionLabel:       "black",
-			RegionLabelHalo:   "white",
-		},
-		Regions: []region{
-			{
-				Name:     "Test #1",
-				Color:    "#ff0000",
-				Label:    &regionLabel{X: 100, Y: 200},
-				Counties: []string{"Square"},
-			},
+func squareCountyFixture() (*mapColors, []group, *countyCollection) {
+	colors := &mapColors{
+		Background:        "none",
+		CountyStroke:      "#000000",
+		UnassignedCounty:  "#cccccc",
+		CountyFillOpacity: 1.0,
+		CountyLabel:       "white",
+		RegionLabel:       "black",
+		RegionLabelHalo:   "white",
+	}
+	groups := []group{
+		{
+			Name:     "Test #1",
+			Color:    "#ff0000",
+			Label:    &regionLabel{X: 100, Y: 200},
+			Counties: []string{"Square"},
 		},
 	}
 
@@ -152,13 +150,13 @@ func squareCountyFixture() (*frontMatter, *countyCollection) {
 			},
 		},
 	}
-	return fm, gf
+	return colors, groups, gf
 }
 
 // groupFixture reuses the square county geography but expresses the
 // assignment as a channel-style group, for renderMap tests.
 func groupFixture() (*mapColors, []group, *countyCollection) {
-	fm, gf := squareCountyFixture()
+	colors, _, gf := squareCountyFixture()
 	groups := []group{
 		{
 			Name:     "MediumFast",
@@ -167,7 +165,7 @@ func groupFixture() (*mapColors, []group, *countyCollection) {
 			Counties: []string{"Square"},
 		},
 	}
-	return &fm.Map, groups, gf
+	return colors, groups, gf
 }
 
 func TestRenderMap_GroupCountyColored(t *testing.T) {
@@ -182,12 +180,12 @@ func TestRenderMap_GroupCountyColored(t *testing.T) {
 }
 
 func TestRenderMap_CatchallColorsUnmatched(t *testing.T) {
-	fm, gf := twoCountyFixture() // "Square" assigned below; "Tri" unmatched
+	colors, _, gf := twoCountyFixture() // "Square" assigned below; "Tri" unmatched
 	groups := []group{
 		{Name: "MediumFast", Color: "#ff8800", Counties: []string{"Square"}},
 		{Name: "LongFast", Color: "#3b82c4", Catchall: true},
 	}
-	svg, err := renderMap(&fm.Map, groups, gf)
+	svg, err := renderMap(colors, groups, gf)
 	if err != nil {
 		t.Fatalf("renderMap: %v", err)
 	}
@@ -232,11 +230,11 @@ func TestRenderMap_MultiLineGroupName(t *testing.T) {
 	}
 }
 
-func TestBuildSVG_SquareCounty(t *testing.T) {
-	fm, gf := squareCountyFixture()
-	svg, err := buildSVG(fm, gf)
+func TestRenderMap_SquareCounty(t *testing.T) {
+	colors, groups, gf := squareCountyFixture()
+	svg, err := renderMap(colors, groups, gf)
 	if err != nil {
-		t.Fatalf("buildSVG: %v", err)
+		t.Fatalf("renderMap: %v", err)
 	}
 
 	// Path corners rounded to ints (see squareCountyFixture comment).
@@ -255,7 +253,7 @@ func TestBuildSVG_SquareCounty(t *testing.T) {
 		t.Errorf("SVG missing county label at centroid\n got:\n%s", svg)
 	}
 
-	// Region label from frontmatter.
+	// Region label from group config.
 	if !strings.Contains(svg, `<text x="100.0" y="200.0" font-size="21" fill="black" stroke="white"`) {
 		t.Errorf("SVG missing region label\n got:\n%s", svg)
 	}
@@ -269,13 +267,13 @@ func TestBuildSVG_SquareCounty(t *testing.T) {
 	}
 }
 
-func TestBuildSVG_BackgroundRect(t *testing.T) {
-	fm, gf := squareCountyFixture()
-	fm.Map.Background = "#112233"
+func TestRenderMap_BackgroundRect(t *testing.T) {
+	colors, groups, gf := squareCountyFixture()
+	colors.Background = "#112233"
 
-	svg, err := buildSVG(fm, gf)
+	svg, err := renderMap(colors, groups, gf)
 	if err != nil {
-		t.Fatalf("buildSVG: %v", err)
+		t.Fatalf("renderMap: %v", err)
 	}
 	want := `<rect width="1200" height="1000" fill="#112233"/>`
 	if !strings.Contains(svg, want) {
@@ -283,33 +281,33 @@ func TestBuildSVG_BackgroundRect(t *testing.T) {
 	}
 }
 
-func TestBuildSVG_UnassignedCounty(t *testing.T) {
-	fm, gf := squareCountyFixture()
-	fm.Regions = nil // no region assignment
+func TestRenderMap_UnassignedCounty(t *testing.T) {
+	colors, _, gf := squareCountyFixture()
+	groups := []group{} // no group assignment
 
-	svg, err := buildSVG(fm, gf)
+	svg, err := renderMap(colors, groups, gf)
 	if err != nil {
-		t.Fatalf("buildSVG: %v", err)
+		t.Fatalf("renderMap: %v", err)
 	}
 	if !strings.Contains(svg, `fill="#cccccc"`) {
 		t.Errorf("expected unassigned fill #cccccc\n got:\n%s", svg)
 	}
 }
 
-func TestBuildSVG_NilRegionLabelSkipped(t *testing.T) {
-	fm, gf := squareCountyFixture()
-	fm.Regions[0].Label = nil
+func TestRenderMap_NilGroupLabelSkipped(t *testing.T) {
+	colors, groups, gf := squareCountyFixture()
+	groups[0].Label = nil
 
-	svg, err := buildSVG(fm, gf)
+	svg, err := renderMap(colors, groups, gf)
 	if err != nil {
-		t.Fatalf("buildSVG: %v", err)
+		t.Fatalf("renderMap: %v", err)
 	}
 	if strings.Contains(svg, "Test #1") {
 		t.Errorf("expected nil region label to be skipped\n got:\n%s", svg)
 	}
 }
 
-func TestBuildSVG_RejectsInvalidOpacity(t *testing.T) {
+func TestRenderMap_RejectsInvalidOpacity(t *testing.T) {
 	cases := []struct {
 		name    string
 		opacity float64
@@ -320,9 +318,9 @@ func TestBuildSVG_RejectsInvalidOpacity(t *testing.T) {
 	}
 	for _, tc := range cases {
 		t.Run(tc.name, func(t *testing.T) {
-			fm, gf := squareCountyFixture()
-			fm.Map.CountyFillOpacity = tc.opacity
-			_, err := buildSVG(fm, gf)
+			colors, groups, gf := squareCountyFixture()
+			colors.CountyFillOpacity = tc.opacity
+			_, err := renderMap(colors, groups, gf)
 			if err == nil {
 				t.Fatal("expected error for invalid county_fill_opacity")
 			}
@@ -333,10 +331,10 @@ func TestBuildSVG_RejectsInvalidOpacity(t *testing.T) {
 	}
 }
 
-func TestBuildSVG_EmptyGeoJSON(t *testing.T) {
-	fm, _ := squareCountyFixture()
+func TestRenderMap_EmptyGeoJSON(t *testing.T) {
+	colors, groups, _ := squareCountyFixture()
 	gf := &countyCollection{Type: "FeatureCollection", Features: nil}
-	_, err := buildSVG(fm, gf)
+	_, err := renderMap(colors, groups, gf)
 	if err == nil {
 		t.Fatal("expected error for empty GeoJSON")
 	}
@@ -351,24 +349,22 @@ func TestBuildSVG_EmptyGeoJSON(t *testing.T) {
 // area-weighted centroid of both polygons: ((0*4+0.65*0.045)/4.045,
 // (0*4+0.6*0.045)/4.045) ≈ (0.00723, 0.00667) → SVG (603.5, 496.8).
 // Bbox is still [-1,1]² so the transform is unchanged from squareCountyFixture.
-func multiPolygonFixture() (*frontMatter, *countyCollection) {
-	fm := &frontMatter{
-		Map: mapColors{
-			Background:        "none",
-			CountyStroke:      "#000000",
-			UnassignedCounty:  "#cccccc",
-			CountyFillOpacity: 1.0,
-			CountyLabel:       "white",
-			RegionLabel:       "black",
-			RegionLabelHalo:   "white",
-		},
-		Regions: []region{
-			{
-				Name:     "Test #1",
-				Color:    "#ff0000",
-				Label:    &regionLabel{X: 100, Y: 200},
-				Counties: []string{"Multi"},
-			},
+func multiPolygonFixture() (*mapColors, []group, *countyCollection) {
+	colors := &mapColors{
+		Background:        "none",
+		CountyStroke:      "#000000",
+		UnassignedCounty:  "#cccccc",
+		CountyFillOpacity: 1.0,
+		CountyLabel:       "white",
+		RegionLabel:       "black",
+		RegionLabelHalo:   "white",
+	}
+	groups := []group{
+		{
+			Name:     "Test #1",
+			Color:    "#ff0000",
+			Label:    &regionLabel{X: 100, Y: 200},
+			Counties: []string{"Multi"},
 		},
 	}
 
@@ -388,14 +384,14 @@ func multiPolygonFixture() (*frontMatter, *countyCollection) {
 			},
 		},
 	}
-	return fm, gf
+	return colors, groups, gf
 }
 
-func TestBuildSVG_MultiPolygon(t *testing.T) {
-	fm, gf := multiPolygonFixture()
-	svg, err := buildSVG(fm, gf)
+func TestRenderMap_MultiPolygon(t *testing.T) {
+	colors, groups, gf := multiPolygonFixture()
+	svg, err := renderMap(colors, groups, gf)
 	if err != nil {
-		t.Fatalf("buildSVG: %v", err)
+		t.Fatalf("renderMap: %v", err)
 	}
 
 	// Both rings concatenated into a single d attribute.
@@ -416,24 +412,22 @@ func TestBuildSVG_MultiPolygon(t *testing.T) {
 
 // twoCountyFixture is a single square (assigned to "Test") and a small
 // triangle ("Tri", unassigned). Bbox stays [-1,1]², transform unchanged.
-func twoCountyFixture() (*frontMatter, *countyCollection) {
-	fm := &frontMatter{
-		Map: mapColors{
-			Background:        "none",
-			CountyStroke:      "#000000",
-			UnassignedCounty:  "#cccccc",
-			CountyFillOpacity: 1.0,
-			CountyLabel:       "white",
-			RegionLabel:       "black",
-			RegionLabelHalo:   "white",
-		},
-		Regions: []region{
-			{
-				Name:     "Test #1",
-				Color:    "#ff0000",
-				Label:    &regionLabel{X: 100, Y: 200},
-				Counties: []string{"Square"},
-			},
+func twoCountyFixture() (*mapColors, []group, *countyCollection) {
+	colors := &mapColors{
+		Background:        "none",
+		CountyStroke:      "#000000",
+		UnassignedCounty:  "#cccccc",
+		CountyFillOpacity: 1.0,
+		CountyLabel:       "white",
+		RegionLabel:       "black",
+		RegionLabelHalo:   "white",
+	}
+	groups := []group{
+		{
+			Name:     "Test #1",
+			Color:    "#ff0000",
+			Label:    &regionLabel{X: 100, Y: 200},
+			Counties: []string{"Square"},
 		},
 	}
 
@@ -456,19 +450,19 @@ func twoCountyFixture() (*frontMatter, *countyCollection) {
 			},
 		},
 	}
-	return fm, gf
+	return colors, groups, gf
 }
 
-func TestBuildSVG_MixedAssignment(t *testing.T) {
-	fm, gf := twoCountyFixture()
-	svg, err := buildSVG(fm, gf)
+func TestRenderMap_MixedAssignment(t *testing.T) {
+	colors, groups, gf := twoCountyFixture()
+	svg, err := renderMap(colors, groups, gf)
 	if err != nil {
-		t.Fatalf("buildSVG: %v", err)
+		t.Fatalf("renderMap: %v", err)
 	}
 
-	// Assigned county gets region color.
+	// Assigned county gets group color.
 	if !strings.Contains(svg, `fill="#ff0000"`) {
-		t.Errorf("assigned county missing region fill\n got:\n%s", svg)
+		t.Errorf("assigned county missing group fill\n got:\n%s", svg)
 	}
 
 	// Unassigned county gets the unassigned default.
@@ -485,21 +479,21 @@ func TestBuildSVG_MixedAssignment(t *testing.T) {
 	}
 }
 
-func TestBuildSVG_TransparentBackground(t *testing.T) {
-	fm, gf := squareCountyFixture()
-	fm.Map.Background = "transparent"
+func TestRenderMap_TransparentBackground(t *testing.T) {
+	colors, groups, gf := squareCountyFixture()
+	colors.Background = "transparent"
 
-	svg, err := buildSVG(fm, gf)
+	svg, err := renderMap(colors, groups, gf)
 	if err != nil {
-		t.Fatalf("buildSVG: %v", err)
+		t.Fatalf("renderMap: %v", err)
 	}
 	if strings.Contains(svg, "<rect ") {
 		t.Errorf("expected no background rect for background=transparent\n got:\n%s", svg)
 	}
 }
 
-func TestBuildSVG_UnsupportedGeometryType(t *testing.T) {
-	fm, _ := squareCountyFixture()
+func TestRenderMap_UnsupportedGeometryType(t *testing.T) {
+	colors, groups, _ := squareCountyFixture()
 	gf := &countyCollection{
 		Type: "FeatureCollection",
 		Features: []*geojson.FeatureOf[countyProps]{
@@ -510,7 +504,7 @@ func TestBuildSVG_UnsupportedGeometryType(t *testing.T) {
 			},
 		},
 	}
-	_, err := buildSVG(fm, gf)
+	_, err := renderMap(colors, groups, gf)
 	if err == nil {
 		t.Fatal("expected error for unsupported geometry type")
 	}
@@ -565,27 +559,27 @@ func TestWarnDuplicateCounties_NoDuplicates(t *testing.T) {
 	}
 }
 
-func TestWarnUnmatchedCounties_FrontmatterCountyMissingFromGeoJSON(t *testing.T) {
-	fm, gf := squareCountyFixture()
-	fm.Regions[0].Counties = append(fm.Regions[0].Counties, "Phantom")
+func TestWarnUnmatchedCounties_SidecarCountyMissingFromGeoJSON(t *testing.T) {
+	_, groups, gf := squareCountyFixture()
+	groups[0].Counties = append(groups[0].Counties, "Phantom")
 
 	var buf bytes.Buffer
-	warnUnmatchedCounties(regionsToGroups(fm.Regions), gf, &buf)
+	warnUnmatchedCounties(groups, gf, &buf)
 	got := buf.String()
 
 	if !strings.Contains(got, "Phantom") {
 		t.Errorf("warning should name county Phantom; got %q", got)
 	}
 	if !strings.Contains(got, "Test") {
-		t.Errorf("warning should name region Test; got %q", got)
+		t.Errorf("warning should name group Test; got %q", got)
 	}
 }
 
 func TestWarnUnmatchedCounties_GeoJSONFeatureMatchedByNoCounty(t *testing.T) {
-	fm, gf := twoCountyFixture() // "Square" assigned; "Tri" is GeoJSON-only
+	_, groups, gf := twoCountyFixture() // "Square" assigned; "Tri" is GeoJSON-only
 
 	var buf bytes.Buffer
-	warnUnmatchedCounties(regionsToGroups(fm.Regions), gf, &buf)
+	warnUnmatchedCounties(groups, gf, &buf)
 	got := buf.String()
 
 	if !strings.Contains(got, "Tri") {
@@ -622,7 +616,7 @@ func TestWarnUnmatchedCounties_CurrentRepoRegionalDataIsClean(t *testing.T) {
 // GeoJSON-side "matched by no county list" warning — uncovered counties are
 // intentional there. The county-side direction (typo detection) always fires.
 func TestWarnUnmatchedCounties_CatchallSuppressesGeoJSONSide(t *testing.T) {
-	_, gf := twoCountyFixture() // "Tri" is GeoJSON-only
+	_, _, gf := twoCountyFixture() // "Tri" is GeoJSON-only
 	groups := []group{{
 		Name:     "Test",
 		Color:    "#aa0000",
@@ -663,27 +657,9 @@ func TestSidecar_CurrentRepoChannelsClean(t *testing.T) {
 	}
 }
 
-// aym-jha: every committed regions[].color must be a well-formed color
-// string; the specific palette is data, not test-pinned.
-func TestFrontmatter_RegionColorFormat(t *testing.T) {
-	repoRoot, err := findRepoRoot()
-	if err != nil {
-		t.Fatalf("findRepoRoot: %v", err)
-	}
-	fm, err := parseFrontmatter(filepath.Join(repoRoot, contentFile))
-	if err != nil {
-		t.Fatalf("parseFrontmatter: %v", err)
-	}
-
-	for _, r := range fm.Regions {
-		if !isWellFormedRegionColor(r.Color) {
-			t.Errorf("region %q color %q is not a well-formed color string", r.Name, r.Color)
-		}
-	}
-}
-
 // aym-nfs.2: every committed channels[].color must be a well-formed color
-// string; mirrors TestFrontmatter_RegionColorFormat.
+// string; mirrors the regions.yaml coverage in
+// TestParseSidecar_RegionsCurrentRepoDataIsClean.
 func TestSidecar_ChannelColorFormat(t *testing.T) {
 	repoRoot, err := findRepoRoot()
 	if err != nil {
@@ -749,13 +725,13 @@ func TestIsWellFormedRegionColor(t *testing.T) {
 	}
 }
 
-func TestBuildSVG_PhantomCountyStillGenerates(t *testing.T) {
-	fm, gf := squareCountyFixture()
-	fm.Regions[0].Counties = append(fm.Regions[0].Counties, "Phantom")
+func TestRenderMap_PhantomCountyStillGenerates(t *testing.T) {
+	colors, groups, gf := squareCountyFixture()
+	groups[0].Counties = append(groups[0].Counties, "Phantom")
 
-	svg, err := buildSVG(fm, gf)
+	svg, err := renderMap(colors, groups, gf)
 	if err != nil {
-		t.Fatalf("buildSVG with phantom county: %v", err)
+		t.Fatalf("renderMap with phantom county: %v", err)
 	}
 	if !strings.Contains(svg, "<svg") {
 		t.Errorf("expected SVG output despite phantom county\n got:\n%s", svg)
@@ -763,31 +739,31 @@ func TestBuildSVG_PhantomCountyStillGenerates(t *testing.T) {
 }
 
 func TestWarnUnmatchedCounties_AllNamesMatch(t *testing.T) {
-	fm, gf := squareCountyFixture()
+	_, groups, gf := squareCountyFixture()
 
 	var buf bytes.Buffer
-	warnUnmatchedCounties(regionsToGroups(fm.Regions), gf, &buf)
+	warnUnmatchedCounties(groups, gf, &buf)
 
 	if buf.Len() != 0 {
 		t.Errorf("expected no warning when all names match; got %q", buf.String())
 	}
 }
 
-func TestBuildSVG_DuplicateCountyLastRegionWins(t *testing.T) {
-	fm, gf := squareCountyFixture()
-	fm.Regions = []region{
+func TestRenderMap_DuplicateCountyLastGroupWins(t *testing.T) {
+	colors, _, gf := squareCountyFixture()
+	groups := []group{
 		{Name: "Alpha #1", Color: "#aa0000", Counties: []string{"Square"}},
 		{Name: "Beta #2", Color: "#00bb00", Counties: []string{"Square"}},
 	}
-	svg, err := buildSVG(fm, gf)
+	svg, err := renderMap(colors, groups, gf)
 	if err != nil {
-		t.Fatalf("buildSVG: %v", err)
+		t.Fatalf("renderMap: %v", err)
 	}
 	if !strings.Contains(svg, `fill="#00bb00"`) {
-		t.Errorf("expected later region color #00bb00; got:\n%s", svg)
+		t.Errorf("expected later group color #00bb00; got:\n%s", svg)
 	}
 	if strings.Contains(svg, `fill="#aa0000"`) {
-		t.Errorf("earlier region color should not win; got:\n%s", svg)
+		t.Errorf("earlier group color should not win; got:\n%s", svg)
 	}
 }
 
@@ -866,112 +842,6 @@ func writeTempFile(t *testing.T, name, content string) string {
 		t.Fatalf("write temp file: %v", err)
 	}
 	return path
-}
-
-func TestParseFrontmatter_Valid(t *testing.T) {
-	path := writeTempFile(t, "index.md", `---
-map:
-  background: "#112233"
-  county_stroke: "#000000"
-  unassigned_county: "#cccccc"
-  county_fill_opacity: 0.85
-  county_label: white
-  region_label: black
-  region_label_halo: white
-regions:
-  - name: "Test #1"
-    color: "#ff0000"
-    label:
-      x: 100
-      y: 200
-    counties:
-      - Square
-      - Tri
-  - name: "NoLabel #2"
-    color: "#00bb00"
-    counties:
-      - Other
----
-Body below the frontmatter is ignored.
-`)
-
-	fm, err := parseFrontmatter(path)
-	if err != nil {
-		t.Fatalf("parseFrontmatter: %v", err)
-	}
-	if fm.Map.Background != "#112233" {
-		t.Errorf("background = %q, want #112233", fm.Map.Background)
-	}
-	if fm.Map.CountyFillOpacity != 0.85 {
-		t.Errorf("county_fill_opacity = %v, want 0.85", fm.Map.CountyFillOpacity)
-	}
-	if len(fm.Regions) != 2 {
-		t.Fatalf("regions = %d, want 2", len(fm.Regions))
-	}
-	r := fm.Regions[0]
-	if r.Name != "Test #1" || r.Color != "#ff0000" {
-		t.Errorf("region 0 = %+v", r)
-	}
-	if r.Label == nil || r.Label.X != 100 || r.Label.Y != 200 {
-		t.Errorf("region 0 label = %+v, want (100, 200)", r.Label)
-	}
-	if len(r.Counties) != 2 || r.Counties[0] != "Square" || r.Counties[1] != "Tri" {
-		t.Errorf("region 0 counties = %v, want [Square Tri]", r.Counties)
-	}
-	if fm.Regions[1].Label != nil {
-		t.Errorf("region without label key should have nil Label, got %+v", fm.Regions[1].Label)
-	}
-}
-
-func TestParseFrontmatter_UnknownKeysIgnored(t *testing.T) {
-	path := writeTempFile(t, "index.md", `---
-regions:
-  - name: Test
-    emoji: 🌴
-    color: "#ff0000"
-    counties:
-      - Square
----
-`)
-
-	fm, err := parseFrontmatter(path)
-	if err != nil {
-		t.Fatalf("parseFrontmatter with unknown key: %v", err)
-	}
-	if len(fm.Regions) != 1 || fm.Regions[0].Name != "Test" {
-		t.Errorf("regions = %+v, want single region named Test", fm.Regions)
-	}
-}
-
-func TestParseFrontmatter_Errors(t *testing.T) {
-	cases := []struct {
-		name    string
-		content string
-		wantErr string
-	}{
-		{"no opening delimiter", "no frontmatter here", "no YAML frontmatter found"},
-		{"unclosed frontmatter", "---\nmap:\n  background: x\n", "unclosed YAML frontmatter"},
-		{"malformed YAML", "---\nmap: [unclosed\n---\n", "parsing YAML"},
-	}
-	for _, tc := range cases {
-		t.Run(tc.name, func(t *testing.T) {
-			path := writeTempFile(t, "index.md", tc.content)
-			_, err := parseFrontmatter(path)
-			if err == nil {
-				t.Fatal("expected error")
-			}
-			if !strings.Contains(err.Error(), tc.wantErr) {
-				t.Errorf("error %q should mention %q", err, tc.wantErr)
-			}
-		})
-	}
-}
-
-func TestParseFrontmatter_MissingFile(t *testing.T) {
-	_, err := parseFrontmatter(filepath.Join(t.TempDir(), "nope.md"))
-	if err == nil {
-		t.Fatal("expected error for missing file")
-	}
 }
 
 func TestParseSidecar_Valid(t *testing.T) {
@@ -1356,8 +1226,8 @@ func TestFindRepoRoot_OutsideRepoErrors(t *testing.T) {
 
 // A collinear ring has zero area; planar.CentroidArea reports area 0, so the
 // county still gets a path but no label.
-func TestBuildSVG_DegenerateGeometryGetsNoLabel(t *testing.T) {
-	fm, gf := squareCountyFixture()
+func TestRenderMap_DegenerateGeometryGetsNoLabel(t *testing.T) {
+	colors, groups, gf := squareCountyFixture()
 	gf.Features = append(gf.Features, &geojson.FeatureOf[countyProps]{
 		Type:       "Feature",
 		Properties: countyProps{TigerName: "Line"},
@@ -1366,9 +1236,9 @@ func TestBuildSVG_DegenerateGeometryGetsNoLabel(t *testing.T) {
 		},
 	})
 
-	svg, err := buildSVG(fm, gf)
+	svg, err := renderMap(colors, groups, gf)
 	if err != nil {
-		t.Fatalf("buildSVG: %v", err)
+		t.Fatalf("renderMap: %v", err)
 	}
 	if strings.Contains(svg, ">Line</text>") {
 		t.Errorf("zero-area county should get no label\n got:\n%s", svg)
@@ -1378,7 +1248,7 @@ func TestBuildSVG_DegenerateGeometryGetsNoLabel(t *testing.T) {
 	}
 }
 
-func TestBuildSVG_BackgroundVariantsNoRect(t *testing.T) {
+func TestRenderMap_BackgroundVariantsNoRect(t *testing.T) {
 	cases := []struct {
 		name       string
 		background string
@@ -1389,12 +1259,12 @@ func TestBuildSVG_BackgroundVariantsNoRect(t *testing.T) {
 	}
 	for _, tc := range cases {
 		t.Run(tc.name, func(t *testing.T) {
-			fm, gf := squareCountyFixture()
-			fm.Map.Background = tc.background
+			colors, groups, gf := squareCountyFixture()
+			colors.Background = tc.background
 
-			svg, err := buildSVG(fm, gf)
+			svg, err := renderMap(colors, groups, gf)
 			if err != nil {
-				t.Fatalf("buildSVG: %v", err)
+				t.Fatalf("renderMap: %v", err)
 			}
 			if strings.Contains(svg, "<rect ") {
 				t.Errorf("background %q should produce no rect\n got:\n%s", tc.background, svg)
