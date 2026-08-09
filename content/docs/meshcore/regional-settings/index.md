@@ -45,7 +45,7 @@ The cost is airtime. The payload portion of a packet takes 8/5 as long, up to 60
 
 ## Region scopes
 
-{{< notice info "Work in progress" >}}
+{{< notice warning "Work in progress" >}}
 The naming convention is still being worked out across the wider MeshCore community, and Florida has not chosen its own tags. Expect the formats below to change.
 {{< /notice >}}
 
@@ -81,7 +81,8 @@ Florida will need `us-fl` and a subregion list. Neither is decided.
 
 ### Further reading
 
-- [What regions are and are not](https://github.com/pinztrek/mesher/blob/main/docs/regions.md)
+- [Region Filtering](https://blog.meshcore.io/2026/01/20/region-filtering)
+- [Default Scope Region](https://blog.meshcore.io/2026/04/17/default-scope)
 - [Proposal: predefined standardized region scopes](https://github.com/meshcore-dev/MeshCore/issues/2495)
 - [Regions, scopes, and the future of MeshCore](https://github.com/meshcore-dev/MeshCore/discussions/2375)
 - [Docs unclear on region behaviour](https://github.com/meshcore-dev/MeshCore/issues/1747)
