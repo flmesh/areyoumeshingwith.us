@@ -88,13 +88,10 @@ set lon <decimal degrees>
 
 Boards with a GPS module use `gps on`, `gps sync`, and `gps setloc` instead.
 
-Region scopes are set with `region put` and `region save` — see [Regional Settings]({{< relref "/docs/meshcore/regional-settings/index.md" >}}).
-
 ### Verifying Your Configuration
 
 ```shell {linenos=false}
 get radio
-region
 get tx
 get path.hash.mode
 get flood.advert.interval
@@ -102,8 +99,7 @@ ver
 ```
 
 - `get radio` returns `910.525,62.5,7,8`
-- `region` lists every tag you set, each showing `F` (flood allowed)
-- `ver` reports firmware `1.10.0`+ (required for region filtering), `1.16.0`+ recommended
+- `ver` reports firmware `1.16.0`+, the recommended version
 
 ### Troubleshooting
 
