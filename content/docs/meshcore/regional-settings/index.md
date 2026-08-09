@@ -73,11 +73,38 @@ Companion nodes receive everything regardless of scope, so nothing here affects 
 | `us-{state}-{subregion}` | `us-fl-cfl` |
 | `us-{iata}` | `us-mco` |
 
-The `us-` prefix is there because bare two-letter state codes are ambiguous: `sc` is both South Carolina and Seychelles. `us-fl` is also the ISO 3166-2 code for the state, so the form is already a standard rather than a local invention.
+`us-fl` is the ISO 3166-2 subdivision code for Florida, so the prefixed form is an existing standard rather than a local invention. A bare `fl` is only an abbreviation, and two-letter codes on their own stop being unique once a mesh reaches beyond one country.
 
-Subregions are meant to be coarse enough that an operator knows which one they are in without consulting a map. IATA codes sit directly under `us` rather than beneath a state, because an airport often sits near a state line and serves across it, and they are expected to be used mainly for wardriving so they line up with Meshmapper.
+Subregions are meant to be coarse enough that an operator knows which one they are in without consulting a map. IATA codes sit directly under `us` rather than beneath a state, because an airport near a state line serves operators on both sides of it and a state-prefixed code would split one metro into two regions. They are expected to be used mainly for wardriving, so they line up with Meshmapper.
 
 Florida will need `us-fl` and a subregion list. Neither is decided.
+
+### Setting them over the CLI
+
+Regions are configured on the repeater, not in the app. Add each one you intend to relay, then save:
+
+```shell {linenos=false}
+region put us-fl
+region put us-fl-cfl us-fl
+region save
+```
+
+The second argument sets the parent shown in the listing. It affects the display only, since each name is hashed whole and matched on its own.
+
+List what the node is carrying, and remove one you no longer want:
+
+```shell {linenos=false}
+region
+region remove us-fl-cfl
+```
+
+Each entry should show `F`, meaning flood allowed. On firmware older than `1.15.0`, follow each `region put` with `region allowf <name>`.
+
+`region default <name>` sets the scope the node puts on packets it originates itself, and `region default <null>` clears it.
+
+{{< notice note "openHop repeaters" >}}
+openHop Repeater does not implement any of these. Every `region` subcommand returns `Error: Region commands not implemented`, so manage regions in the openHop Console instead. Renaming an entry there keeps its original key, so delete it and add the new name rather than editing it.
+{{< /notice >}}
 
 ### Further reading
 

@@ -20,7 +20,7 @@ Companion nodes are configured in the app. Repeaters and room servers are config
 
 ## Companion nodes
 
-If your node is paired to your phone, this section is the whole setup. Three settings and a list of channels. Nothing in the repeater section below applies to you.
+If your node is paired to your phone, this section plus [Channels](#channels) is the whole setup. Nothing in the repeater section applies to you.
 
 ### Radio
 
@@ -39,21 +39,14 @@ Frequency, bandwidth, and spreading factor must match the rest of the mesh exact
 
 Settings → Experimental → **Hop Bytes: `2`**
 
-### Channels
-
-`Public` is built in. Add these:
-
-`#wardriving` · `#emergency` · `#hamradio` · `#testing` · `#florida` · `#weather` · `#weekly-mesh-net`
-
-Add them with *Add Channel → Join a Hashtag Channel* or a QR code; there is no CLI to add channels. A hashtag channel derives its key from its name, so every node joining by the same name lands on the same channel. These are shared public channels, not private ones. `#weekly-mesh-net` carries the [Weekly Mesh Net]({{< relref "/docs/meshcore/weekly-mesh-net/index.md" >}}).
-
 ### Check your work
 
 - The radio screen reads `910.525` / `62.5` / `7` / `8`
 - Hop Bytes is `2`
+- The channels below are joined
 - Other nodes appear in your contact list
 
-That is the complete configuration for a companion node.
+That is the whole radio configuration for a companion node. Channels are next.
 
 ### Why Hop Bytes 2
 
@@ -62,6 +55,24 @@ Every hop a packet takes is recorded in its path as a short hash of the repeater
 The cost is path length: each hop consumes two bytes of a fixed-size path field instead of one, reducing the maximum number of hops a route can record. Florida accepts that trade.
 
 The CLI equivalent is `set path.hash.mode 1`.
+
+## Channels
+
+`Public` is built in. Florida also uses:
+
+`#emergency` · `#hamradio` · `#testing` · `#florida` · `#weather` · `#wardriving` · `#weekly-mesh-net`
+
+Add them with *Add Channel → Join a Hashtag Channel* or a QR code; there is no CLI to add channels. A hashtag channel derives its key from its name, so every node joining by the same name lands on the same channel. These are shared public channels, not private ones. `#weekly-mesh-net` carries the [Weekly Mesh Net]({{< relref "/docs/meshcore/weekly-mesh-net/index.md" >}}).
+
+Join the ones you intend to use. There is no cost to joining a channel you rarely read, and traffic on it reaches you either way.
+
+If you run Meshmapper, list every channel you know of under **Public Channels** in its admin settings. That is what the wardriving app listens on for passive RX logs, and a longer list means more coverage recorded for the same drive.
+
+## Region scopes
+
+Region scopes decide which repeaters relay a flood beyond its own area. They are set on repeaters, and companion nodes receive everything regardless, so most operators have nothing to configure here yet.
+
+Florida has not chosen its tags and the naming convention is still moving. See [Region Scopes]({{< relref "/docs/meshcore/regional-settings/index.md" >}}#region-scopes) for how they work, the formats under discussion, and the CLI commands.
 
 ## Repeater & room server nodes
 
