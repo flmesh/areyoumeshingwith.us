@@ -79,7 +79,7 @@ Rules:
 
 `us-fl` is the ISO 3166-2 subdivision code for Florida, lowercased, and `us-ga` / `us-tn` / `us-al` are the same for the states we exchange traffic with. The name costs nothing on air either way — it is hashed to a fixed-size key, so a longer tag does not make a larger packet.
 
-Metro tags use IATA airport codes because observers and mapping tools already standardised on them. Both `us-mco` and `us-fl-mco` are in use elsewhere; the state-prefixed form is the safer one where a metro spans a state line.
+Metro tags use IATA airport codes because observers and mapping tools already standardised on them, and they sit directly under `us` rather than under a state. That is deliberate: a metro's airport is often near a state line and serves more than one — Chattanooga sits at a three-way with north-west Georgia and north-east Alabama, and Charleston's code covers traffic around Savannah — so putting the code behind a state would force duplicate regions like `us-sc-chs` and `us-ga-chs` for one metro.
 
 Subregions are meant to be coarse enough that an operator knows which one they are in without consulting a map — a quadrant of the state, or a metro. Counties are finer than this scheme intends.
 
