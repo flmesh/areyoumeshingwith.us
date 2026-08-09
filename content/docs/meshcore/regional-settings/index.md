@@ -46,7 +46,7 @@ The cost is airtime. The payload portion of a packet takes 8/5 as long, up to 60
 ## Region scopes
 
 {{< notice warning "Work in progress — no consensus yet" >}}
-Nothing here is settled. The naming convention is still being worked out across the wider MeshCore community, and Florida has not chosen its own tags. Do not roll this out across your repeaters yet.
+The naming convention is still being worked out across the wider MeshCore community, and Florida has not chosen its own tags. Expect the formats below to change.
 {{< /notice >}}
 
 A region is a tag on a packet. A repeater forwards a scoped flood only if it carries that exact tag, so scoping keeps local traffic local. Unscoped traffic still floods as it always has, and companion nodes receive everything either way.
