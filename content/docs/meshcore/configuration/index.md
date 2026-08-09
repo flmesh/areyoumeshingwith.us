@@ -99,7 +99,7 @@ ver
 ```
 
 - `get radio` returns `910.525,62.5,7,8`
-- `ver` reports firmware `1.16.0`+, the recommended version
+- `ver` reports the firmware version, so you can confirm the node is running the one you intended
 
 ### Troubleshooting
 

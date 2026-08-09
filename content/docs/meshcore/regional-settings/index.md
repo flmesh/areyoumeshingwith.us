@@ -45,7 +45,7 @@ The cost is airtime. The payload portion of a packet takes 8/5 as long, up to 60
 
 ## Region scopes
 
-{{< notice warning "Work in progress" >}}
+{{< notice note "Work in progress" >}}
 The naming convention is still being worked out across the wider MeshCore community, and Florida has not chosen its own tags. Expect the formats below to change.
 {{< /notice >}}
 
@@ -61,7 +61,7 @@ Unscoped traffic ignores all of this and floods the way it always has, so adding
 
 Repeater operators, mostly. A repeater can hold many regions at once, and the guidance so far is to carry only what you should be relaying: your own area, plus a wider tag for the traffic that genuinely needs to travel further.
 
-Companion nodes receive everything regardless of scope, so nothing here affects what you can hear. A companion's region setting only tags what it sends, one region per message, with a default and optionally a per-channel choice once clients support it.
+Companion nodes receive everything regardless of scope, so nothing here affects what you can hear. A companion's region setting only tags what it sends. The app's experimental settings hold a default scope that applies to every flood packet the node originates, and a channel configured with its own scope overrides that default.
 
 ### The formats under discussion
 
