@@ -51,5 +51,3 @@ Report the messages and acknowledgements you receive back to the same channel.
 ## Results
 
 Check-ins tagged `#FLMeshNet` and the gateways that heard them are at [meshview.areyoumeshingwith.us/net](https://meshview.areyoumeshingwith.us/net). The map icon beside a message lists the receiving gateways.
-
-Schedule changes are posted on the [Florida Mesh Discord](https://discord.gg/floridamesh).

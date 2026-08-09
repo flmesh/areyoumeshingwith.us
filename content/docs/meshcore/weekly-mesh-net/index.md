@@ -49,9 +49,3 @@ Post to the net channel, incrementing the counter with each message:
 ```
 
 Report the messages and acknowledgements you receive back to the same net channel.
-
-## Results
-
-Check-ins are captured by observer nodes feeding the [MeshCore telemetry tools](/telemetry/meshcore/); there is no dedicated net view.
-
-Schedule changes are posted on the [Florida Mesh Discord](https://discord.gg/floridamesh).
