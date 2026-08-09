@@ -22,7 +22,6 @@ const (
 	strokeWidth       = 0.4
 	outputFile        = "content/docs/meshtastic/regional-lora-settings/regional-lora-settings.svg"
 	channelOutputFile = "content/docs/meshtastic/regional-lora-settings/channel-lora-settings.svg"
-	contentFile       = "content/docs/meshtastic/regional-lora-settings/index.md"
 	channelsFile      = "content/docs/meshtastic/regional-lora-settings/channels.yaml"
 	regionsFile       = "content/docs/meshtastic/regional-lora-settings/regions.yaml"
 	geoJSONFile       = "assets/gis/counties.geojson"

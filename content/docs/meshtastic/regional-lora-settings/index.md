@@ -27,7 +27,7 @@ images:
 
 ## Regions
 
-{{< figure src="regional-lora-settings.svg" alt="Florida Mesh Regions" width="50%" class="float-end me-3" >}}
+{{< figure src="regional-lora-settings.svg" alt="Florida Mesh Regions" width="50%" >}}
 
 Here at Florida Mesh we've divided up the State into Five distinct regions. They are as follows:
 
@@ -36,6 +36,16 @@ Here at Florida Mesh we've divided up the State into Five distinct regions. They
 - 🔵 Blue - Central West Florida
 - 🟡 Yellow - Central East Florida
 - 🟠 Orange - South Florida
+
+### Channel Presets
+
+{{< figure src="channel-lora-settings.svg" alt="Florida Mesh LoRa Channels" width="50%" >}}
+
+The channel map colors counties by their Meshtastic modem preset:
+
+- **🔵 LongFast** (#3B82C4) — Default preset for most of the state
+- **🟣 MediumFast** (#FF00FF) — Southeast coast (Monroe through Okeechobee)
+- **🟣 LongFast/MediumFast** (#8E44AD) — Brevard County (dual preset area)
 
 Each Region's LoRa settings and Metro based Meshes settings will be called out in each Region Section.
 
