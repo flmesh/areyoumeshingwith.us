@@ -1,13 +1,13 @@
 ---
-title: Region Scopes
-description: Florida's MeshCore region scope scheme and how scoped flooding works.
+title: Regional Settings
+description: Florida's MeshCore modem preset and region scope scheme.
 date: 2026-07-26T00:00:00-04:00
 draft: false
 noindex: false
-nav_weight: 3
+nav_weight: 2
 nav_icon:
   vendor: bs
-  name: diagram-3
+  name: wifi
   color: orange
 authors:
   - beanfield
@@ -16,15 +16,38 @@ series:
   - Docs
 ---
 
-Scoping limits how far a flood propagates, so statewide airtime does not have to carry traffic that only concerns one county.
+Florida runs one statewide modem preset. Region scopes control which repeaters forward a flood.
 
 <!--more-->
 
-{{< notice note "Repeater operators" >}}
-Region scopes are a repeater setting. They govern what a repeater *forwards*, never what a node *hears*, so a companion node is unaffected by any of this — see [Companion Node Setup]({{< relref "/docs/meshcore/companion/index.md" >}}).
-{{< /notice >}}
+## Modem preset
 
-## How it works
+MeshCore's `USA/Canada` preset, with the coding rate raised to `8`.
+
+- Frequency: `910.525 MHz`
+- Bandwidth: `62.5 kHz`
+- Spreading factor: `7`
+- Coding rate: `8`
+
+CLI: `set radio 910.525,62.5,7,8`. In the app, select the preset and then change the coding rate.
+
+### Which values must match
+
+Frequency, bandwidth, and spreading factor must be identical on both ends. A mismatch in any of the three means the radios cannot demodulate each other at all — there is no degraded mode.
+
+Coding rate is the exception. The receiver reads it from the packet header, so a node on `8` and a node on the preset default of `5` still exchange traffic.
+
+### Why coding rate 8
+
+Coding rate is LoRa's forward-error-correction ratio. `5` sends 5 symbols for every 4 of payload (4/5); `8` sends 8 (4/8). The additional parity lets a receiver reconstruct packets that arrive corrupted, which raises the decode margin on weak, noisy, and multipath-affected links — the marginal paths that determine how far a mesh actually reaches.
+
+The cost is airtime. The payload portion of a packet takes 8/5 as long, up to 60% more; total packet time rises by less, since the preamble and header are fixed. On a network of this density that trade favours reliability: a packet that decodes once beats a shorter packet that has to be repeated.
+
+## Region scopes
+
+Scoping limits how far a flood propagates, so statewide airtime does not have to carry traffic that only concerns one county.
+
+Region scopes are a repeater setting. They govern what a repeater *forwards*, never what a node *hears*, so a companion node is unaffected by any of this.
 
 Two halves of one mechanism:
 
@@ -35,7 +58,7 @@ A repeater forwards a scoped flood only when it carries that exact tag. Matching
 
 A name without a leading `#` is treated as if it had one: `us-fl` and `#us-fl` are the same region.
 
-## Florida's scheme
+### Florida's scheme
 
 Three levels, each a complete hyphenated tag:
 
@@ -89,7 +112,7 @@ Drop the bare `us` tag. No network outside Florida scopes a flood to the whole c
 
 The second argument to `region put` sets the parent shown in the listing. It is presentation only — see below.
 
-## The tree does not cascade
+### The tree does not cascade
 
 `region` prints its tags with indentation, which reads like a hierarchy. It is not one. Each tag is matched independently.
 
@@ -97,11 +120,11 @@ A repeater carrying only `us-fl` will **not** forward `us-fl-manatee` traffic. E
 
 This is the single most common cause of traffic that stops at a county boundary.
 
-## Unscoped traffic
+### Unscoped traffic
 
 `*` is unscoped traffic. It floods by default and is unaffected by the region list, so adding regions to a repeater never breaks existing traffic.
 
-## Setting regions on openHop
+### Setting regions on openHop
 
 {{< notice warning "The region CLI is not implemented in openHop Repeater" >}}
 Every `region` subcommand — `put`, `save`, `get`, `remove`, `allowf`, `denyf`, `load`, `home` — returns `Error: Region commands not implemented`. The commands above apply to repeaters running MeshCore firmware.
@@ -111,7 +134,7 @@ On [openHop]({{< relref "/docs/meshcore/installation/_index.md" >}}), manage reg
 
 Renaming an existing region there keeps its original key, so it silently carries on matching the old name. Delete the region and add the new one instead of editing it.
 
-## Verifying
+### Verifying
 
 ```shell {linenos=false}
 region
@@ -120,3 +143,5 @@ region
 Every tag you set should be listed, each showing `F` — flood allowed. On openHop, check the Console's region list instead.
 
 Region names in use across the wider network, and their derived keys, are collected at <https://meshmaster.store/regions/>.
+
+Application per node role is in [Node Configuration]({{< relref "/docs/meshcore/configuration/index.md" >}}).
