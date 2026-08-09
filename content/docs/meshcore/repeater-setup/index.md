@@ -1,54 +1,30 @@
 ---
-title: Node Configuration
-description: Configuring MeshCore companion clients and repeater infrastructure for the Florida Mesh.
-nav_weight: 3
+title: Repeater Setup
+description: CLI configuration for MeshCore repeaters and room servers on the Florida Mesh.
+date: 2026-07-26T00:00:00-04:00
+draft: false
+noindex: false
+nav_weight: 2
+nav_icon:
+  vendor: bs
+  name: toggles
+  color: grey
 authors:
   - beanfield
   - Json_18
 series:
   - Guide
-date: 2026-07-26T00:00:00-04:00
-nav_icon:
-  vendor: bs
-  name: toggles
-  color: grey
 ---
 
-Companion nodes are configured in the app. Repeaters and room servers are configured over the CLI. Radio values come from [Regional Settings]({{< relref "/docs/meshcore/regional-settings/index.md" >}}).
+Repeaters and room servers are configured over the CLI. Reboot to apply radio changes.
 
 <!--more-->
 
-## Companion nodes
+{{< notice note "Repeater operators" >}}
+This page is for infrastructure nodes. If your node is paired to a phone, everything you need is in [Companion Node Setup]({{< relref "/docs/meshcore/companion/index.md" >}}) — none of the settings here apply to you.
+{{< /notice >}}
 
-Radio — select the `USA/Canada` preset, then set the coding rate to `8`:
-
-- Frequency: `910.525 MHz`
-- Bandwidth: `62.5 kHz`
-- Spreading factor: `7`
-- Coding rate: `8`
-
-Channels:
-
-- `Public` — built in
-- `#wardriving`, `#emergency`, `#hamradio`, `#testing`, `#florida`, `#weather`, `#weekly-mesh-net`
-
-A hashtag channel derives its key from its name, so every node joining by the same name lands on the same channel. These are shared public channels, not private ones. Add them with *Add Channel → Join a Hashtag Channel* or a QR code; there is no CLI to add channels. `#weekly-mesh-net` carries the [Weekly Mesh Net]({{< relref "/docs/weekly-mesh-net/index.md" >}}).
-
-Settings → Experimental:
-
-- Hop Bytes: `2`
-
-### Why Hop Bytes 2
-
-Every hop a packet takes is recorded in its path as a short hash of the repeater that forwarded it. At 1 byte there are only 256 possible values, so in a mesh this size two repeaters routinely hash to the same byte — routing and telemetry then cannot tell which one actually carried the packet. Two bytes gives 65,536 values and makes collisions rare.
-
-The cost is path length: each hop consumes two bytes of a fixed-size path field instead of one, reducing the maximum number of hops a route can record. Florida accepts that trade.
-
-The CLI equivalent is `set path.hash.mode 1`.
-
-## Repeater & room server nodes
-
-CLI configuration. Reboot to apply radio changes.
+## Settings
 
 ```shell {linenos=false}
 set radio 910.525,62.5,7,8
@@ -56,11 +32,11 @@ set flood.advert.interval 12
 set path.hash.mode 1
 ```
 
-`radio` — frequency, bandwidth, spreading factor, coding rate. The first three must match between two nodes or they cannot demodulate each other; coding rate does not. See [Regional Settings]({{< relref "/docs/meshcore/regional-settings/index.md" >}}).
+`radio` — frequency, bandwidth, spreading factor, coding rate. The first three must match between two nodes or they cannot demodulate each other at all; coding rate does not have to match, because the receiver reads it from the packet header.
 
 `flood.advert.interval` — hours between flood adverts, range `3`–`168`, default `12`. Shorter intervals put more advert traffic on the air for every repeater that relays them. `advert.interval` separately controls local zero-hop adverts, in minutes.
 
-`path.hash.mode` — `0` = 1-byte, `1` = 2-byte, `2` = 3-byte. Florida uses 2-byte; see [Why Hop Bytes 2](#why-hop-bytes-2).
+`path.hash.mode` — `0` = 1-byte, `1` = 2-byte, `2` = 3-byte. Florida uses 2-byte: at 1 byte there are only 256 possible values, so in a mesh this size two repeaters routinely hash to the same byte and the recorded path becomes ambiguous. The cost is that each hop consumes two bytes of a fixed-size path field.
 
 Fixed position, for boards without GPS:
 
@@ -71,13 +47,14 @@ set lon <decimal degrees>
 
 Boards with a GPS module use `gps on`, `gps sync`, and `gps setloc` instead.
 
-Region scopes are set with `region put` and `region save` — see [Regional Settings]({{< relref "/docs/meshcore/regional-settings/index.md" >}}).
+## Region scopes
 
-## Verifying Your Configuration
+Which floods this repeater forwards beyond its own area — see [Region Scopes]({{< relref "/docs/meshcore/regions/index.md" >}}).
+
+## Verifying
 
 ```shell {linenos=false}
 get radio
-region
 get tx
 get path.hash.mode
 get flood.advert.interval
@@ -85,7 +62,6 @@ ver
 ```
 
 - `get radio` returns `910.525,62.5,7,8`
-- `region` lists every tag you set, each showing `F` (flood allowed)
 - `ver` reports firmware `1.10.0`+ (required for region filtering), `1.16.0`+ recommended
 
 ## Troubleshooting

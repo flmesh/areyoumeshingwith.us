@@ -46,7 +46,7 @@ The net runs on a hashtag channel. Add it with *Add Channel → Join a Hashtag C
 - Channel: `#weekly-mesh-net`
 - Key: `284d8129d937833bdd641f21256dced0`
 
-Radio values are the standard Florida preset — see [Regional Settings]({{< relref "/docs/meshcore/regional-settings/index.md" >}}).
+Radio values are the standard Florida preset — see [Companion Node Setup]({{< relref "/docs/meshcore/companion/index.md" >}}).
 
 ## Check-in format
 

@@ -18,6 +18,10 @@ Setting up a MeshCore repeater on a Raspberry Pi using **openHop Repeater**, a P
 
 <!--more-->
 
+{{< notice note "Repeater operators" >}}
+Building infrastructure. If your node is paired to a phone, you do not need any of this — see [Companion Node Setup]({{< relref "/docs/meshcore/companion/index.md" >}}).
+{{< /notice >}}
+
 {{< notice note "Renamed projects" >}}
 openHop Repeater was `pyMC_Repeater`; openHop Console was `pyMC Console`. Guides referencing `/etc/pymc_repeater`, the `pymc-repeater` service, or `github.com/dmduran12/…` are out of date. The paths below are current.
 {{< /notice >}}
@@ -201,7 +205,7 @@ Changing `Storage` migrates nothing — after restarting journald, run `sudo jou
 | Service won't start | `sudo journalctl -u openhop-repeater -n 50` |
 | Console shows nothing | Hard-refresh (`Ctrl+Shift+R`); confirm `web.web_path` in `config.yaml` |
 | Radio fails to initialise | Board selection and SPI/GPIO pins in the `sx1262:` section |
-| No packets | Frequency, bandwidth, spreading factor, and coding rate must match the local mesh — see [Regional Settings]({{< relref "/docs/meshcore/regional-settings/index.md" >}}) |
+| No packets | Frequency, bandwidth, spreading factor, and coding rate must match the local mesh — see [Repeater Setup]({{< relref "/docs/meshcore/repeater-setup/index.md" >}}) |
 | Wrong TX power after upgrade | `sudo grep -n tx_power /etc/openhop_repeater/config.yaml` |
 
 ## References
