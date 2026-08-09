@@ -5,10 +5,10 @@ mapgen generates the SVG maps for the
 page. It reads county boundaries from `assets/gis/counties.geojson` and writes
 two maps:
 
-- `regional-lora-settings.svg` — counties colored by region, from the
-  `regions` and `map` keys in that page's YAML frontmatter.
+- `regional-lora-settings.svg` — counties colored by region, from
+  `regions.yaml` next to the page (see the sidecar sections below).
 - `channel-lora-settings.svg` — counties colored by LoRa channel, from
-  `channels.yaml` next to the page (see the sidecar section below).
+  `channels.yaml` next to the page.
 
 ## Running
 
@@ -32,16 +32,17 @@ go -C tools/mapgen test ./...
 ## The generated SVGs are never hand-edited
 
 Both SVGs are generated output. To change anything about the maps — colors,
-labels, county assignments — edit the frontmatter in
-`content/docs/meshtastic/regional-lora-settings/index.md` or `channels.yaml`,
-re-run `go -C tools/mapgen run .`, and commit the regenerated SVGs. Never edit
+labels, county assignments — edit `regions.yaml` or `channels.yaml` in
+`content/docs/meshtastic/regional-lora-settings/`, re-run
+`go -C tools/mapgen run .`, and commit the regenerated SVGs. Never edit
 an SVG by hand; the next run will overwrite manual changes.
 
-## Frontmatter contract
+## Regions sidecar (`regions.yaml`)
 
-The page frontmatter is the single source of truth for all map colors. mapgen
-contains no hardcoded color values and no built-in defaults — every color comes
-from the frontmatter.
+`regions.yaml`, next to `index.md`, drives the regional map. The two sidecar
+files are the single source of truth for all map colors: mapgen contains no
+hardcoded color values and no built-in defaults — every color comes from a
+sidecar.
 
 ### `regions[]`
 
@@ -55,7 +56,7 @@ Each entry in the `regions` list defines one region:
 | `counties` | yes      | County names assigned to this region.                          |
 
 Region fill color is read only from `regions[].color`; see the resolution
-order below. Unknown keys are ignored, so stale frontmatter still parses.
+order below. Unknown keys are ignored, so stale sidecars still parse.
 
 County names are matched case-insensitively with spaces removed, so
 `De Soto`, `DeSoto`, and `desoto` are equivalent.
@@ -88,7 +89,7 @@ is a hard error.
 ## Channels sidecar (`channels.yaml`)
 
 `channels.yaml`, next to `index.md`, drives the channel map. It has the same
-shape as the frontmatter contract: a `map` block (same keys as above) plus a
+shape as the regions sidecar: a `map` block (same keys as above) plus a
 `channels` list. Each entry is a group:
 
 | Key        | Required | Meaning                                                        |
@@ -111,7 +112,7 @@ spelling drift, always fires). Two catchall groups is a hard error.
 ## Warnings
 
 mapgen prints warnings to stderr but still generates both SVGs and exits 0.
-The checks run on the frontmatter regions and on `channels.yaml` alike:
+The checks run on `regions.yaml` and `channels.yaml` alike:
 
 - **Duplicate county**: a county appearing in more than one group's
   `counties` list, or twice in the same list. The warning names the county and

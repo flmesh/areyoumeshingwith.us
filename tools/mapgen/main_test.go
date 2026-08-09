@@ -768,7 +768,7 @@ func TestRenderMap_DuplicateCountyLastGroupWins(t *testing.T) {
 }
 
 // The README is the mapgen user documentation (aym-emi); it must cover the
-// tool's purpose, how to run it, the frontmatter contract, and the rule that
+// tool's purpose, how to run it, the sidecar contract, and the rule that
 // the generated SVG is never hand-edited.
 func TestREADME_DocumentsMapgen(t *testing.T) {
 	data, err := os.ReadFile("README.md")
@@ -780,6 +780,7 @@ func TestREADME_DocumentsMapgen(t *testing.T) {
 	required := []string{
 		"GeoJSON",
 		"go -C tools/mapgen run .",
+		"regions.yaml",
 		"regions",
 		"counties",
 		"county_stroke",
