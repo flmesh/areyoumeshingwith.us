@@ -45,28 +45,30 @@ The cost is airtime. The payload portion of a packet takes 8/5 as long, up to 60
 
 ## Region scopes
 
-Scoping limits how far a flood propagates, so statewide airtime does not have to carry traffic that only concerns one county.
-
-Region scopes are a repeater setting. They govern what a repeater *forwards*, never what a node *hears*, so a companion node is unaffected by any of this.
+Scoping limits how far a flood propagates, so statewide airtime does not have to carry traffic that only concerns one part of the state.
 
 Two halves of one mechanism:
 
-- A **scope** is a tag the sender attaches to a flood.
+- A **scope** is a tag attached to a packet by the node that sends it.
 - A **region** is a tag a repeater is willing to forward.
 
-A repeater forwards a scoped flood only when it carries that exact tag. Matching is exact and case-sensitive. The name itself is never transmitted — it is hashed into a key, and packets are authenticated against that key — so two operators who spell a tag differently silently end up on separate regions that never exchange traffic.
+A repeater forwards a scoped packet only when it carries that exact tag. Matching is exact and case-sensitive. The name itself is never transmitted — it is hashed into a key, and packets are authenticated against that key — so two operators who spell a tag differently silently end up on separate regions that never exchange traffic.
 
 A name without a leading `#` is treated as if it had one: `us-fl` and `#us-fl` are the same region.
 
-### Florida's scheme
+{{< notice note "Not yet ratified" >}}
+The scheme below is the form the wider MeshCore community is converging on. It has not been formally agreed, and the Florida subregion list in particular is still open. Expect refinement.
+{{< /notice >}}
 
-Three levels, each a complete hyphenated tag:
+### The scheme
 
-| Tag | Covers |
-|---|---|
-| `us-southeast` | Interstate traffic between Florida and its neighbours |
-| `us-fl` | Statewide |
-| `us-fl-<county>` | One county, e.g. `us-fl-manatee` |
+| Tag | Level | Example |
+|---|---|---|
+| `us` | Country | `us` |
+| `us-southeast` | Meta-region, for traffic crossing state lines | `us-southeast` |
+| `us-{state}` | State | `us-fl` |
+| `us-{state}-{subregion}` | Part of a state | `us-fl-cfl` |
+| `us-{iata}` | Metro area, by airport code | `us-mco` |
 
 Rules:
 
@@ -75,54 +77,55 @@ Rules:
 - Region filtering requires firmware `1.10.0`+
 - On firmware below `1.15.0`, follow each `region put` with `region allowf <name>`
 
-### Why the `us-` prefix
+`us-fl` is the ISO 3166-2 subdivision code for Florida, lowercased, and `us-ga` / `us-tn` / `us-al` are the same for the states we exchange traffic with. The name costs nothing on air either way — it is hashed to a fixed-size key, so a longer tag does not make a larger packet.
 
-`us-fl` is the ISO 3166-2 subdivision code for Florida, lowercased, and `us-ga` / `us-nc` / `us-sc` are the same for our neighbours. Georgia and western North Carolina are already implementing that form, so it is both the standard and what the adjacent states will actually match against.
+Metro tags use IATA airport codes because observers and mapping tools already standardised on them. Both `us-mco` and `us-fl-mco` are in use elsewhere; the state-prefixed form is the safer one where a metro spans a state line.
 
-Bare two-letter state codes are ambiguous internationally — `sc` is Seychelles, `ga` is Gabon, `nc` is New Caledonia, `tn` is Tunisia. Florida is one of the states that happens *not* to collide with a country code, so `fl` was never dangerous on its own; the prefix is about matching the region, not avoiding a clash.
+Subregions are meant to be coarse enough that an operator knows which one they are in without consulting a map — a quadrant of the state, or a metro. Counties are finer than this scheme intends.
 
-The name costs nothing on air either way. It is hashed to a fixed-size key, so a longer tag does not make a larger packet.
+### What a repeater carries
 
-### Why county names, not airport codes
+Carry the regions you should forward traffic for, and nothing else. Three is typical:
 
-Some networks use IATA codes for local scopes. Florida uses county names because IATA only covers places with an airport — most rural counties have none — and because the area a code implies is ambiguous: `srq` is "Sarasota–Bradenton", which is two counties. Metro repeaters may carry an IATA tag *in addition* if it is locally useful, but the county tag is the one that must be there.
+- `us-southeast` — so traffic can cross the state line
+- `us-fl` — the state default
+- your subregion or metro tag
 
-### Interstate traffic
+Do **not** add neighbouring states' tags. `us-southeast` is what carries traffic between states; adding `us-ga` to a Florida repeater pulls all of Georgia's state traffic into Florida airtime.
 
-`us-southeast` is the tag Georgia and western North Carolina carry for traffic that crosses a state line. A Florida repeater without it will not forward their scoped floods, and they will not forward Florida's.
+### What a companion node does
 
-Every Florida repeater can carry it; boundary and high-site repeaters in particular should. The recommendation from the operators in the adjacent states is to carry `us-southeast` rather than adding each neighbour's state tag to your repeaters.
+Companions **receive everything**, regardless of region. Scoping never affects what you hear.
 
-### During the transition
-
-Earlier Florida guidance used bare tags — `us`, `fl`, and a bare county name. Those are *different regions*, not shorthand for the new ones: `fl` and `us-fl` hash to different keys and never exchange traffic.
-
-Repeaters already deployed should carry both forms until the state has moved over:
-
-```shell {linenos=false}
-region put us-southeast
-region put us-fl us-southeast
-region put us-fl-manatee us-fl
-region put fl
-region put manatee fl
-region save
-```
-
-Drop the bare `us` tag. No network outside Florida scopes a flood to the whole country, so it matches nothing.
-
-The second argument to `region put` sets the parent shown in the listing. It is presentation only — see below.
+Regions only tag what a companion *sends*. Once client support lands, a companion can set a default region for its messages and a region per channel — one region per message, not a list. The intent is a default of `us-fl`, `us-southeast` on channels meant to travel between states, and a narrow local tag on `#testing` or `#wardriving` so that traffic stays put.
 
 ### The tree does not cascade
 
 `region` prints its tags with indentation, which reads like a hierarchy. It is not one. Each tag is matched independently.
 
-A repeater carrying only `us-fl` will **not** forward `us-fl-manatee` traffic. Every tag you intend to forward has to be listed explicitly, from the root down. Treat the output as a flat list of tags that happens to be printed with indentation.
+A repeater carrying only `us-fl` will **not** forward `us-fl-cfl` traffic. Every tag you intend to forward has to be listed explicitly. The hierarchy exists to help people reason about coverage; the repeater only compares transport codes.
 
-This is the single most common cause of traffic that stops at a county boundary.
+This is the single most common cause of traffic that stops at a boundary.
 
 ### Unscoped traffic
 
-`*` is unscoped traffic. It floods by default and is unaffected by the region list, so adding regions to a repeater never breaks existing traffic.
+`*` is unscoped traffic. It floods by default and is unaffected by the region list, so adding regions to a repeater never breaks existing traffic. Nodes that never scope anything keep working exactly as they do now.
+
+### Moving from the earlier tags
+
+Earlier Florida guidance used `us`, `fl`, and a bare county name. `us` is unchanged and stays. `fl` and `us-fl` are *different regions*, not two spellings of one — they hash to different keys and never exchange traffic — and county tags are finer than the scheme now calls for.
+
+Repeaters already deployed should carry both forms until the state has moved over:
+
+```shell {linenos=false}
+region put us
+region put us-southeast us
+region put us-fl us-southeast
+region put fl
+region save
+```
+
+The second argument to `region put` sets the parent shown in the listing. It is presentation only — see above.
 
 ### Setting regions on openHop
 
@@ -142,6 +145,10 @@ region
 
 Every tag you set should be listed, each showing `F` — flood allowed. On openHop, check the Console's region list instead.
 
-Region names in use across the wider network, and their derived keys, are collected at <https://meshmaster.store/regions/>.
+### Further reading
+
+- Background on what regions are and are not — <https://github.com/pinztrek/mesher/blob/main/docs/regions.md>
+- Map of regions in use — <https://regions.caboosey.net/>
+- Region names and their derived keys — <https://meshmaster.store/regions/>
 
 Application per node role is in [Node Configuration]({{< relref "/docs/meshcore/configuration/index.md" >}}).

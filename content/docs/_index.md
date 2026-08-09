@@ -12,8 +12,11 @@ menu:
 
 Florida Mesh Documentations, How-tos and Configuration Setup Guides.
 
-Start with the [Introduction][introduction], then follow the section for your network — [Meshtastic][meshtastic-docs] or [Meshcore][meshcore-docs]. Each section covers regional settings, node configuration, installation, and the weekly net for that network.
+Start with the [Introduction][introduction], then follow the section for your network — [Meshtastic][meshtastic-docs] or [Meshcore][meshcore-docs]. Each section covers regional settings, node configuration, and installation.
+
+The [Weekly Mesh Net][weekly-net] runs on both networks at the same time.
 
 [introduction]: introduction
 [meshtastic-docs]: meshtastic
 [meshcore-docs]: meshcore
+[weekly-net]: weekly-mesh-net

@@ -45,7 +45,7 @@ Settings → Experimental → **Hop Bytes: `2`**
 
 `#wardriving` · `#emergency` · `#hamradio` · `#testing` · `#florida` · `#weather` · `#weekly-mesh-net`
 
-Add them with *Add Channel → Join a Hashtag Channel* or a QR code; there is no CLI to add channels. A hashtag channel derives its key from its name, so every node joining by the same name lands on the same channel. These are shared public channels, not private ones. `#weekly-mesh-net` carries the [Weekly Mesh Net]({{< relref "/docs/meshcore/weekly-mesh-net/index.md" >}}).
+Add them with *Add Channel → Join a Hashtag Channel* or a QR code; there is no CLI to add channels. A hashtag channel derives its key from its name, so every node joining by the same name lands on the same channel. These are shared public channels, not private ones. `#weekly-mesh-net` carries the [Weekly Mesh Net]({{< relref "/docs/weekly-mesh-net/index.md" >}}).
 
 ### Check your work
 
