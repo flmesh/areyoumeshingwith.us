@@ -19,8 +19,8 @@ Florida Mesh is a community of operators running long-range, low-power radio net
 
 Two networks run here, on separate radio settings and separate software:
 
-- **Meshtastic** — the larger and longer-established of the two.
-- **MeshCore** — newer, with its own firmware and apps.
+- **Meshtastic** is the larger and longer-established of the two.
+- **MeshCore** is newer, with its own firmware and apps.
 
 They do not interoperate. Pick either one, or run both on separate hardware. The documentation is split the same way: each section is complete on its own, and the settings in one do not apply to the other.
 

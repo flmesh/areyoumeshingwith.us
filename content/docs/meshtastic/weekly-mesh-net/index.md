@@ -35,7 +35,7 @@ Runs two hours.
 The net runs on the default public primary channel. A node already on the mesh is already on it.
 
 - Channel: primary, channel `0`, key `AQ==`, frequency slot `0`
-- Modem preset: your region's — see [Regional Settings]({{< relref "/docs/meshtastic/regional-lora-settings/index.md" >}})
+- Modem preset: your region's, listed in [Regional Settings]({{< relref "/docs/meshtastic/regional-lora-settings/index.md" >}})
 
 ## Check-in format
 
