@@ -22,6 +22,7 @@ categories:
 tags:
 #  - 
 images:
+ - /images/regional-lora-settings/Regional-lora-settings.webP
 #  - 
 ---
 
