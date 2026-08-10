@@ -13,4 +13,16 @@ authors:
   - jbouse
 ---
 
-TBD
+Florida Mesh is a community of operators running long-range, low-power radio networks across the state. The radios relay for each other, so coverage comes from the number of people participating rather than from any central site.
+
+<!--more-->
+
+Two networks run here, on separate radio settings and separate software:
+
+- **Meshtastic** is the larger and longer-established of the two.
+- **MeshCore** is newer, with its own firmware and apps.
+
+They do not interoperate. Pick either one, or run both on separate hardware. The documentation is split the same way: each section is complete on its own, and the settings in one do not apply to the other.
+
+Getting started takes a supported radio and a phone. Follow the section for the network you are joining, match the settings for your part of the state, and you are on the mesh.
+

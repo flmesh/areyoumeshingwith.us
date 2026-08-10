@@ -12,6 +12,3 @@ menu:
 ---
 
 Meshcore documentation and guides.
-
-
-*Stay tuned.*
