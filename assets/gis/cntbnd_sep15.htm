@@ -1,0 +1,636 @@
+<HTML>
+<HEAD>
+<TITLE> FGDL Documentation </TITLE>
+<STYLE>
+          .pre { color: black; font-size: 12pt; font-weight: normal; font-family: courier; }
+	  strong {font-weight: normal; text-transform: uppercase; }
+</STYLE>
+</HEAD>
+<BODY>
+<table width="90%">
+<tr>
+<td>
+<strong><b>FLORIDA GEOGRAPHIC DATA LIBRARY DOCUMENTATION</b></strong><br />
+<p>
+<strong><b>TITLE: FLORIDA COUNTY BOUNDARIES - SEPTEMBER 2015</b></strong>
+</p>
+<pre>
+Geodataset Name:       CNTBND_SEP15
+Geodataset Type:       SHAPEFILE
+Geodataset Feature:    <strong>Polygon</strong>
+Feature Count:         67
+</pre>
+</td>
+</tr>
+<tr><td></td></tr>
+<tr><td></td></tr>
+<tr>
+<td>
+<strong><b>GENERAL DESCRIPTION:</b></strong>
+<table width="650">
+<tr>
+<td>
+This dataset contains the boundaries of Florida's 67 counties. The interior county boundaries are from the US Census Bureau's TIGER data. The coastal boundaries are from the previous version of CNTBND and are used by Florida Department of Transportation's Efficient Transportation Decision Making (ETDM) process for display purposes.
+
+GeoPlan maintains 3 county boundary layers: COUNTYSHORE_AREAS, CNTBND, and COUNTY. These 3 layers will all have the same interior 
+boundaries and different coastal boundaries. The interior boundaries come 
+from the MAF/TIGER Database that is updated yearly by the US Census Bureau. 
+The coastal boundaries differ in the following way:
+
+1)      COUNTYSHORE_AREAS - FWRI's detailed shoreline layer (updated 
+        periodically)
+
+2)      CNTBND - moderately generalized shoreline designed for ETDM display, 
+         sourced from historic US Census Bureau data
+
+3)      COUNTY - highly generalized shoreline designed for ETDM display, 
+         sourced from historic US Census Bureau data
+</td>
+</tr>
+</table>
+</td>
+</tr>
+<tr><td></td></tr>
+<tr>
+<td>
+<pre>
+DATA SOURCE(S):                    University of Florida GeoPlan Center
+SCALE OF ORIGINAL SOURCE MAPS:     100000
+GEODATASET EXTENT:                 State of Florida<br />
+PUBLICATION DATE:                  2015
+TIME PERIOD OF CONTENT:            Begin Date: 1990    End Date: 201509
+DOWNLOAD LINK:                     <A href="http://www.fgdl.org/metadataexplorer/explorer.jsp">http://www.fgdl.org/metadataexplorer/explorer.jsp</A>
+</pre>
+</td>
+</tr>
+</table>
+<P>
+<strong><b>FEATURE ATTRIBUTE TABLES:</b></strong>
+</P>
+<pre>Datafile Name: CNTBND_SEP15.DBF</pre>
+<table width="75%" cellspacing="0" cellpadding="0" border="0">
+<tr align="left">
+<td> ITEM NAME </td>
+<td>WIDTH</td>
+<td>TYPE</td>
+</tr>
+<tr>
+<td>
+<DIV align="left">OBJECTID
+</DIV>
+</td>
+<td>4</td>
+<td>OID</td>
+</tr>
+<tr>
+<td>
+<DIV align="left">Shape
+</DIV>
+</td>
+<td>4</td>
+<td>Geometry</td>
+</tr>
+<tr>
+<td>
+<DIV align="left">TIGERNAME
+</DIV>
+</td>
+<td>100</td>
+<td>String</td>
+</tr>
+<tr>
+<td>
+<DIV align="left">NAME
+</DIV>
+</td>
+<td>32</td>
+<td>String</td>
+</tr>
+<tr>
+<td>
+<DIV align="left">FGDLCODE
+</DIV>
+</td>
+<td>32</td>
+<td>String</td>
+</tr>
+<tr>
+<td>
+<DIV align="left">FIPS
+</DIV>
+</td>
+<td>3</td>
+<td>String</td>
+</tr>
+<tr>
+<td>
+<DIV align="left">DESCRIPT
+</DIV>
+</td>
+<td>12</td>
+<td>String</td>
+</tr>
+<tr>
+<td>
+<DIV align="left">FGDLAQDATE
+</DIV>
+</td>
+<td>36</td>
+<td>Date</td>
+</tr>
+<tr>
+<td>
+<DIV align="left">COASTAL
+</DIV>
+</td>
+<td>1</td>
+<td>String</td>
+</tr>
+<tr>
+<td>
+<DIV align="left">AUTOID
+</DIV>
+</td>
+<td>4</td>
+<td>Integer</td>
+</tr>
+<tr>
+<td>
+<DIV align="left">SHAPE.AREA
+</DIV>
+</td>
+<td>0</td>
+<td>Double</td>
+</tr>
+<tr>
+<td>
+<DIV align="left">SHAPE.LEN
+</DIV>
+</td>
+<td>0</td>
+<td>Double</td>
+</tr>
+</table>
+<p>
+<strong><b>FEATURE ATTRIBUTE TABLES CODES AND VALUES:</b></strong>
+</p>
+<P />
+<table width="75%" cellspacing="0" cellpadding="0" border="0">
+<tr>
+<td width="30%">Item<pre></pre></td>
+<td>Item Description<pre></pre></td>
+</tr>
+<tr valign="top">
+<td>OBJECTID</td>
+<td>
+Internal feature number.<table>
+<tr>
+<td>
+</td>
+</tr>
+</table>
+<br />
+</td>
+</tr>
+<tr valign="top">
+<td>Shape</td>
+<td>
+Feature geometry.<table>
+<tr>
+<td>
+</td>
+</tr>
+</table>
+<br />
+</td>
+</tr>
+<tr valign="top">
+<td>TIGERNAME</td>
+<td>
+County name taken from TIGER data.<table>
+<tr>
+<td>
+</td>
+</tr>
+</table>
+<br />
+</td>
+</tr>
+<tr valign="top">
+<td>NAME</td>
+<td>
+County Name<table>
+<tr>
+<td>
+</td>
+</tr>
+</table>
+<br />
+</td>
+</tr>
+<tr valign="top">
+<td>FGDLCODE</td>
+<td>
+County Code used by FGDL (coincides with alphabetical order)<table>
+<tr>
+<td>
+</td>
+</tr>
+</table>
+<br />
+</td>
+</tr>
+<tr valign="top">
+<td>FIPS</td>
+<td>
+Federal Informational Processing Standard Code. Unique county code used by the Census Bureau.<table>
+<tr>
+<td>
+</td>
+</tr>
+</table>
+<br />
+</td>
+</tr>
+<tr valign="top">
+<td>DESCRIPT</td>
+<td>
+GeoPlan added field based on NAME<table>
+<tr>
+<td>
+</td>
+</tr>
+</table>
+<br />
+</td>
+</tr>
+<tr valign="top">
+<td>FGDLAQDATE</td>
+<td>
+Date GeoPlan acquired data from source.<table>
+<tr>
+<td>
+</td>
+</tr>
+</table>
+<br />
+</td>
+</tr>
+<tr valign="top">
+<td>COASTAL</td>
+<td>
+Indicates whether county is on the coast.<table>
+<tr>
+<td>
+Y = Yes<br /><pre></pre>
+N = No<br /><pre></pre>
+</td>
+</tr>
+</table>
+<br />
+</td>
+</tr>
+<tr valign="top">
+<td>AUTOID</td>
+<td>
+Unique ID added by GeoPlan<table>
+<tr>
+<td>
+</td>
+</tr>
+</table>
+<br />
+</td>
+</tr>
+<tr valign="top">
+<td>SHAPE.AREA</td>
+<td>
+Area in meters<table>
+<tr>
+<td>
+</td>
+</tr>
+</table>
+<br />
+</td>
+</tr>
+<tr valign="top">
+<td>SHAPE.LEN</td>
+<td>
+Perimeter in meters<table>
+<tr>
+<td>
+</td>
+</tr>
+</table>
+<br />
+</td>
+</tr>
+</table>
+<table>
+<tr>
+<td>
+<pre></pre>
+</td>
+</tr>
+</table>
+<strong><b>USER NOTES:</b></strong>
+<br />
+<table width="500">
+<tr>
+<td>
+<pre>
+Certain node/geometry and topology (GT)-polygon/chain relationships are 
+collected or generated to satisfy topological requirements. Some of these 
+requirements include: chains must begin and end at nodes, chains must connect 
+to each other at nodes, chains do not extend through nodes, left and right 
+GT-polygons are defined for each chain element and are consistent throughout 
+the transfer, and the chains representing the limits of the file (neatline) are free of 
+gaps. The neatline is generated by connecting the four corners of the digital file, 
+as established during initialization of the digital file.  All data outside the enclosed 
+region are ignored and all data crossing these geographically straight lines are 
+clipped at the neatline. (Exception: During the QA/QC process all data is 
+examined and if errors are found and corrections are possible, then data is 
+corrected accordingly.  This process is documented in the Process_Step.)  Data 
+within a specified tolerance of the neatline are snapped to the neatline. Neatline 
+straightening aligns the digitized edges of the digital data with the generated 
+neatline, that is, with the longitude/latitude lines in geographic coordinates.  All 
+internal polygons are tested for closure.  Certain attributes and/or entities, e.g. 
+closure line, convey data quality information.  When information to be encoded in 
+the subfield is known to be not applicable (undefined, not relevant), then the 
+subfield is valued by a string of "9s"; and when the information to be encoded is 
+relevant but unknown (or missing), then the subfield is valued by a string of "9s."
+</pre>
+</td>
+</tr>
+</table>
+<table width="500">
+<tr>
+<td>
+<pre>
+Relied on the integrity of the attribute information within the original data layer.
+</pre>
+</td>
+</tr>
+</table>
+<table width="500">
+<tr>
+<td>
+<pre>
+GeoPlan relied on the integrity of the attribute information within
+the original data.
+</pre>
+</td>
+</tr>
+</table>
+<table width="500">
+<tr>
+<td>
+<pre>
+</pre>
+</td>
+</tr>
+</table>
+<table width="500">
+<tr>
+<td>
+<pre>
+This dataset provides location and attribute information on all 67 of Florida's counties.<br /><br />
+</pre>
+</td>
+</tr>
+</table>
+<table width="500">
+<tr>
+<td>
+<pre>
+This data is provided 'as is' and its horizontal positional accuracy has not 
+been verified by GeoPlan<br /><br />
+</pre>
+</td>
+</tr>
+</table>
+<table width="500">
+<tr>
+<td>
+<pre>
+This data is provided 'as is' and its vertical positional accuracy has not been 
+verified by GeoPlan<br /><br />
+</pre>
+</td>
+</tr>
+</table>
+<table width="550">
+<tr>
+<td>
+<pre>
+NONE</pre>
+<br />
+</td>
+</tr>
+</table>
+<table width="550">
+<tr>
+<td>
+<pre>
+The Florida Geographic Data Library is a collection of Geospatial Data
+compiled by the University of Florida GeoPlan Center with support from
+the Florida Department of Transportation. GIS data available in FGDL is
+collected from various state, federal, and other agencies (data sources)
+who are data stewards, producers, or publishers. The data available in
+FGDL may not be the most current version of the data offered by the
+data source. University of Florida GeoPlan Center makes no guarantees
+about the currentness of the data and suggests that data users check
+with the data source to see if more recent versions of the data exist.
+
+Furthermore, the GIS data available in the FGDL are provided 'as is'.
+The University of Florida GeoPlan Center makes no warranties, guaranties
+or representations as to the truth, accuracy or completeness of the data
+provided by the data sources. The University of Florida GeoPlan Center
+makes no representations or warranties about the quality or suitability
+of the materials, either expressly or implied, including but not limited
+to any implied warranties of merchantability, fitness for a particular
+purpose, or non-infringement. The University of Florida GeoPlan Center
+shall not be liable for any damages suffered as a result of using,
+modifying, contributing or distributing the materials.
+
+A note about data scale: 
+
+Scale is an important factor in data usage.  Certain scale datasets
+are not suitable for some project, analysis, or modeling purposes.
+Please be sure you are using the best available data. 
+
+1:24000 scale datasets are recommended for projects that are at the
+county level.
+1:24000 data should NOT be used for high accuracy base mapping such
+as property parcel boundaries.
+1:100000 scale datasets are recommended for projects that are at the
+multi-county or regional level.
+1:125000 scale datasets are recommended for projects that are at the
+regional or state level or larger.
+
+Vector datasets with no defined scale or accuracy should be
+considered suspect. Make sure you are familiar with your data
+before using it for projects or analysis. Every effort has been
+made to supply the user with data documentation. For additional
+information, see the References section and the Data Source Contact
+section of this documentation. For more information regarding
+scale and accuracy, see our webpage at:
+http://geoplan.ufl.edu/education.html</pre>
+<br />
+</td>
+</tr>
+</table>
+<strong><b>REFERENCES: </b></strong>
+<table width="60%">
+<tr>
+<td>
+<pre>
+USCB Tiger:
+https://www.census.gov/geo/maps-data/data/tiger-line.html
+</pre>
+<br />
+</td>
+</tr>
+</table>
+<strong><b>DATA LINEAGE SUMMARY: </b></strong>
+<br />
+<table width="60%">
+<tr>
+<td>
+<pre>
+This data layer was originally created by the US Census Bureau. 
+The GeoPlan Center acquired this dataset from the Florida Department 
+of Environmental Protection GIS Division. This dataset was previously 
+released in FGDL Version 3 (released July 2000), and there was an 
+error in the eastern border of Polk County/ western border of Osceola. 
+The border has been corrected and updated for this new version of the 
+dataset.
+Process Date: 2002
+<br />
+The originating agencies created the original spatial coverage. 
+GeoPlan, during the QA/QC process included the following aspects:
+
+(1) Reprojected data to FGDL Albers
+(2) Set Precision to DOUBLE
+(3) Set Tolerances to FGDL Standards.
+(4) Changed DADE county name to MIAMI-DADE; also changed FIPS code from 13 to 86
+Process Date: 2002
+<br />
+GeoPlan corrected Hernando and Sumter County boundaries in September 2004.
+Process Date: 20040900
+<br />
+Dissolved layer based on county name in order to convert single part shapes to 
+multipart shapes. This reduced the polygon count to 67. In addition, deleted small 
+island polygons that had name Franklin but were located on the western border of 
+Wakulla County.
+Process Date: 20080612
+<br />
+Fixed Palm Beach / Broward border. Made corrections based on the following two layers:
+fl_countyshore.shp (FDEP)
+CountyBoundary.shp (Broward County GIS)
+Process Date: 20110601
+<br />
+Fixed Gulf/Franklin boundary based on 2011 TIGER Line shapefile. Renamed 
+output to CNTBND_JUL11. The July 2011 date tag comes from the source date of 
+TIGER data. This date also matches FGDL layer countyshore_areas_jul11.shp, 
+which also comes from TIGER.
+Process Date: 20120423
+<br />
+This layer is made up of 2 sources.
+
+1) The interior county lines are derived from the latest TIGER county boundary. This 
+can be downloaded here:
+ftp://ftp2.census.gov/geo/tiger/TIGER2015/COUNTY/
+
+2) The coastal boundary was taken from CNTBND_JUL11.
+
+Major changes to boundaries include the following:
+Gulf/Franklin
+Martin/St. Lucie
+
+Other minor changes can be seen around the state because of the new method of 
+replacing all interior boundaries with the latest TIGER data. In past versions of 
+CNTBND only the major changes were made.
+
+Python script county_boundaries.py was used to do the following:
+-Used Dissolve, Intersect, and Spatial Join command to replace interior boundaries 
+with updated TIGER boundaries
+-Add TIGERNAME field based on county name in TIGER data
+-Add DESCRIPT field based on county name
+-Add FGDLAQDATE based on date acquired from source
+Process Date: 20151119
+<br />
+</pre>
+</td>
+</tr>
+</table>
+<strong><b>MAP PROJECTION PARAMETERS: </b></strong>
+<br />
+<pre>
+Projection                          ALBERS
+Datum                               HPGN
+Units                               METERS
+Spheroid                            GRS1980
+1st Standard Parallel               24  0  0.000
+2nd Standard Parallel               31 30  0.000
+Central Meridian                   -84 00  0.000
+Latitude of Projection's Origin     24  0  0.000
+False Easting (meters)              400000.00000
+False Northing (meters)             0.00000
+</pre>
+<p>
+<strong><b>DATA SOURCE CONTACT (S):</b></strong>
+</p>
+<table width="100%" cellspacing="0" cellpadding="0" border="0">
+<tr>
+<td>
+<pre>
+Name:
+Abbr. Name:
+Address:
+
+
+Phone:
+
+Web site:
+E-mail:
+Contact Person:
+         Phone:
+        E-mail:
+</pre>
+</td>
+<td valign="top"><pre>University of Florida GeoPlan Center
+GeoPlan
+431 Arch Building
+Gainesville, FL
+32611
+n/a
+<br />
+www.fgdl.org
+Technical Support: http://www.fgdl.org/fgdlfeed.html
+GIS Staff
+</pre>
+</td>
+</tr>
+</table>
+<br />
+<strong><b>FGDL CONTACT:</b></strong>
+<pre>
+Name:                   FLORIDA GEOGRAPHIC DATA LIBRARY
+Abbr. Name:             FGDL
+Address:                Florida Geographic Data Library
+                        431 Architecture Building
+                        PO Box 115706
+                        Gainesville, FL  32611-5706
+Web site:               <a href="http://www.fgdl.org">http://www.fgdl.org</a>
+
+Contact FGDL: 
+
+      Technical Support:	        <a href="http://www.fgdl.org/fgdlfeed.html">http://www.fgdl.org/fgdlfeed.html</a>
+      FGDL Frequently Asked Questions:  <a href="http://www.fgdl.org/fgdlfaq.html">http://www.fgdl.org/fgdlfaq.html</a>
+      FGDL Mailing Lists:		<a href="http://www.fgdl.org/fgdl-l.html">http://www.fgdl.org/fgdl-l.html</a>
+      For FGDL Software:                <a href="http://www.fgdl.org/software.html">http://www.fgdl.org/software.html</a>
+</pre>
+</BODY>
+</HTML>

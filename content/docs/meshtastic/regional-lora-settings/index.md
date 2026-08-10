@@ -14,6 +14,7 @@ nav_icon:
 authors:
   - Json_18
   - jbouse
+  - meh098
 series:
   - Docs
 categories:
@@ -26,7 +27,7 @@ images:
 
 ## Regions
 
-{{< figure src="regional-lora-settings.webP" alt="Florida Mesh Regions" width="50%" class="float-end me-3" >}}
+{{< figure src="regional-lora-settings.svg" alt="Florida Mesh Regions" width="50%" >}}
 
 Here at Florida Mesh we've divided up the State into Five distinct regions. They are as follows:
 
@@ -35,6 +36,18 @@ Here at Florida Mesh we've divided up the State into Five distinct regions. They
 - 🔵 Blue - Central West Florida
 - 🟡 Yellow - Central East Florida
 - 🟠 Orange - South Florida
+
+### Channel Presets
+
+{{< figure src="channel-lora-settings.svg" alt="Florida Mesh LoRa Channels" width="50%" >}}
+
+The channel map colors counties by their Meshtastic modem preset:
+
+ - {{< dot color="#3B82C4" >}} **LongFast** — Default preset for most of the state
+
+ - {{< dot color="#FF00FF" >}} **MediumFast** — Southeast coast (Monroe through Okeechobee)
+
+ - {{< dot color="#8E44AD" >}} **LongFast/MediumFast** — Brevard County (dual preset area)
 
 Each Region's LoRa settings and Metro based Meshes settings will be called out in each Region Section.
 
@@ -87,7 +100,7 @@ As of 2026/21, Sebastian to Layton key is **MEDIUM_FAST** If your in range of th
 ### Sebastian to Layton key
 
 {{< notice >}}
-As of 2026/21, Sebastian to Layton key is **MEDIUM_FAST** If your in range of the Eastern Seaboard in this region, Medium_Fast is the frequency you'll want to be on.
+As of 2026/6/21, Sebastian to Layton key is **MEDIUM_FAST** If your in range of the Eastern Seaboard in this region, Medium_Fast is the frequency you'll want to be on.
 {{< /notice >}}
 
 - LoRa: `MediumFast`

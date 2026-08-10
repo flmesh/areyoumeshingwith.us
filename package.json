@@ -3,8 +3,10 @@
   "description": "Florida Mesh website.",
   "scripts": {
     "csdev": "hugo server --gc --enableGitInfo -DF -b / --appendPort=false",
-    "dev": "hugo server --gc --enableGitInfo -DF",
-    "prod": "hugo server --gc --disableFastRender --enableGitInfo --minify -e production -p 1314"
+    "dev": "npm run mapgen && hugo server --gc --enableGitInfo -DF",
+    "prod": "hugo server --gc --disableFastRender --enableGitInfo --minify -e production -p 1314",
+    "mapgen": "cd tools/mapgen && go run main.go",
+    "build": "npm run mapgen && hugo --gc --minify -e production"
   },
   "repository": {
     "type": "git",

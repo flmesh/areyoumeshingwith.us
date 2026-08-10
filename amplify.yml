@@ -47,6 +47,9 @@ frontend:
     build:
       commands:
         - |
+          # Generate regional map SVG from GeoJSON
+          cd tools/mapgen && go run main.go
+        - |
           if [ -n "$BASEURL" ]; then
             case "$AWS_BRANCH" in
               main|master)
