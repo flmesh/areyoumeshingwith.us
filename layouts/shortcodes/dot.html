@@ -1,0 +1,17 @@
+{{- /*
+    Shortcode: dot
+    Usage: {{< dot color="#3B82C4" >}}
+    Produces a small shaded circular SVG matching the provided hex color.
+*/ -}}
+{{ $c := .Get "color" | default "#000000" }}
+{{ $id := printf "g%s" (replace $c "#" "") }}
+<svg role="img" width="1em" height="1em" viewBox="0 0 16 16" style="vertical-align:-0.15em; margin-right:0.35em;">
+  <defs>
+    <radialGradient id="{{ $id }}" cx="30%" cy="25%" r="60%">
+      <stop offset="0%" stop-color="#ffffff" stop-opacity="0.25"/>
+      <stop offset="45%" stop-color="{{ $c }}" stop-opacity="1"/>
+      <stop offset="100%" stop-color="#000000" stop-opacity="0.06"/>
+    </radialGradient>
+  </defs>
+  <circle cx="8" cy="8" r="7" fill="url(#{{ $id }})" stroke="rgba(0,0,0,0.06)" stroke-width="0.5"/>
+</svg>

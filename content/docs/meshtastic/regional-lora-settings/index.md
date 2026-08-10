@@ -43,9 +43,11 @@ Here at Florida Mesh we've divided up the State into Five distinct regions. They
 
 The channel map colors counties by their Meshtastic modem preset:
 
-- **🔵 LongFast** (#3B82C4) — Default preset for most of the state
-- **🟣 MediumFast** (#FF00FF) — Southeast coast (Monroe through Okeechobee)
-- **🟣 LongFast/MediumFast** (#8E44AD) — Brevard County (dual preset area)
+ - {{< dot color="#3B82C4" >}} **LongFast** — Default preset for most of the state
+
+ - {{< dot color="#FF00FF" >}} **MediumFast** — Southeast coast (Monroe through Okeechobee)
+
+ - {{< dot color="#8E44AD" >}} **LongFast/MediumFast** — Brevard County (dual preset area)
 
 Each Region's LoRa settings and Metro based Meshes settings will be called out in each Region Section.
 
@@ -98,7 +100,7 @@ As of 2026/21, Sebastian to Layton key is **MEDIUM_FAST** If your in range of th
 ### Sebastian to Layton key
 
 {{< notice >}}
-As of 2026/21, Sebastian to Layton key is **MEDIUM_FAST** If your in range of the Eastern Seaboard in this region, Medium_Fast is the frequency you'll want to be on.
+As of 2026/6/21, Sebastian to Layton key is **MEDIUM_FAST** If your in range of the Eastern Seaboard in this region, Medium_Fast is the frequency you'll want to be on.
 {{< /notice >}}
 
 - LoRa: `MediumFast`
