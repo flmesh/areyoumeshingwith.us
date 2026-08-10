@@ -62,7 +62,7 @@ The CLI equivalent is `set path.hash.mode 1`.
 
 `#emergency` · `#hamradio` · `#testing` · `#florida` · `#weather` · `#weekly-mesh-net`
 
-Add them with *Add Channel → Join a Hashtag Channel* or a QR code; there is no CLI to add channels. A hashtag channel derives its key from its name, so every node joining by the same name lands on the same channel. These are shared public channels, not private ones. `#weekly-mesh-net` carries the [Weekly Mesh Net]({{< relref "/docs/meshcore/weekly-mesh-net/index.md" >}}).
+Add them with *Add Channel → Join a Hashtag Channel* or a QR code; there is no CLI to add channels. A hashtag channel derives its key from its name, so every node joining by the same name lands on the same channel. These are shared public channels, not private ones. `#weekly-mesh-net` carries the [Weekly Mesh Net]({{< relref "/docs/general/weekly-mesh-net/index.md" >}}).
 
 Join the ones you intend to use. There is no cost to joining a channel you rarely read, and traffic on it reaches you either way.
 
