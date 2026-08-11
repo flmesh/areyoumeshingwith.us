@@ -22,7 +22,6 @@ categories:
 tags:
 #  - 
 images:
- - /images/regional-lora-settings/Regional-lora-settings.webP
 #  - 
 ---
 
@@ -44,11 +43,11 @@ Here at Florida Mesh we've divided up the State into Five distinct regions. They
 
 The channel map colors counties by their Meshtastic modem preset:
 
- - {{< dot color="#3B82C4" >}} **LongFast** — Default preset for most of the state
+- {{< dot color="#3B82C4" >}} **LongFast** — Default preset for most of the state
 
- - {{< dot color="#FF00FF" >}} **MediumFast** — Southeast coast (Monroe through Okeechobee)
+- {{< dot color="#FF00FF" >}} **MediumFast** — Southeast coast (Monroe through Okeechobee)
 
- - {{< dot color="#8E44AD" >}} **LongFast/MediumFast** — Brevard County (dual preset area)
+- {{< dot color="#8E44AD" >}} **LongFast/MediumFast** — Brevard County (dual preset area)
 
 Each Region's LoRa settings and Metro based Meshes settings will be called out in each Region Section.
 
