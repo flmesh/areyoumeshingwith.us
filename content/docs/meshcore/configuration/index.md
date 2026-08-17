@@ -58,13 +58,22 @@ The CLI equivalent is `set path.hash.mode 1`.
 
 ## Channels
 
-`Public` is built in. Florida also uses:
+Florida uses:
 
-`#emergency` · `#hamradio` · `#testing` · `#florida` · `#weather` · `#weekly-mesh-net`
+| Channel | Key | Region Scope | Purpose |
+|---|---|---|---|
+| [`Public`](meshcore://channel/add?name=Public&secret=8b3387e9c5cdea6ac9e5edbaa115cd72) | `8b3387e9c5cdea6ac9e5edbaa115cd72` | | Built in, general traffic |
+| [`FloridaMesh`](meshcore://channel/add?name=FloridaMesh&secret=e9a7128005b364ae010dd6330d693fa6) | `e9a7128005b364ae010dd6330d693fa6` | | Statewide chat |
+| [`#emergency`](meshcore://channel/add?name=%23emergency&secret=e1ad578d25108e344808f30dfdaaf926) | `e1ad578d25108e344808f30dfdaaf926` | | Emergency and severe weather traffic |
+| [`#weather`](meshcore://channel/add?name=%23weather&secret=88f502554fee92a1625cfb311546e7cb) | `88f502554fee92a1625cfb311546e7cb` | | Weather scripts and alerting |
+| [`#testing`](meshcore://channel/add?name=%23testing&secret=cde5e82cf515647dcb547a79a4f065d1) | `cde5e82cf515647dcb547a79a4f065d1` | | Node, script, and bot testing |
+| [`#weekly-mesh-net`](meshcore://channel/add?name=%23weekly-mesh-net&secret=284d8129d937833bdd641f21256dced0) | `284d8129d937833bdd641f21256dced0` | | [Weekly Mesh Net]({{< relref "/docs/general/weekly-mesh-net/index.md" >}}) |
 
-Add them with *Add Channel → Join a Hashtag Channel* or a QR code; there is no CLI to add channels. A hashtag channel derives its key from its name, so every node joining by the same name lands on the same channel. These are shared public channels, not private ones. `#weekly-mesh-net` carries the [Weekly Mesh Net]({{< relref "/docs/general/weekly-mesh-net/index.md" >}}).
+Open a channel name on a device with the MeshCore app installed to add it directly. Otherwise: `Public` is built in and needs nothing entered, the hashtag channels derive their key from their name so *Add Channel → Join a Hashtag Channel* or a QR code is enough, and `FloridaMesh` is private, so enter its name and key exactly as shown or scan a QR code. There is no CLI to add channels.
 
 Join the ones you intend to use. There is no cost to joining a channel you rarely read, and traffic on it reaches you either way.
+
+Bots and scripts that chat back and forth belong on `#testing` or a private channel. Leave `#emergency` clear for real emergencies. See [Bots and Automation]({{< relref "/docs/general/bots-and-automation/index.md" >}}).
 
 If you run Meshmapper, list every channel you know of under **Public Channels** in its admin settings. That is what the wardriving app listens on for passive RX logs, and a longer list means more coverage recorded for the same drive.
 
@@ -138,3 +147,19 @@ Transmit power, range `1`–`22` dBm. The default varies by board.
 This value sets the transceiver's output, not the antenna's. On boards with a power amplifier the radiated power is substantially higher than the number you set. Establish your board's PA gain and your applicable limits before raising it. Driving a PA beyond its rating, or transmitting into a bad or missing antenna, will permanently damage the radio.
 
 Raising TX power does not fix an asymmetric link. If you can hear a repeater but it cannot hear you, the deficit is usually antenna, feedline, or siting, not power.
+
+## FAQ
+
+### I receive too many notifications on a channel
+
+Nothing is wrong with your node. A busy channel is a busy channel, and what it does to your phone is yours to control.
+
+Open the channel, then **Channel Settings**:
+
+- **Notifications** sets what the channel is allowed to interrupt you for: *All Messages*, *Mentions Only*, or *None*. Messages keep arriving either way, you just stop being told about each one.
+- **Blocked Senders** silences one particular node, which is the right tool when a single chatty bot is the problem rather than the channel.
+- **Message Retention** limits how much history the app keeps.
+
+If you have no use for the channel at all, remove it from your channel list. You can add it back any time from the key or link above.
+
+None of this affects anyone else on the mesh.

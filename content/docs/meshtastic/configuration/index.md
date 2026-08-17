@@ -19,6 +19,32 @@ nav_icon:
 
 Below are configuration recommendations for optimizing your Meshtastic nodes for getting on the [Florida Mesh Map][MESHMAP] & [Florida Mesh Telemetry][MALLA].
 
+## Channels
+
+Alongside the primary channel, Florida uses:
+
+| Channel | Key | Purpose |
+|---|---|---|
+| [`FloridaMesh`](https://meshtastic.org/e/?add=true#CjcSIGXQsmeHp7fzWcnl7zY7Qb666dJQpaHVMoWKVS-MbIZwGgtGbG9yaWRhTWVzaCgBMAE6AggN) | `ZdCyZ4ent/NZyeXvNjtBvrrp0lClodUyhYpVL4xshnA=` | Statewide chat |
+| [`emergency`](https://meshtastic.org/e/?add=true#ChYSAQEaCWVtZXJnZW5jeSgBMAE6AggN) | `AQ==` | Emergency and severe weather traffic |
+| [`weather`](https://meshtastic.org/e/?add=true#Cg4SAQEaB3dlYXRoZXIoAQ) | `AQ==` | Weather scripts and alerting |
+| [`testing`](https://meshtastic.org/e/?add=true#Cg4SAQEaB3Rlc3RpbmcoAQ) | `AQ==` | Node, script, and bot testing |
+| [`telemetry`](https://meshtastic.org/e/?add=true#ChISAQEaCXRlbGVtZXRyeSgBOgA) | `AQ==` | Remote infrastructure nodes only, see below |
+
+Open a channel name on a device with the Meshtastic app installed to add it, or enter the name and key by hand as a secondary channel. The name and key together define the channel, so every node using the same name and key lands on the same one. Names are case sensitive and limited to 11 characters, and a node has eight channel slots including the primary.
+
+{{< notice note >}}
+These are `?add=true` links. They add the one channel and leave your existing channels and radio settings alone.
+
+A `meshtastic.org/e/` link without `?add=true` is a *replace* link: it wipes every channel you have, makes its first channel your primary, and overwrites your LoRa configuration including region, hop limit, and TX power. Check for `?add=true` before scanning a link or QR code from anyone.
+{{< /notice >}}
+
+### telemetry
+
+Skip this one unless you run remote infrastructure. Neighbor Info will not transmit over LoRa while your primary channel is the default public channel, so a remote infrastructure node that needs to share neighbor data adds `telemetry` and makes it its **primary**, not a secondary. Normal nodes have no use for it.
+
+Join the ones you intend to use. The [Weekly Mesh Net]({{< relref "docs/general/weekly-mesh-net/index.md" >}}) stays on your region's default public channel. Bots and scripts that chat back and forth belong on `testing` or a private channel, not the primary. Leave `emergency` clear for real emergencies. See [Bots and Automation]({{< relref "docs/general/bots-and-automation/index.md" >}}).
+
 ## Getting on the Map In Existing Meshes
 
 For nodes that are in established meshes (please check [Florida Mesh Map][MESHMAP] to see where the closest feeders are) all you need to get added to the maps and tools is one config change.
@@ -54,6 +80,20 @@ Channels:
   - Precise Location: *user preference*
   - Precision Slider: *user preference*
   
+Uplink and downlink are set per channel. What each of the Florida channels expects:
+
+| Channel | Uplink | Downlink | Zero-hopped |
+|---|---|---|---|
+| primary (`LongFast`) | `Checked` | `Unchecked` | Yes |
+| `FloridaMesh` | `Checked` | `Checked` | No |
+| `emergency` | `Checked` | `Checked` | No |
+| `weather`, `testing` | `Checked` | `Unchecked` | No |
+| `telemetry` | `Checked` | `Unchecked` | Yes |
+
+`FloridaMesh` carries downlink so that a message put on it reaches operators anywhere in the state rather than only those within radio range of the sender. `emergency` carries downlink for the same reason and a sharper one: when it matters, the information needs to travel as far as it can.
+
+The [Florida broker](https://github.com/flmesh/emqx) zeroes `hop_limit` and `hop_start` in flight on the default modem-preset channels and on `telemetry`. A packet the broker delivers on those reaches only the nodes that hear a gateway directly and is not rebroadcast, which is what keeps internet-scale traffic from flooding the radio mesh. `FloridaMesh` and `emergency` are not zero-hopped, so traffic downlinked on them travels the mesh normally.
+
 Device:
 
 - Role: `CLIENT|CLIENT_BASE|CLIENT_MUTE`[^role]
@@ -125,6 +165,18 @@ If your node is not appearing on the map:
 - Ensure the precision settings meet the minimum requirements (1194ft / 363m)
 - Confirm the root topic is set exactly to `msh/US/FL`
 - Verify the MQTT module is enabled and properly configured
+
+## FAQ
+
+### I receive too many notifications on a channel
+
+Nothing is wrong with your node. A busy channel is a busy channel, and you control what it does to your phone.
+
+- Mute the conversation. In the message list, select the channel and choose **Mute notifications**, for 8 hours, 1 week, or always. Messages still arrive, your phone stays quiet.
+- Turn off notifications for the Meshtastic app in your phone's own settings if you would rather check messages when you open the app.
+- Leave the channel. Delete it in the app's channel settings and that slot is free for something else. You can rejoin later with the name and key above.
+
+Muting or leaving a channel changes nothing for anyone else on the mesh, and it does not stop your node from relaying traffic.
 
 [^presets]: Please reference [Regional LoRa Settings]({{< relref "regional-lora-settings/index.md" >}}) for up to date modem presets for each area of the state.
 [^tls]: TLS encrypts data transmitted between MQTT clients and the broker for increased security, but may not supported on all platforms. It is known that the Android App version above 2.7.13 may have issues with TLS enabled.
