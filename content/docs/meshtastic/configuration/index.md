@@ -31,19 +31,19 @@ Alongside the primary channel, Florida uses:
 | [`testing`](https://meshtastic.org/e/?add=true#Cg4SAQEaB3Rlc3RpbmcoAQ) | `AQ==` | Node, script, and bot testing |
 | [`telemetry`](https://meshtastic.org/e/?add=true#ChISAQEaCXRlbGVtZXRyeSgBOgA) | `AQ==` | Remote infrastructure nodes only, see below |
 
-Open a channel name on a device with the Meshtastic app installed to add it, or enter the name and key by hand as a secondary channel. The name and key together define the channel, so every node using the same name and key lands on the same one. Names are case sensitive and limited to 11 characters, and a node has eight channel slots including the primary.
+Open a channel name on a device with the app installed to add it, or enter the name and key by hand as a secondary channel. Name and key together define the channel: same name, same key, same channel. Names are case sensitive and limited to 11 characters. A node has eight channel slots including the primary.
 
-{{< notice note >}}
-These are `?add=true` links. They add the one channel and leave your existing channels and radio settings alone.
+The [Weekly Mesh Net]({{< relref "docs/general/weekly-mesh-net/index.md" >}}) runs on your region's default public channel, not on any of these. Bot-to-bot traffic goes on `testing` or a private channel; keep `emergency` clear. See [Bots and Automation]({{< relref "docs/general/bots-and-automation/index.md" >}}).
 
-A `meshtastic.org/e/` link without `?add=true` is a *replace* link: it wipes every channel you have, makes its first channel your primary, and overwrites your LoRa configuration including region, hop limit, and TX power. Check for `?add=true` before scanning a link or QR code from anyone.
+{{< notice note "Check for ?add=true" >}}
+The links above are `?add=true`: each adds one channel and leaves your other channels and LoRa config untouched.
+
+A `meshtastic.org/e/` link *without* `?add=true` replaces the entire channel set, makes its first channel your primary, and overwrites LoRa config including region, hop limit, and TX power. Verify before scanning a link or QR code from anyone.
 {{< /notice >}}
 
 ### telemetry
 
-Skip this one unless you run remote infrastructure. Neighbor Info will not transmit over LoRa while your primary channel is the default public channel, so a remote infrastructure node that needs to share neighbor data adds `telemetry` and makes it its **primary**, not a secondary. Normal nodes have no use for it.
-
-Join the ones you intend to use. The [Weekly Mesh Net]({{< relref "docs/general/weekly-mesh-net/index.md" >}}) stays on your region's default public channel. Bots and scripts that chat back and forth belong on `testing` or a private channel, not the primary. Leave `emergency` clear for real emergencies. See [Bots and Automation]({{< relref "docs/general/bots-and-automation/index.md" >}}).
+Infrastructure only. Neighbor Info does not transmit over LoRa while the primary channel is the default one, so a remote infrastructure node sharing neighbor data sets `telemetry` as its **primary** rather than a secondary. The add link installs it as a secondary, where it has no effect.
 
 ## Getting on the Map In Existing Meshes
 
@@ -80,7 +80,7 @@ Channels:
   - Precise Location: *user preference*
   - Precision Slider: *user preference*
   
-Uplink and downlink are set per channel. What each of the Florida channels expects:
+Uplink and downlink are per channel:
 
 | Channel | Uplink | Downlink | Zero-hopped |
 |---|---|---|---|
@@ -90,9 +90,9 @@ Uplink and downlink are set per channel. What each of the Florida channels expec
 | `weather`, `testing` | `Checked` | `Unchecked` | No |
 | `telemetry` | `Checked` | `Unchecked` | Yes |
 
-`FloridaMesh` carries downlink so that a message put on it reaches operators anywhere in the state rather than only those within radio range of the sender. `emergency` carries downlink for the same reason and a sharper one: when it matters, the information needs to travel as far as it can.
+`FloridaMesh` and `emergency` take downlink so traffic on them reaches the whole state instead of only nodes in radio range of the sender.
 
-The [Florida broker](https://github.com/flmesh/emqx) zeroes `hop_limit` and `hop_start` in flight on the default modem-preset channels and on `telemetry`. A packet the broker delivers on those reaches only the nodes that hear a gateway directly and is not rebroadcast, which is what keeps internet-scale traffic from flooding the radio mesh. `FloridaMesh` and `emergency` are not zero-hopped, so traffic downlinked on them travels the mesh normally.
+The [Florida broker](https://github.com/flmesh/emqx) zeroes `hop_limit` and `hop_start` in flight on the default modem-preset channels and on `telemetry`. Packets it delivers on those reach only nodes hearing a gateway directly and are not rebroadcast, so MQTT traffic cannot flood the radio mesh. `FloridaMesh` and `emergency` are not zero-hopped; downlinked traffic on them propagates at its hop limit.
 
 Device:
 
@@ -170,13 +170,11 @@ If your node is not appearing on the map:
 
 ### I receive too many notifications on a channel
 
-Nothing is wrong with your node. A busy channel is a busy channel, and you control what it does to your phone.
+Notification behaviour is local to your phone. Messages keep arriving either way, and your node keeps relaying traffic for the mesh.
 
-- Mute the conversation. In the message list, select the channel and choose **Mute notifications**, for 8 hours, 1 week, or always. Messages still arrive, your phone stays quiet.
-- Turn off notifications for the Meshtastic app in your phone's own settings if you would rather check messages when you open the app.
-- Leave the channel. Delete it in the app's channel settings and that slot is free for something else. You can rejoin later with the name and key above.
-
-Muting or leaving a channel changes nothing for anyone else on the mesh, and it does not stop your node from relaying traffic.
+- **Mute the conversation.** Select the channel in the message list, then **Mute notifications**: 8 hours, 1 week, or always.
+- **Disable notifications for the app** in your phone's settings.
+- **Remove the channel** in the app's channel settings, freeing the slot. Rejoin later with the name and key above.
 
 [^presets]: Please reference [Regional LoRa Settings]({{< relref "regional-lora-settings/index.md" >}}) for up to date modem presets for each area of the state.
 [^tls]: TLS encrypts data transmitted between MQTT clients and the broker for increased security, but may not supported on all platforms. It is known that the Android App version above 2.7.13 may have issues with TLS enabled.

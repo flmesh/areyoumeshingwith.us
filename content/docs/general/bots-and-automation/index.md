@@ -16,35 +16,31 @@ series:
   - Guide
 ---
 
-Bots, scripts, and AI responders are welcome on the Florida mesh. They are also the easiest way to fill the shared channels with traffic nobody asked for, so this page describes where automation belongs.
+Conventions for running automation on the Florida mesh. Automation here means anything that transmits without a person pressing send: auto-replies, scripts, alerting integrations, and AI agents.
 
 <!--more-->
 
-Automation here means anything that transmits without a person pressing send: auto-replies, scripts, alerting integrations, and AI agents.
-
 ## Where to run it
 
-- Reply by direct message. A bot that answers the person who called it has no reason to broadcast.
-- Run on a channel meant for it. Bots talking to bots, and anyone experimenting with AI on the mesh, belong on the testing channel or a private one. Weather scripts belong on the weather channel.
-- Leave the emergency channel clear. It has to stay quiet enough to be useful the day it matters.
-- Use a tapback instead of a text reply where the app supports one. It confirms receipt without adding a message.
+- **Reply by direct message.** A bot answering the node that called it does not need to broadcast.
+- **Use a channel meant for it.** Bot-to-bot traffic and AI experiments go on the testing channel or a private one. Weather scripts go on the weather channel.
+- **Keep the emergency channel clear.** Emergency traffic only.
+- **Prefer a tapback to a text reply** where the app supports one. It acknowledges without a second message.
 
-Two bots answering each other on a shared channel is the failure everyone notices, and it is the one these habits prevent.
+An auto-reply that triggers on another bot's auto-reply loops until one of them stops. Reply by DM, or filter on sender, or both.
 
 ## Label it as a bot
 
-Put `bot` in the node name, and in the short name where the app has one. Someone reading a channel should be able to tell at a glance whether a message came from a person, a script, or a model, without already knowing which nodes are which.
-
-It costs nothing and it is what makes everything else on this page work. A reader who can spot automation can decide what to do about it.
+Put `bot` in the node name, and in the short name where the app has one. A reader scanning a channel can then separate scripted traffic from human traffic without knowing the nodes.
 
 ## Public channel traffic
 
-Some automation does belong on the public channel. Emergency and severe weather alerting is the clear case: low volume, high value, and nothing for another bot to reply to.
+Emergency and severe weather alerting is the case that justifies the public channel: low volume, high value, no reply loop.
 
-Coordinate before starting one. Several operators relaying the same feed multiplies the traffic without adding information, and an alert meant for one county reaches the whole state if nothing scopes it. Ask on Discord first.
+Coordinate before running one. Duplicate relays of the same feed multiply traffic without adding information, and an alert scoped to one county floods the state unless something limits it. Ask on Discord first.
 
 ## Channel names
 
-The everyday channels use the same names on both networks so operators do not have to learn two sets. The lists are in [MeshCore Node Configuration]({{< relref "/docs/meshcore/configuration/index.md" >}}#channels) and [Meshtastic Node Configuration]({{< relref "/docs/meshtastic/configuration/index.md" >}}#channels).
+The everyday channels use the same names on both networks. The lists, keys, and add links are in [MeshCore Node Configuration]({{< relref "/docs/meshcore/configuration/index.md" >}}#channels) and [Meshtastic Node Configuration]({{< relref "/docs/meshtastic/configuration/index.md" >}}#channels).
 
-None of this is enforced. Neither network has an operator who could enforce it. It works only as a convention people choose to follow.
+Neither network has an operator who can enforce any of this. It holds as a convention or not at all.
