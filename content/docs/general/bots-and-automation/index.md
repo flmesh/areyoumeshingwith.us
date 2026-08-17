@@ -29,7 +29,13 @@ Automation here means anything that transmits without a person pressing send: au
 - Leave the emergency channel clear. It has to stay quiet enough to be useful the day it matters.
 - Use a tapback instead of a text reply where the app supports one. It confirms receipt without adding a message.
 
-Two bots answering each other on a shared channel is the failure everyone notices, and it is the one these three habits prevent.
+Two bots answering each other on a shared channel is the failure everyone notices, and it is the one these habits prevent.
+
+## Label it as a bot
+
+Put `bot` in the node name, and in the short name where the app has one. Someone reading a channel should be able to tell at a glance whether a message came from a person, a script, or a model, without already knowing which nodes are which.
+
+It costs nothing and it is what makes everything else on this page work. A reader who can spot automation can decide what to do about it.
 
 ## Public channel traffic
 
