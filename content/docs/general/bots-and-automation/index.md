@@ -20,11 +20,7 @@ Conventions for running automation on the Florida mesh. Automation here means an
 
 <!--more-->
 
-## Airtime is the cost, not screen clutter
-
-Notifications are the visible symptom. The real constraint is airtime: one channel, shared by everyone in range, and every transmission occupies it while repeaters carry it further. Traffic that nobody needed still displaces traffic somebody did.
-
-Automation cuts both ways here. A bot that answers a common question once, by direct message, can lower total traffic by saving five people from asking it on a public channel, and a well-scoped alerting feed can replace a scattered conversation. A bot that acknowledges every message, retries on failure, or answers other bots spends the same airtime and returns nothing. The difference is implementation, not intent.
+Airtime is shared and finite: one frequency for every node in range, used again by each repeater that forwards a packet. A bot that answers by direct message saves airtime. One that replies to everything, retries failures, or answers other bots wastes it.
 
 ## Where to run it
 
