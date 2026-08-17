@@ -42,5 +42,3 @@ Coordinate before running one. Duplicate relays of the same feed multiply traffi
 ## Channel names
 
 The everyday channels use the same names on both networks. The lists, keys, and add links are in [MeshCore Node Configuration]({{< relref "/docs/meshcore/configuration/index.md" >}}#channels) and [Meshtastic Node Configuration]({{< relref "/docs/meshtastic/configuration/index.md" >}}#channels).
-
-Neither network has an operator who can enforce any of this. It holds as a convention or not at all.
