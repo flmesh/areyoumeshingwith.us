@@ -18,6 +18,14 @@ Companion nodes are configured in the app. Repeaters and room servers are config
 
 <!--more-->
 
+## Firmware
+
+Flash from the [MeshCore flasher](https://flasher.meshcore.io) over USB, using Chrome or Edge. Select the board, then the firmware role: companion, repeater, or room server.
+
+{{< notice info "Use meshcore.io" >}}
+The project moved to `meshcore.io`. `meshcore.co.uk` is not affiliated with the official project and should not be used.
+{{< /notice >}}
+
 ## Companion nodes
 
 If your node is paired to your phone, this section plus [Channels](#channels) is the whole setup. Nothing in the repeater section applies to you.

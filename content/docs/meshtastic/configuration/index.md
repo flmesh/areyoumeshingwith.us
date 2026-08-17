@@ -19,6 +19,10 @@ nav_icon:
 
 Below are configuration recommendations for optimizing your Meshtastic nodes for getting on the [Florida Mesh Map][MESHMAP] & [Florida Mesh Telemetry][MALLA].
 
+## Firmware
+
+Flash from the [Meshtastic web flasher](https://flasher.meshtastic.org) over USB, using Chrome or Edge. The [flashing documentation](https://meshtastic.org/docs/getting-started/flashing-firmware/) covers ESP32 and nRF52/RP2040/RP2350 boards separately; the procedure differs by family. Install the serial drivers first if the board is not detected.
+
 ## Channels
 
 Alongside the primary channel, Florida uses:
