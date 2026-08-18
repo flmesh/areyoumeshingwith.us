@@ -106,12 +106,4 @@ Each entry should show `F`, meaning flood allowed. On firmware older than `1.15.
 openHop Repeater does not implement any of these. Every `region` subcommand returns `Error: Region commands not implemented`, so manage regions in the openHop Console instead. Renaming an entry there keeps its original key, so delete it and add the new name rather than editing it.
 {{< /notice >}}
 
-### Further reading
-
-- [Region Filtering](https://blog.meshcore.io/2026/01/20/region-filtering)
-- [Default Scope Region](https://blog.meshcore.io/2026/04/17/default-scope)
-- [Proposal: predefined standardized region scopes](https://github.com/meshcore-dev/MeshCore/issues/2495)
-- [Regions, scopes, and the future of MeshCore](https://github.com/meshcore-dev/MeshCore/discussions/2375)
-- [Docs unclear on region behaviour](https://github.com/meshcore-dev/MeshCore/issues/1747)
-
 Application per node role is in [Node Configuration]({{< relref "/docs/meshcore/configuration/index.md" >}}).

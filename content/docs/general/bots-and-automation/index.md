@@ -20,33 +20,22 @@ Conventions for running automation on the Florida mesh. Automation here means an
 
 <!--more-->
 
-Airtime is shared and finite: one frequency for every node in range, used again by each repeater that forwards a packet. A bot that answers by direct message saves airtime. One that replies to everything, retries failures, or answers other bots wastes it.
+Automation earns its airtime in plenty of places: severe weather and emergency alerting, range validation, equipment testing, new user onboarding, and proximity alerts. Not all of them belong on every channel. Remember, airtime is shared and finite: one frequency for every node in range, used again by each repeater that forwards a packet. A bot that answers by direct message saves airtime. One that replies to everything, retries failures, or answers other bots wastes it and creates noise.
 
-## Where to run it
+## Best Practices
 
-- **Reply by direct message.** A bot answering the node that called it does not need to broadcast.
-- **Use a channel meant for it.** Bot-to-bot traffic and AI experiments go on the testing channel or a private one. Weather scripts go on the weather channel.
-- **Keep the emergency channel clear.** Emergency traffic only.
-- **Prefer a tapback to a text reply** where the app supports one. It acknowledges without a second message.
+- **Keep the emergency channels clear.** Emergency traffic only.
+- Add the word `bot` to your node name to make it easy for users and other automated responders to identify.
+- **Reply by direct message, not the channel.** A bot answering the node that called it does not need to broadcast. Direct messages are also cheaper on the air: both networks learn a path to the destination and route later messages along it rather than flooding the mesh, [Meshtastic](https://meshtastic.org/docs/overview/mesh-algo/) with next-hop routing and [MeshCore](https://docs.meshcore.io/faq/#54-q-how-does-a-node-discover-a-path-to-its-destination-and-then-use-it-to-send-messages-in-the-future-instead-of-flooding-every-message-it-sends-like-meshtastic) with the path recorded in the delivery report.
+- **Use tapbacks** where the app supports one. It acknowledges without a second message.
+- **Avoid replying on the default public channel.** Use one of the above two methods or choose an appropriate [MeshCore]({{< relref "/docs/meshcore/configuration/index.md" >}}#channels) or [Meshtastic]({{< relref "/docs/meshtastic/configuration/index.md" >}}#channels) channel.
+- Keep replies concise and pertinent.
+- Consider your reach. Local weather forecasts and the functional status of your automated responder do not belong on an MQTT uplinked channel that reaches nodes across the state.
+- When in doubt, start small and on a private channel.
+- If the content is something people fetch rather than something they need pushed to them, consider a BBS or Room Server.
 
-An auto-reply that triggers on another bot's auto-reply loops until one of them stops. Reply by DM, or filter on sender, or both.
+## Projects worth looking at
 
-## Consider a room server instead
-
-If the content is something people fetch rather than something they need pushed to them, a MeshCore room server or a bulletin board is often the better mechanism. Messages sit on the server until a client connects and reads them, so the cost is one exchange with one node at a time the reader chose, rather than a broadcast every radio in range has to carry whether or not anyone wanted it.
-
-Bulletins, net announcements, reference material, and logs all fit that shape. Time-critical alerts do not, which is why emergency and severe weather alerting stays on a channel.
-
-## Label it as a bot
-
-Put `bot` in the node name, and in the short name where the app has one. A reader scanning a channel can then separate scripted traffic from human traffic without knowing the nodes.
-
-## Public channel traffic
-
-Emergency and severe weather alerting is the case that justifies the public channel: low volume, high value, no reply loop.
-
-Coordinate before running one. Duplicate relays of the same feed multiply traffic without adding information, and an alert scoped to one county floods the state unless something limits it. Ask on Discord first.
-
-## Channel names
-
-The everyday channels use the same names on both networks. The lists, keys, and add links are in [MeshCore Node Configuration]({{< relref "/docs/meshcore/configuration/index.md" >}}#channels) and [Meshtastic Node Configuration]({{< relref "/docs/meshtastic/configuration/index.md" >}}#channels).
+- [Mesh Monitor](https://meshmonitor.org). Self-hosted web dashboard for Meshtastic, MeshCore, and MQTT sources in one deployment: maps, messaging, telemetry, and remote device administration. Its automation covers auto-responders, scheduled messages, auto-traceroute, geofence triggers, and push notifications, extensible with Python or Bash scripts.
+- [meshing-around](https://github.com/SpudGunMan/meshing-around). Python bot suite for Meshtastic, run over serial, TCP, or BLE across multiple nodes. Keyword responder, BBS with mail and store-and-forward, scheduled messages, NOAA and USGS weather, river, tide and earthquake lookups, EAS alerts, wiki and satellite pass queries, proximity alerts, network and hardware test commands, optional LLM integration, and games.
+- [Meshtastic SAME EAS Alerter](https://github.com/RCGV1/Meshtastic-SAME-EAS-Alerter). Decodes SAME emergency alerts off the air with an RTL-SDR and forwards them to a node over serial or TCP. No internet connection required.

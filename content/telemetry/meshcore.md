@@ -1,5 +1,5 @@
 ---
-title: Meshcore Telemetry
+title: MeshCore Telemetry
 type: docs
 date: 2025-02-27T23:16:40+00:00
 ---

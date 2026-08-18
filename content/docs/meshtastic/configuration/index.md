@@ -33,21 +33,11 @@ Alongside the primary channel, Florida uses:
 | [`emergency`](https://meshtastic.org/e/?add=true#ChYSAQEaCWVtZXJnZW5jeSgBMAE6AggN) | `AQ==` | Emergency and severe weather traffic |
 | [`weather`](https://meshtastic.org/e/?add=true#Cg4SAQEaB3dlYXRoZXIoAQ) | `AQ==` | Weather scripts and alerting |
 | [`testing`](https://meshtastic.org/e/?add=true#Cg4SAQEaB3Rlc3RpbmcoAQ) | `AQ==` | Node, script, and bot testing |
-| [`telemetry`](https://meshtastic.org/e/?add=true#ChISAQEaCXRlbGVtZXRyeSgBOgA) | `AQ==` | Remote infrastructure nodes only, see below |
+| [`telemetry`](https://meshtastic.org/e/?add=true#ChISAQEaCXRlbGVtZXRyeSgBOgA) | `AQ==` | Remote infrastructure nodes only[^telemetry] |
 
 Open a channel name on a device with the app installed to add it, or enter the name and key by hand as a secondary channel. Name and key together define the channel: same name, same key, same channel. Names are case sensitive and limited to 11 characters. A node has eight channel slots including the primary.
 
-The [Weekly Mesh Net]({{< relref "docs/general/weekly-mesh-net/index.md" >}}) runs on your region's default public channel, not on any of these. Bot-to-bot traffic goes on `testing` or a private channel; keep `emergency` clear. See [Bots and Automation]({{< relref "docs/general/bots-and-automation/index.md" >}}).
-
-{{< notice note "Check for ?add=true" >}}
-The links above are `?add=true`: each adds one channel and leaves your other channels and LoRa config untouched.
-
-A `meshtastic.org/e/` link *without* `?add=true` replaces the entire channel set, makes its first channel your primary, and overwrites LoRa config including region, hop limit, and TX power. Verify before scanning a link or QR code from anyone.
-{{< /notice >}}
-
-### telemetry
-
-Infrastructure only. Neighbor Info does not transmit over LoRa while the primary channel is the default one, so a remote infrastructure node sharing neighbor data sets `telemetry` as its **primary** rather than a secondary. The add link installs it as a secondary, where it has no effect.
+The [Weekly Mesh Net]({{< relref "docs/general/weekly-mesh-net/index.md" >}}) runs on your region's default public channel, not on any of these. Bot traffic goes on `testing` or a private channel; keep `emergency` clear. See [Bots and Automation]({{< relref "docs/general/bots-and-automation/index.md" >}}).
 
 ## Getting on the Map In Existing Meshes
 
@@ -159,9 +149,9 @@ After configuring your device, you can verify that your telemetry is being prope
 2. Review your device debug logs for successful MQTT connection messages
 3. Confirm your device is sending position updates at the expected intervals
 
-## Troubleshooting
+## FAQ
 
-If your node is not appearing on the map:
+### My node is not appearing on the map
 
 - Verify internet connectivity on the device
 - If its a NRF52 based node confirm that `Proxy to Client` is enabled.
@@ -169,8 +159,6 @@ If your node is not appearing on the map:
 - Ensure the precision settings meet the minimum requirements (1194ft / 363m)
 - Confirm the root topic is set exactly to `msh/US/FL`
 - Verify the MQTT module is enabled and properly configured
-
-## FAQ
 
 ### I receive too many notifications on a channel
 
@@ -180,6 +168,7 @@ Notification behaviour is local to your phone. Messages keep arriving either way
 - **Disable notifications for the app** in your phone's settings.
 - **Remove the channel** in the app's channel settings, freeing the slot. Rejoin later with the name and key above.
 
+[^telemetry]: Neighbor Info does not transmit over LoRa while the primary channel is the default one, so a remote infrastructure node sharing neighbor data sets `telemetry` as its **primary** rather than a secondary. The add link installs it as a secondary, where it has no effect.
 [^presets]: Please reference [Regional LoRa Settings]({{< relref "regional-lora-settings/index.md" >}}) for up to date modem presets for each area of the state.
 [^tls]: TLS encrypts data transmitted between MQTT clients and the broker for increased security, but may not supported on all platforms. It is known that the Android App version above 2.7.13 may have issues with TLS enabled.
 [^ninfo]: Please only enable Neighbor Info on Basestation and stationary nodes, when enabled on mobile nodes it causes a lot of noise and clutter to the map. Thank you.

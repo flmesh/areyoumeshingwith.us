@@ -1,5 +1,5 @@
 ---
-title: Meshcore Docs
+title: MeshCore Docs
 menu:
   main:
     parent: docs
@@ -11,4 +11,4 @@ menu:
         color: blue
 ---
 
-Meshcore documentation and guides.
+MeshCore documentation and guides.
