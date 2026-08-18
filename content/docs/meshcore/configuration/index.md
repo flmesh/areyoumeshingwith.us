@@ -67,13 +67,7 @@ Florida uses:
 | [`#testing`](meshcore://channel/add?name=%23testing&secret=cde5e82cf515647dcb547a79a4f065d1) | Derived from name | | Node, script, and bot testing |
 | [`#weekly-mesh-net`](meshcore://channel/add?name=%23weekly-mesh-net&secret=284d8129d937833bdd641f21256dced0) | Derived from name | | [Weekly Mesh Net]({{< relref "/docs/general/weekly-mesh-net/index.md" >}}) |
 
-Open a channel name on a device with the app installed to add it directly. Otherwise: `Public` is built in, the hashtag channels derive their key from their name so *Add Channel → Join a Hashtag Channel* or a QR code is enough, and `FloridaMesh` is private, so enter its name and key exactly as listed. There is no CLI to add channels.
-
-Join the ones you intend to use. There is no cost to joining a channel you rarely read, and traffic on it reaches you either way.
-
-Bot traffic goes on `#testing` or a private channel; keep `#emergency` clear. See [Bots and Automation]({{< relref "/docs/general/bots-and-automation/index.md" >}}).
-
-If you run Meshmapper, list every channel you know of under **Public Channels** in its admin settings. That is what the wardriving app listens on for passive RX logs, and a longer list means more coverage recorded for the same drive.
+Open this page in your phone's browser and tap a channel name to hand it straight to the MeshCore app, which opens with the name and key already filled in. To add one by hand instead: `Public` is built in and needs nothing entered, the hashtag channels derive their key from their name, so *Add Channel → Join a Hashtag Channel* or a QR code is enough, and `FloridaMesh` is private, so enter its name and key exactly as listed. There is no CLI to add channels.
 
 ## Region scopes
 

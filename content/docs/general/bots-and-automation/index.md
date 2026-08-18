@@ -31,8 +31,8 @@ Automation earns its airtime in plenty of places: severe weather and emergency a
 - **Avoid replying on the default public channel.** Use one of the above two methods or choose an appropriate [MeshCore]({{< relref "/docs/meshcore/configuration/index.md" >}}#channels) or [Meshtastic]({{< relref "/docs/meshtastic/configuration/index.md" >}}#channels) channel.
 - Keep replies concise and pertinent.
 - Consider your reach. Local weather forecasts and the functional status of your automated responder do not belong on an MQTT uplinked channel that reaches nodes across the state.
-- When in doubt, start small and on a private channel.
 - If the content is something people fetch rather than something they need pushed to them, consider a BBS or Room Server.
+- When in doubt, start small and on a private channel.
 
 ## Projects worth looking at
 
