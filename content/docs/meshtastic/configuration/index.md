@@ -19,6 +19,26 @@ nav_icon:
 
 Below are configuration recommendations for optimizing your Meshtastic nodes for getting on the [Florida Mesh Map][MESHMAP] & [Florida Mesh Telemetry][MALLA].
 
+## Firmware
+
+Flash from the [Meshtastic web flasher](https://flasher.meshtastic.org) over USB, using Chrome or Edge. The [flashing documentation](https://meshtastic.org/docs/getting-started/flashing-firmware/) covers ESP32 and nRF52/RP2040/RP2350 boards separately; the procedure differs by family. Install the serial drivers first if the board is not detected.
+
+## Channels
+
+Alongside the primary channel, Florida uses:
+
+| Channel | Key | Purpose |
+|---|---|---|
+| [`FloridaMesh`](https://meshtastic.org/e/?add=true#CjcSIGXQsmeHp7fzWcnl7zY7Qb666dJQpaHVMoWKVS-MbIZwGgtGbG9yaWRhTWVzaCgBMAE6AggN) | `ZdCyZ4ent/NZyeXvNjtBvrrp0lClodUyhYpVL4xshnA=` | Statewide chat |
+| [`emergency`](https://meshtastic.org/e/?add=true#ChYSAQEaCWVtZXJnZW5jeSgBMAE6AggN) | `AQ==` | Emergency and severe weather traffic |
+| [`weather`](https://meshtastic.org/e/?add=true#Cg4SAQEaB3dlYXRoZXIoAQ) | `AQ==` | Weather scripts and alerting |
+| [`testing`](https://meshtastic.org/e/?add=true#Cg4SAQEaB3Rlc3RpbmcoAQ) | `AQ==` | Node, script, and bot testing |
+| [`telemetry`](https://meshtastic.org/e/?add=true#ChISAQEaCXRlbGVtZXRyeSgBOgA) | `AQ==` | Remote infrastructure nodes only[^telemetry] |
+
+Open a channel name on a device with the app installed to add it, or enter the name and key by hand as a secondary channel. Name and key together define the channel: same name, same key, same channel. Names are case sensitive and limited to 11 characters. A node has eight channel slots including the primary.
+
+The [Weekly Mesh Net]({{< relref "docs/general/weekly-mesh-net/index.md" >}}) runs on your region's default public channel, not on any of these. Bot traffic goes on `testing` or a private channel; keep `emergency` clear. See [Bots and Automation]({{< relref "docs/general/bots-and-automation/index.md" >}}).
+
 ## Getting on the Map In Existing Meshes
 
 For nodes that are in established meshes (please check [Florida Mesh Map][MESHMAP] to see where the closest feeders are) all you need to get added to the maps and tools is one config change.
@@ -54,6 +74,20 @@ Channels:
   - Precise Location: *user preference*
   - Precision Slider: *user preference*
   
+Uplink and downlink are per channel:
+
+| Channel | Uplink | Downlink | Zero-hopped |
+|---|---|---|---|
+| primary (`LongFast`) | `Checked` | `Unchecked` | Yes |
+| `FloridaMesh` | `Checked` | `Checked` | No |
+| `emergency` | `Checked` | `Checked` | No |
+| `weather`, `testing` | `Checked` | `Unchecked` | No |
+| `telemetry` | `Checked` | `Unchecked` | Yes |
+
+`FloridaMesh` and `emergency` take downlink so traffic on them reaches the whole state instead of only nodes in radio range of the sender.
+
+The [Florida broker](https://github.com/flmesh/emqx) zeroes `hop_limit` and `hop_start` in flight on the default modem-preset channels and on `telemetry`. Packets it delivers on those reach only nodes hearing a gateway directly and are not rebroadcast, so MQTT traffic cannot flood the radio mesh. `FloridaMesh` and `emergency` are not zero-hopped; downlinked traffic on them propagates at its hop limit.
+
 Device:
 
 - Role: `CLIENT|CLIENT_BASE|CLIENT_MUTE`[^role]
@@ -115,9 +149,9 @@ After configuring your device, you can verify that your telemetry is being prope
 2. Review your device debug logs for successful MQTT connection messages
 3. Confirm your device is sending position updates at the expected intervals
 
-## Troubleshooting
+## FAQ
 
-If your node is not appearing on the map:
+### My node is not appearing on the map
 
 - Verify internet connectivity on the device
 - If its a NRF52 based node confirm that `Proxy to Client` is enabled.
@@ -126,6 +160,15 @@ If your node is not appearing on the map:
 - Confirm the root topic is set exactly to `msh/US/FL`
 - Verify the MQTT module is enabled and properly configured
 
+### I receive too many notifications on a channel
+
+Notification behaviour is local to your phone. Messages keep arriving either way, and your node keeps relaying traffic for the mesh.
+
+- **Mute the conversation.** Select the channel in the message list, then **Mute notifications**: 8 hours, 1 week, or always.
+- **Disable notifications for the app** in your phone's settings.
+- **Remove the channel** in the app's channel settings, freeing the slot. Rejoin later with the name and key above.
+
+[^telemetry]: Neighbor Info does not transmit over LoRa while the primary channel is the default one, so a remote infrastructure node sharing neighbor data sets `telemetry` as its **primary** rather than a secondary. The add link installs it as a secondary, where it has no effect.
 [^presets]: Please reference [Regional LoRa Settings]({{< relref "regional-lora-settings/index.md" >}}) for up to date modem presets for each area of the state.
 [^tls]: TLS encrypts data transmitted between MQTT clients and the broker for increased security, but may not supported on all platforms. It is known that the Android App version above 2.7.13 may have issues with TLS enabled.
 [^ninfo]: Please only enable Neighbor Info on Basestation and stationary nodes, when enabled on mobile nodes it causes a lot of noise and clutter to the map. Thank you.
