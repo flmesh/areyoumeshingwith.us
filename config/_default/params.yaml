@@ -74,6 +74,10 @@ hb:
   google_fonts:
     families:
       - name: Ubuntu
+        axis:
+          wght:
+            - 400
+            - 700
   back_to_top:
     icon_name: radioactive
   sass_silence_deprecations:
