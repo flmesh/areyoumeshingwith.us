@@ -26,6 +26,10 @@ images:
 This is meant to enable Florida Mesh to provide better stability for the MQTT server and easier to identify responsible
 parties if there an issue pops up that was not possible using shared credentials as originally launched. The shared credentials have been deprecated and removed completely.
 
+The broker is [EMQX](https://github.com/flmesh/emqx) with [floodgate](https://github.com/eric-becker/floodgate), an ExHook plugin that keeps MQTT packets on the public channels from being rebroadcast over RF, to preserve the health of the mesh. Rebroadcasting all public channel traffic saturates local airtime with noise from traffic all over the state. Channels with a private key, or a name other than the public ones, are unaffected. The intent is to affect as little traffic as possible while preserving fair airtime for everyone.
+
+It currently accepts only Meshtastic traffic under the `msh/US/FL` root topic.
+
 {{< notice warning >}}
 If you are trying to connect to the Florida Mesh MQTT server, you **must** create an account. Shared credentials do not work at all now.
 {{< /notice >}}

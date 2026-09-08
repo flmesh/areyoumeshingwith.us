@@ -149,3 +149,7 @@ Notification behaviour is local to your phone. Open the channel, then **Channel 
 - **Message Retention**: limit how much history the app keeps.
 
 To leave entirely, remove the channel from your channel list. Re-add it from the key or link above.
+
+### Does my node report to the MQTT server?
+
+No. MQTT observer packets are not yet implemented, so there is nothing to configure.
