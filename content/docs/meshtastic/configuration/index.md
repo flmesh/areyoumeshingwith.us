@@ -168,6 +168,12 @@ Notification behaviour is local to your phone. Messages keep arriving either way
 - **Disable notifications for the app** in your phone's settings.
 - **Remove the channel** in the app's channel settings, freeing the slot. Rejoin later with the name and key above.
 
+### Can I publish under a different root topic?
+
+No. `msh/US/FL` is the only root topic the server accepts. Publishes to any other topic are rejected.
+
+You can publish to your own subgroup beneath it, such as `msh/US/FL/mygroup`. You cannot subscribe to a parent of `msh/US/FL`, such as `msh/US` or `msh`.
+
 [^telemetry]: Neighbor Info does not transmit over LoRa while the primary channel is the default one, so a remote infrastructure node sharing neighbor data sets `telemetry` as its **primary** rather than a secondary. The add link installs it as a secondary, where it has no effect.
 [^presets]: Please reference [Regional LoRa Settings]({{< relref "regional-lora-settings/index.md" >}}) for up to date modem presets for each area of the state.
 [^tls]: TLS encrypts data transmitted between MQTT clients and the broker for increased security, but may not supported on all platforms. It is known that the Android App version above 2.7.13 may have issues with TLS enabled.
