@@ -1,5 +1,5 @@
 ---
-title: "Meshtastic Mesh Map Update"
+title: "Meshtastic Mesh Map Update Summer 2026"
 date: 2026-09-11T00:00:00-04:00
 draft: false
 description: To radar, or not to radar - that is no longer the question! We have Weather! Also a round of behind-the-scenes improvements to the Florida Mesh Map including infrastructure node display, and better traceroutes.
@@ -53,22 +53,22 @@ authors:
 <div align="center"><sup>A evening summer storm marches its way across the state, and the Great Lake of Okeechobee.</sup></div>
 
 
-Since the [Florida Mesh Map][FLMESHMAP] went live over a year ago, we've kept iterating on it behind the scenes. Most of that work is invisible day-to-day, but it adds up to a faster, more informative map - so here's a rundown of what changed.
+Since the [Florida Mesh Map][FLMESHMAP] went live over a year ago, we've kept iterating on it behind the scenes. Most of that work is invisible day-to-day, but it adds up to a faster, more informative map, so here's a rundown on some of the most recent changes.
 
 <!--more-->
 
 ## Infrastructure Sites
 
-Backbone of much of our regional meshes, Infrastructure nodes like (Routers, Router_Late, Repeaters, and Router_Clients *the last two deprecated, but still existing in the wild*) matter a great deal for how nodes are able to reach out into the net, and can be the diffrence inbetween being online or a party of one. 
+The backbones of much of our regional meshes, Infrastructure nodes like (Routers, Router_Late, Repeaters, and Router_Clients *the last two deprecated, but still existing in the wild*) matter a great deal for how nodes are able to reach out into the net, and can be the diffrence inbetween being online or a party of one. 
 
 We wanted the map to be able to show these connections and the links inbetween the infra sites, while also keeping inmind that for sustainability sake it had to be dynamically taggable, this sadly does limit us from being able to flag nodes of other roles in the infrastructure group, though that may be something to dig into at a later date.
 
-The map now automatically identifies infrastructure-role nodes and surfaces them as their own overlay `Infrastructure Sites` and filtering the map to only them. So you can see at a glance where the backbone of the network actually is. Especially with the new included feature.
+The map now automatically identifies infrastructure-role nodes and surfaces them as their own overlay `Infrastructure Sites` and filtering the map to only them. So you can see at a glance where the backbone of the network actually is. Especially with the new included feature below.
 
 ## Infrastructure Connections
 To complement the split out infra sites group, we now have a new `infra connections` 
 {{< figure src="infra_link.webp" alt="A freqent link across Tampa Bay" width="75%" class="d-block mx-auto" >}}
-This new Green neighbors line only displays when theres a captured trace route or SNR reading inbetween two nodes tagged with the `infra` flag, as layed out above. These lines won't be the most frequent to show up, espcially if both infra nodes aren't reporting neighbors or SNR readings. So the lack of this line does not mean the connection isn't there, see tools like [MALLA] or [Meshview][MESHVIEW] for more reliable and detailed connection information and analysis. These lines are meant for cursory review and inspection. 
+These new Green neighbors line only displays when theres a captured trace route or SNR reading inbetween two nodes tagged with the `infra` flag, as layed out above. These lines won't be the most frequent to show up, espcially if both infra nodes aren't reporting neighbors or SNR readings. So the lack of this line does not mean the connection isn't there, see tools like [MALLA] or [Meshview][MESHVIEW] for more reliable and detailed connection information and analysis. These lines are meant for cursory review and inspection. 
 
 ## Connection Quality Between Nodes
 
@@ -87,14 +87,16 @@ With the peak of Hurricane Season now upon us, we wanted to add a frequently use
 
 We also have the option for worldwide radar imagery as well, provided by [RainViewer] which is at an average of 1km resolution, and is also on a 5 min update cadance. 
 
-## A Faster-Loading Map
+## A Faster-Loading Map and ETC.
 
 While we're where at it, We went through and conveted the preexisting system of `.png` for device image files over to `.webp` files. This resulted in a good savings of storage space as well as and more importantly faster rendering times for the map. With the ever growing number of devices every little bit helps.
-
+The Devices are now also updated to include as many of the new devices that have either come out on the market or are about to drop. This is a constant ongoing task, so if you'd like to help out, or have found a better quality image of a device or of one we don't yet have. Please feel free to attach it in a PR at the [Github Flmesh Map Repo] or let me know to add to the que.
 
 
 [FLMESHMAP]: https://map.areyoumeshingwith.us "Florida Mesh Map"
 [MALLA]: https://malla.areyoumeshingwith.us "Malla"
 [MESHVIEW]: https://meshview.areyoumeshingwith.us "Meshview"
 [NEXRAD]: https://mesonet.agron.iastate.edu/docs/nexrad_mosaic/ "NEXRAD"
-[RainViewer]:[https://www.rainviewer.com/] "RainViewer"
+[RainViewer]:https://www.rainviewer.com/ "RainViewer"
+[Github Flmesh Map Repo]: https://github.com/flmesh/meshtastic-map "FL Mesh Meshtastic Map Github Repo"
+</div>
