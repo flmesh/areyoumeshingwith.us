@@ -8,6 +8,7 @@ authors:
   - Json_18
   - PockyBum522
   - jbouse
+  - meh098
 series:
   - Guide
 date: 2026-01-19T00:31:34-04:00
@@ -149,31 +150,6 @@ After configuring your device, you can verify that your telemetry is being prope
 2. Review your device debug logs for successful MQTT connection messages
 3. Confirm your device is sending position updates at the expected intervals
 
-## FAQ
-
-### My node is not appearing on the map
-
-- Verify internet connectivity on the device
-- If its a NRF52 based node confirm that `Proxy to Client` is enabled.
-- Check that your MQTT credentials are entered correctly
-- Ensure the precision settings meet the minimum requirements (1194ft / 363m)
-- Confirm the root topic is set exactly to `msh/US/FL`
-- Verify the MQTT module is enabled and properly configured
-
-### I receive too many notifications on a channel
-
-Notification behaviour is local to your phone. Messages keep arriving either way, and your node keeps relaying traffic for the mesh.
-
-- **Mute the conversation.** Select the channel in the message list, then **Mute notifications**: 8 hours, 1 week, or always.
-- **Disable notifications for the app** in your phone's settings.
-- **Remove the channel** in the app's channel settings, freeing the slot. Rejoin later with the name and key above.
-
-### Can I publish under a different root topic?
-
-No. `msh/US/FL` is the only root topic the server accepts. Publishes to any other topic are rejected.
-
-You can publish to your own subgroup beneath it, such as `msh/US/FL/mygroup`. You cannot subscribe to a parent of `msh/US/FL`, such as `msh/US` or `msh`.
-
 [^telemetry]: Neighbor Info does not transmit over LoRa while the primary channel is the default one, so a remote infrastructure node sharing neighbor data sets `telemetry` as its **primary** rather than a secondary. The add link installs it as a secondary, where it has no effect.
 [^presets]: Please reference [Regional LoRa Settings]({{< relref "regional-lora-settings/index.md" >}}) for up to date modem presets for each area of the state.
 [^tls]: TLS encrypts data transmitted between MQTT clients and the broker for increased security, but may not supported on all platforms. It is known that the Android App version above 2.7.13 may have issues with TLS enabled.
@@ -184,6 +160,7 @@ You can publish to your own subgroup beneath it, such as `msh/US/FL/mygroup`. Yo
 [^hubot]: Florida Mesh has a new requirement to [request an individual MQTT account]({{< relref "docs/general/mqtt-server/index.md" >}}) which allow both channel `uplink` & `downlink` ability.
 [^ignore-mqtt]: Can be Checked to stop rouge MQTT data from appearing on your node and hopping though. Consider unchecking if you uncheck `downlink`.
 [^ok-mqtt]: This gives permission to uplink your node to MQTT Servers. You will not appear on the Meshtastic Map if this is not enabled.
+=======
 
 [MESHMAP]: https://map.areyoumeshingwith.us "Florida Mesh Map"
 [MALLA]: https://malla.areyoumeshingwith.us/ "Florida Mesh Telemetry"

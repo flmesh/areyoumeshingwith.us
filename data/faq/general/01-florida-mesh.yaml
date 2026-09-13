@@ -1,0 +1,51 @@
+- question: "What exactly is Florida Mesh?"
+  id: "what-exactly-is-florida-mesh"
+  category: "Florida Mesh"
+  answer: "Florida Mesh is a community of operators running long-range, low-power radio networks across 
+    the state. The radios relay for each other, so coverage comes from the number of people participating 
+    rather than from any central site. See [Introduction](/docs/introduction/)."
+
+- question: "What is LoRa?"
+  id: "what-is-lora"
+  category: "Florida Mesh"
+  answer: | 
+    LoRa is a low-power, long-range radio technique for transmitting relatively small pieces of data 
+    over distances that Wi-Fi or Bluetooth does not reach.
+
+    The network requires all users to have compatible radio parameters (frequency, bandwidth, and other 
+    channel settings) so that their announcements and routing information will be mutually understood.
+
+    Without MQTT or other internet-based messaging service, packets pass through the mesh completely via 
+    radio links. If there is a direct connection between nodes, then the packet can be sent directly. If 
+    not, other nodes in-between will relay it.
+
+    It is similar to passing whispers in a classroom.
+
+    You whisper your message to the person sitting behind you – this is your radio link.
+
+    This person relays the message to the next one – this is one hop.
+
+    Your message passes from person to person until it reaches the addressee.
+
+    Each radio link/node acts as both a user and a relay (when configured properly) for messages for others.
+
+- question: "Can nodes on the same settings talk to each other?"
+  id: "can-nodes-on-the-same-settings-talk-to-each-other"
+  category: "Florida Mesh"
+  answer: "Yes! Although with a PC you can forward messages from one band to another, depending on the setup."
+
+- question: "How far does my node reach?"
+  id: "how-far-does-my-node-reach"
+  category: "Florida Mesh"
+  answer: | 
+    Not all radios have the same power or antenna setup and they all have their own obstacles. One thing would be 
+    to get two nodes, have one of them transmitting at intervals (within the app settings) and then take 
+    your other node and move around to see where you can receive. You could plot that information on a 
+    map and get an idea of your real world max radius under different conditions. The world is dynamic, 
+    things change quickly. So it can be hard to tell how well things are working without ground truthing 
+    it yourself - and your mileage may vary compared to another person with different hardware.
+
+    Generally people wouldn't mind somebody taking an hour or two to experiment with their nodes, just 
+    make sure to turn off all unnecessary transmitting when done.
+
+    With a single node it is a lot harder. You have to be clever about how to test.

@@ -1,0 +1,128 @@
+- question: "What is Meshcore?"                                                     
+  id: "what-is-meshcore"                                                            
+  category: "Meshcore"                                                              
+  answer: |                                                                           
+    [MeshCore](https://meshcore.io/) is a LoRa mesh networking firmware built with a strong emphasis on keeping the airwaves quiet. Where Meshtastic broadcasts NodeInfo packets fairly frequently and sends telemetry on a fairly tight cadence, MeshCore intentionally sends node adverts and telemetry much less often — the whole design philosophy is to minimize unnecessary chatter so there's more room on the channel for actual messages. This shows up most clearly in how the two handle routing. Meshtastic relies on *managed flooding*: every node just rebroadcasts what it hears, which makes it a very ad-hoc, self-organizing mesh with zero setup, but it means duplicate traffic multiplies fast as the network grows. MeshCore instead behaves more like a planned, controlled network — it floods once to discover a path to a destination, then learns and reuses that route for subsequent traffic (falling back to a flood only if the path breaks). That one distinction is really the heart of the MeshCore vs. Meshtastic conversation.
+
+    A few other differences worth knowing if you're new to either:
+
+    - **Hop limits** — MeshCore supports up to 64 hops, versus Meshtastic's default of 7, which matters a lot if you're trying to build out a large or long-chain regional network rather than a small local one.
+    - **MQTT usage** — MeshCore only uses MQTT for telemetry bridging, while Meshtastic allows MQTT to carry both telemetry *and* messages, which is more flexible but also more chatter over the internet bridge.
+    - **ATAK integration** — Meshtastic has an official, actively maintained ATAK plugin for sending position and chat data (CoT) over the mesh. MeshCore has no native ATAK integration, and the devs have said it isn't really a priority fit for how the project is designed.
+
+    Put simply, if Meshtastic is a "grab a radio and it just works" ad-hoc mesh, MeshCore is the more deliberate, infrastructure-minded sibling — built for people who want to plan routes, cut down on background noise, and scale a network further without the channel getting saturated.
+
+- question: "How is MeshCore similar to Meshtastic?"
+  id: "meshcore-similar-to-meshtastic"
+  category: "Meshcore"
+  answer: |
+    Despite their differences in routing philosophy, Meshtastic and MeshCore have a lot in common at the core. Both are built on LoRa (Long Range) radio technology, using the same general sub-GHz frequency bands (typically 433/868/915 MHz depending on region), so the underlying hardware — chipsets like the SX1262, and popular boards like the Heltec, RAK, and T-Beam/T-Deck families — is largely interchangeable between the two firmwares. Both are designed to work entirely off-grid, without relying on cell towers, Wi-Fi, or internet infrastructure, which makes them popular for the same use cases: hiking and backcountry communication, disaster and emergency preparedness, community mesh networks, and off-grid coordination in general.
+
+    They also share the same values when it comes to openness and security:
+
+    - **Open source** — both projects are fully open source, with active community development and no proprietary lock-in.
+    - **End-to-end encryption** — both encrypt messages by default (AES-based), so traffic on the mesh isn't readable by anyone without the right channel or contact key.
+    - **No subscription or infrastructure required** — both let you get a basic mesh running with just a couple of cheap radios, no ongoing service fees.
+    - **Cross-platform apps** — both offer companion apps (Android, iOS, web/desktop) that pair with the radio over Bluetooth or USB.
+
+    In short, they're solving the same problem — private, resilient, infrastructure-free communication over LoRa — just with different opinions about how the mesh itself should behave as it scales.
+- question: "How do Meshcore roles work?"
+  id: "meshcore-roles"
+  category: "Meshcore"
+  answer: |
+    MeshCore splits its network into distinct device roles, and each one runs its own dedicated firmware build rather than being a mode you toggle in an app. This is one of the more important differences from Meshtastic to understand up front: in Meshtastic, a single firmware image runs on every device, and you pick the node's behavior (Client, Router, Repeater, TAK, etc.) as a setting inside the app after flashing. With MeshCore, you have to decide the role beforehand and flash the matching firmware onto the device — there's no in-app dropdown to turn a Companion radio into a Repeater later. If you want to change a device's role, you reflash it with a different firmware build.
+
+    The three main MeshCore roles are:
+
+    - **Companion Radio** — this is your personal, end-user node, the one that pairs with your phone or laptop over Bluetooth/USB. It doesn't relay traffic for anyone else; it's just your gateway into the mesh for sending and receiving messages.
+    - **Repeater** — the backbone of the network. Repeaters are meant to be placed in fixed, strategic, elevated locations (rooftops, hilltops, towers) and are the only nodes that actually forward other people's traffic. This is a big departure from Meshtastic, where every device helps relay by default.
+    - **Room Server** — acts like a shared message board or group chat hub. It stores message history and lets multiple companion clients check in, read, and post to a shared conversation, sort of like a bulletin board node sitting on the mesh.
+
+    Because only Repeaters route traffic and everything else is fixed at flash time, MeshCore's network topology ends up being much more deliberate and planned compared to Meshtastic, where every node is functionally identical and can relay by default.
+
+- question: "What are Region Scopes?"
+  id: "region-scopes"
+  category: "Meshcore"
+  answer: |
+    Region scopes in MeshCore are basically a way to tag flood traffic with a named "region" so it only travels as far as it's relevant, instead of every message flooding the entire mesh regardless of distance. A repeater can be configured to only forward traffic carrying certain region tags, so local chatter stays local and doesn't get repeated by nodes hundreds of miles away that have no reason to care about it — this cuts down on channel congestion as meshes grow larger and start bordering other communities' networks.
+
+    The important thing to know is that region scopes are configured on **repeaters**, not on companion radios. As a companion/client user, all you do is set which region scope your outgoing traffic is tagged with (in the app); you don't define regions yourself. Repeater operators are the ones who decide which region tags their repeater will actually forward. The specific naming conventions for tags are still being worked out by the community and are likely to change, so it's not worth memorizing any particular scheme right now — just understand the concept: tags scope traffic, and only repeaters decide what gets carried.
+
+- question: "What are Room Servers?" 
+  id: "room-servers"                 
+  category: "Meshcore"                
+  answer: |                           
+    A Room Server in MeshCore is a store-and-forward message hub — think of it as a shared bulletin board that sits on the mesh, always on, waiting for people to check in. Companion nodes (your phone-paired radio) can log into a room server, post messages to it, and read whatever's been posted since they last checked. The key point is that a message doesn't have to be received live to count — the room server holds onto it, and anyone who logs in later can catch up on everything they missed.
+
+    This is exactly the same model as an old-school BBS (Bulletin Board System): you don't need to be sitting at your terminal the moment someone posts — you dial in whenever you get the chance, read what's accumulated, reply if you want, and log off. MeshCore's Room Server works the same way over LoRa: instead of a broadcast that only the currently-listening nodes catch (like a live channel message), a room server persists the conversation so intermittently-connected nodes — people who only power on their radio occasionally, or who were out of range earlier — can still pull up the full history whenever they reconnect. It's a solid fit for group coordination where not everyone can realistically be online and in range at the same time.
+
+- question: "What's an observer?"
+  id: "observer"
+  category: "Meshcore"
+  answer: |
+    In MeshCore, an **observer is essentially a passive packet listener**. It hears LoRa traffic over the air but **doesn't participate in routing or forwarding** like a repeater does. Its job is to record what it can hear—packets, metadata, signal information, etc.—so something outside the mesh can analyze the network.
+
+    Architecturally, think of it as: **MeshCore RF → Observer → MQTT → server/application**. The observer sits at the edge of the MeshCore network. When it hears a packet, it hands that observation to an MQTT bridge/uplink, which publishes it to an MQTT broker. The broker then becomes the **central collection point** where many observers can report their observations. This lets you correlate "Observer A heard packet X" with "Observer B also heard packet X," which is useful for mapping, coverage, path analysis, and network monitoring.
+
+    The observer doesn't send its observation back through the LoRa mesh. It uses some IP connection—typically Wi-Fi/Ethernet through the device itself or a connected computer—to reach the MQTT broker. From there, consumers such as MeshCore analyzers, maps, databases, or your own application subscribe to the MQTT topics. 
+
+    A useful mental model is: **repeaters move MeshCore packets; observers watch MeshCore packets; MQTT transports the observations; the server makes sense of the observations.** And importantly, an MQTT *observer uplink* is different from an MQTT *mesh bridge*: the former reports what the radio hears to an external system, while the latter can actually transport MeshCore traffic between radios/networks.
+
+- question: "What is multibyte support?"
+  id: "multibyte-support"
+  category: "Meshcore"
+  answer: |
+    In MeshCore, **multibyte support is about how a repeater is represented in the packet’s path**. When a packet travels through repeaters, MeshCore records each hop in the path using a short hash derived from that repeater’s public key. The original design used **1 byte per repeater**, so a path like `A7 → 3C → F2` means the packet went through three repeaters whose path hashes were those one-byte values. Because the path has a maximum of 64 bytes, 1-byte hashes allow up to 64 hops. 
+
+    The problem is that **1 byte only gives you 256 possible values** (254 usable), while you can have thousands of repeaters. So imagine two completely different repeaters: Repeater A's public key starts with `3C`, and Repeater B's public key also starts with `3C`. Both are legitimately different repeaters, but a packet path containing `3C` can't tell an analyzer which one it means. **That's the collision.** It doesn't normally stop the packet from working or routing; it mainly makes the recorded path ambiguous and makes network-analysis tools less accurate. 
+
+    **Multibyte support lets MeshCore use 2 or 3 bytes instead of 1 byte for each hop.** With 2 bytes there are 65,536 possible hashes; with 3 bytes there are 16,777,216. So instead of two repeaters potentially both appearing as `3C`, you might get something like `3C91` and `3CA7`, making it much easier to identify which repeater actually handled the packet. This was introduced in firmware 1.14; the sender chooses the path-hash size, and 1.14+ repeaters can forward all three sizes. 
+
+    The tradeoff is **path length**. The path still has only 64 bytes available, so larger IDs mean fewer hops: **1-byte = 64 hops, 2-byte = 32 hops, 3-byte = 21 hops**. This is why you may see settings for `1`, `2`, or `3` byte path hashes. In practice, 2- or 3-byte paths are particularly useful for adverts and network analysis because they make it much easier to accurately determine *which repeaters a packet passed through*.
+
+- question: "My repeater hears very little, or has stopped hearing traffic"                                                                                                                                                                                                                                                                                                                                                                                                                
+  id: "repeater-stopped-hearing-traffic"
+  category: "Meshcore"
+  answer: |
+    Two receive-side settings, neither of which is set by the modem preset.                                                                                                                                                                                                                                                                                                                                                                                                          
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     
+    ```shell {linenos=false}                                                                                                                                                                                                                                                                                                                                                                                                                                                         
+    set radio.rxgain on                                                                                                                                                                                                                                                                                                                                                                                                                                                              
+    set agc.reset.interval 12                                                                                                                                                                                                                                                                                                                                                                                                                                                        
+    ```                                                                                                                                                                                                                                                                                                                                                                                                                                                                              
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     
+    `radio.rxgain` enables the LoRa transceiver's boosted receive gain, a low-noise front-end mode on SX12xx and LR1110 radios that trades a small increase in current draw for roughly 3 dB of sensitivity. It defaults to `on` in firmware `1.14.1`+, but confirm it with `get radio.rxgain` on any repeater that underperforms.                                                                                                                                                   
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     
+    `agc.reset.interval` periodically restarts the receiver's automatic gain control. A strong nearby transmission can leave the AGC latched at low gain, after which the radio still appears healthy but no longer decodes weak signals, the classic "deaf repeater". The value is in seconds, rounded down to a multiple of 4, and defaults to `0` (disabled). `12` restores sensitivity on an unattended repeater without resetting so often that it clips traffic mid-reception. 
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 
+- question: "My node has poor range, or is not being heard"
+  id: "poor-range"
+  category: "Meshcore"
+  answer: |
+    ```shell {linenos=false}
+    set tx <dBm>
+    ```
+
+    Transmit power, range `1`–`22` dBm. The default varies by board.
+
+    This value sets the transceiver's output, not the antenna's. On boards with a power amplifier the radiated power is substantially higher than the number you set. Establish your board's PA gain and your applicable limits before raising it. Driving a PA beyond its rating, or transmitting into a bad or missing antenna, will permanently damage the radio.
+
+    Raising TX power does not fix an asymmetric link. If you can hear a repeater but it cannot hear you, the deficit is usually antenna, feedline, or siting, not power.
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 
+- question: "I receive too many notifications on a channel"
+  id: "too-many-notifications-on-channel"
+  category: "Meshcore"
+  answer: |                                                                                                                                                                                                                                                                                                                                                                                                                                
+    Notification behaviour is local to your phone. Open the channel, then **Channel Settings**:
+
+    - **Notifications**: *All Messages*, *Mentions Only*, or *None*. Messages keep arriving either way.
+    - **Blocked Senders**: silence one node rather than the whole channel, for a single chatty bot.
+    - **Message Retention**: limit how much history the app keeps.
+
+    To leave entirely, remove the channel from your channel list. Re-add it from the key or link above.
+
+- question: "Does my node report to the MQTT server?"
+  id: "report-to-mqtt-server"
+  category: "Meshcore"
+  answer: |                                                                                                                                                                                                                                                                                                                                                                                                                                
+    No. MQTT observer packets are not yet implemented, so there is nothing to configure

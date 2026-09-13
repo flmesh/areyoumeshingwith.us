@@ -40,3 +40,6 @@ resources/
 
 # Compiled Go binaries
 tools/mapgen/bin/
+
+# Local agent instructions
+AGENTS.md.DS_Store

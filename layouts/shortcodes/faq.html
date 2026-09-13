@@ -1,0 +1,86 @@
+{{ $faqFile := .Get 0 }}
+{{ $faqDir := index $.Site.Data.faq $faqFile }}
+{{ $faqData := slice }}
+
+{{ if not $faqDir }}
+  <div class="alert alert-warning">FAQ data not found: {{ $faqFile }}</div>
+{{ else }}
+  {{/* Build sorted file list */}}
+  {{ $files := slice }}
+  {{ range $name, $content := $faqDir }}
+    {{ $files = $files | append (dict "name" $name "data" $content) }}
+  {{ end }}
+  {{ $files = sort $files "name" }}
+
+  {{/* Merge in order */}}
+  {{ range $files }}
+    {{ $faqData = $faqData | append .data }}
+  {{ end }}
+
+  {{ $categories := slice }}
+  {{ range $faqData }}
+    {{ if not (in $categories .category) }}
+      {{ $categories = $categories | append .category }}
+    {{ end }}
+  {{ end }}
+
+  {{ range $catIndex, $category := $categories }}
+    {{ if $category }}
+      {{ $itemCount := 0 }}
+      {{ range $faqData }}
+        {{ if eq .category $category }}
+          {{ $itemCount = add $itemCount 1 }}
+        {{ end }}
+      {{ end }}
+      {{ if gt $itemCount 0 }}
+        <h3 class="mt-4 mb-3">{{ $category }}</h3>
+        <div class="accordion" id="faq-accordion-{{ $catIndex }}">
+          {{ $itemIndex := 0 }}
+          {{ range $faqData }}
+            {{ if eq .category $category }}
+              {{ $anchorId := .id | default (printf "faq-%d-%d" $catIndex $itemIndex) }}
+              <div class="accordion-item" id="{{ $anchorId }}">
+                <h2 class="accordion-header" id="heading-{{ $catIndex }}-{{ $itemIndex }}">
+                  <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse-{{ $catIndex }}-{{ $itemIndex }}" aria-expanded="false" aria-controls="collapse-{{ $catIndex }}-{{ $itemIndex }}">
+                    {{ .question | markdownify }}
+                    <a href="#{{ $anchorId }}" class="anchor-link ms-2" aria-label="Anchor link for this question">#</a>
+                  </button>
+                </h2>
+                <div id="collapse-{{ $catIndex }}-{{ $itemIndex }}" class="accordion-collapse collapse" aria-labelledby="heading-{{ $catIndex }}-{{ $itemIndex }}" data-bs-parent="#faq-accordion-{{ $catIndex }}">
+                  <div class="accordion-body">
+                    {{ .answer | markdownify }}
+                  </div>
+                </div>
+              </div>
+              {{ $itemIndex = add $itemIndex 1 }}
+            {{ end }}
+          {{ end }}
+        </div>
+
+        {{ $style := printf `
+        <style>
+          #faq-accordion-%d .anchor-link {
+            opacity: 0;
+            text-decoration: none;
+            color: var(--bs-link-color);
+            font-size: 0.85em;
+            transition: opacity 0.2s ease;
+            flex-shrink: 0;
+          }
+          #faq-accordion-%d .accordion-button:hover .anchor-link,
+          #faq-accordion-%d .accordion-button:focus .anchor-link {
+            opacity: 1;
+          }
+          #faq-accordion-%d .accordion-button {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+          }
+        </style>
+        ` $catIndex $catIndex $catIndex $catIndex | safeHTML }}
+        {{ $style }}
+      {{ end }}
+    {{ end }}
+  {{ end }}
+{{ end }}
+

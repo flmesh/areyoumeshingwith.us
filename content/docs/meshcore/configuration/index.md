@@ -6,6 +6,7 @@ nav_weight: 3
 authors:
   - beanfield
   - Json_18
+  - meh098
 series:
   - Guide
 date: 2026-07-26T00:00:00-04:00
@@ -112,44 +113,3 @@ ver
 
 - `get radio` returns `910.525,62.5,7,8`
 - `ver` reports the firmware version, so you can confirm the node is running the one you intended
-
-## FAQ
-
-### My repeater hears very little, or has stopped hearing traffic
-
-Two receive-side settings, neither of which is set by the modem preset.
-
-```shell {linenos=false}
-set radio.rxgain on
-set agc.reset.interval 12
-```
-
-`radio.rxgain` enables the LoRa transceiver's boosted receive gain, a low-noise front-end mode on SX12xx and LR1110 radios that trades a small increase in current draw for roughly 3 dB of sensitivity. It defaults to `on` in firmware `1.14.1`+, but confirm it with `get radio.rxgain` on any repeater that underperforms.
-
-`agc.reset.interval` periodically restarts the receiver's automatic gain control. A strong nearby transmission can leave the AGC latched at low gain, after which the radio still appears healthy but no longer decodes weak signals, the classic "deaf repeater". The value is in seconds, rounded down to a multiple of 4, and defaults to `0` (disabled). `12` restores sensitivity on an unattended repeater without resetting so often that it clips traffic mid-reception.
-
-### My node has poor range, or is not being heard
-
-```shell {linenos=false}
-set tx <dBm>
-```
-
-Transmit power, range `1`–`22` dBm. The default varies by board.
-
-This value sets the transceiver's output, not the antenna's. On boards with a power amplifier the radiated power is substantially higher than the number you set. Establish your board's PA gain and your applicable limits before raising it. Driving a PA beyond its rating, or transmitting into a bad or missing antenna, will permanently damage the radio.
-
-Raising TX power does not fix an asymmetric link. If you can hear a repeater but it cannot hear you, the deficit is usually antenna, feedline, or siting, not power.
-
-### I receive too many notifications on a channel
-
-Notification behaviour is local to your phone. Open the channel, then **Channel Settings**:
-
-- **Notifications**: *All Messages*, *Mentions Only*, or *None*. Messages keep arriving either way.
-- **Blocked Senders**: silence one node rather than the whole channel, for a single chatty bot.
-- **Message Retention**: limit how much history the app keeps.
-
-To leave entirely, remove the channel from your channel list. Re-add it from the key or link above.
-
-### Does my node report to the MQTT server?
-
-No. MQTT observer packets are not yet implemented, so there is nothing to configure.

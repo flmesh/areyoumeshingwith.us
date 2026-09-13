@@ -1,0 +1,74 @@
+- question: "What is Meshtastic?"
+  id: "what-is-meshtastic"
+  category: "Meshtastic"
+  answer: |
+    From [Meshtastic.org](https://meshtastic.org/docs/introduction/)'s documentation:
+    
+    "Meshtastic® is a project that enables you to use inexpensive LoRa radios as a long range off-grid communication 
+    platform in areas without existing or reliable communications infrastructure. This project is 100% community 
+    driven and open source!"
+
+- question: "What are the ethics of using Mesh discovery feature?"
+  id: "what-are-the-ethics-of-using-mesh-discovery-feature"
+  category: "Meshtastic"
+  answer: "Think about congestion and air time, privacy, security, and etiquette. For example, people have 
+    to opt-in for map reporting. So if there are known repeater locations, it is not right 
+    to re-publish their position locations as map reports without the consent of the owner. Nothing is 
+    stopping a person from doing that, but they should always ask and respect the owners decisions. 
+    It's shared, so as long as you're being excellent to others, you're good."
+
+- question: "How do I get started with Meshtastic?"
+  id: "how-do-i-get-started-with-meshtastic"
+  category: "Meshtastic"
+  answer: |
+    Getting started with Meshtastic is straightforward:
+    
+    1. **Get compatible hardware** - Purchase a LoRa-capable device such as a T-Beam, LilyGO T-Echo, or RAK WisBlock.
+    2. **Flash the firmware** - Use the web flasher at [meshtastic.org/docs/software/android/flasher](https://meshtastic.org/docs/software/android/flasher/) or the mobile app.
+    3. **Configure your radio** - Set your region, frequency, and channel settings to match your local mesh network (for Florida Mesh, see our regional settings).
+    4. **Install the app** - Download the Meshtastic app for Android or iOS, or use the web client.
+    5. **Connect and test** - Pair your device via Bluetooth and send a test message to verify it's working.
+    6. **Join the community** - Connect with other operators in your area for tips and support.
+    
+    Remember to follow local regulations and community guidelines when operating your node.
+
+- question: "My node is not appearing on the map"
+  id: "node-is-not-on-map"
+  category: "Meshtastic"
+  answer: |
+    - Verify internet connectivity on the device
+    - If its a NRF52 based node confirm that `Proxy to Client` is enabled.
+    - Check that your MQTT credentials are entered correctly
+    - Ensure the precision settings meet the minimum requirements (1194ft / 363m)
+    - Confirm the root topic is set exactly to `msh/US/FL`
+    - Verify the MQTT module is enabled and properly configured
+
+- question: "I receive too many notifications on a channel"                                                                                                                                                                                                                                         
+  id: "too-many-notifications-on-channel"
+  category: "Meshtastic"
+  answer: |
+    Notification behaviour is local to your phone. Messages keep arriving either way, and your node keeps relaying traffic for the mesh.
+
+    - **Mute the conversation.** Select the channel in the message list, then **Mute notifications**: 8 hours, 1 week, or always.
+    - **Disable notifications for the app** in your phone's settings.
+    - **Remove the channel** in the app's channel settings, freeing the slot. Rejoin later with the name and key above.
+
+- question: "Can I publish under a different root topic?"
+  id: "publish-under-different-topic"
+  category: "Meshtastic"
+  answer: |
+    No. `msh/US/FL` is the only root topic the server accepts. Publishes to any other topic are rejected.
+
+    You can publish to your own subgroup beneath it, such as `msh/US/FL/mygroup`. You cannot subscribe to a parent of `msh/US/FL`, such as `msh/US` or `msh`.
+
+    [^telemetry]: Neighbor Info does not transmit over LoRa while the primary channel is the default one, so a remote infrastructure node sharing neighbor data sets `telemetry` as its **primary** rather than a secondary. The add link installs it as a secondary, where it has no effect.
+    [^presets]: Please reference [Regional LoRa Settings]({{< relref "regional-lora-settings/index.md" >}}) for up to date modem presets for each area of the state.
+    [^tls]: TLS encrypts data transmitted between MQTT clients and the broker for increased security, but may not supported on all platforms. It is known that the Android App version above 2.7.13 may have issues with TLS enabled.
+    [^ninfo]: Please only enable Neighbor Info on Basestation and stationary nodes, when enabled on mobile nodes it causes a lot of noise and clutter to the map. Thank you.
+    [^role]: CLIENT, CLIENT_BASE, or CLIENT_MUTE unless you have a different use case. **Never set this to ROUTER or REPEATER**.
+    [^hops]: Except in specific use cases *(user preference: but do not set to higher than 5)*.
+    [^downlink]: If you wish to receive traffic from MQTT and not just send traffic to MQTT then you may enable with your individual MQTT account credentials.
+    [^hubot]: Florida Mesh has a new requirement to [request an individual MQTT account]({{< relref "docs/general/mqtt-server/index.md" >}}) which allow both channel `uplink` & `downlink` ability.
+    [^ignore-mqtt]: Can be Checked to stop rouge MQTT data from appearing on your node and hopping though. Consider unchecking if you uncheck `downlink`.
+    [^ok-mqtt]: This gives permission to uplink your node to MQTT Servers. You will not appear on the Meshtastic Map if this is not enabled.
+
