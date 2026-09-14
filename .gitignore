@@ -42,4 +42,7 @@ resources/
 tools/mapgen/bin/
 
 # Local agent instructions
-AGENTS.md.DS_Store
+AGENTS.md
+
+# MacOS metadata file
+.DS_Store
