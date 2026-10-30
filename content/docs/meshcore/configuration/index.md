@@ -34,16 +34,20 @@ If your node is paired to your phone, this section plus [Channels](#channels) is
 
 ### Radio
 
-Select the `USA/Canada` preset, then change the coding rate to `8`:
+Select the `USA/Canada` preset:
 
 | Setting | Value |
 |---|---|
 | Frequency | `910.525 MHz` |
 | Bandwidth | `62.5 kHz` |
 | Spreading factor | `7` |
-| Coding rate | `8` |
+| Coding rate | `5` |
 
-Frequency, bandwidth, and spreading factor must match the rest of the mesh exactly. Coding rate does not have to, since the receiver reads it from each packet, but set it to `8` anyway because it makes your own weak links more reliable.
+Frequency, bandwidth, and spreading factor must match the rest of the mesh exactly. Coding rate does not have to, since the receiver reads it from each packet.
+
+{{< notice note "Coding rate 8" >}}
+Leave coding rate at `5` unless a specific link needs it. `8` adds forward error correction that can recover packets on a link that is heard but often fails to decode because of noise, interference, or multipath. It does not help a link that is simply out of range, and it costs up to 60% more airtime on every packet the node sends, time taken from everyone sharing the channel. It is mainly for a fixed repeater carrying a weak hop the mesh depends on, after antenna, feedline, and siting have been checked. Set it with `set radio 910.525,62.5,7,8`, and return to `5` if the link does not improve.
+{{< /notice >}}
 
 ### Hop Bytes
 
@@ -81,7 +85,7 @@ Florida has not chosen its tags and the naming convention is still moving. See [
 CLI configuration. Reboot to apply radio changes.
 
 ```shell {linenos=false}
-set radio 910.525,62.5,7,8
+set radio 910.525,62.5,7,5
 set flood.advert.interval 12
 set path.hash.mode 1
 ```
@@ -111,5 +115,5 @@ get flood.advert.interval
 ver
 ```
 
-- `get radio` returns `910.525,62.5,7,8`
+- `get radio` returns `910.525,62.5,7,5`
 - `ver` reports the firmware version, so you can confirm the node is running the one you intended
