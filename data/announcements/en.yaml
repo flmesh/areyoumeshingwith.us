@@ -7,3 +7,8 @@ meshbot:
   title: MeshBot is now generally available on Discord!
   url: docs/general/meshbot-commands/index.md
   weight: 10
+
+Meshtastic-Map Update:
+  title: Meshtastic-Map has been updated! 
+  url: blog/Meshtastic-map-update/Meshtastic-mesh-map-update.md
+  weight: 15
