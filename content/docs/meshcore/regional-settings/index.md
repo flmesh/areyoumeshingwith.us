@@ -22,7 +22,7 @@ Florida runs one statewide modem preset. Region scoping is still being worked ou
 
 ## Modem preset
 
-MeshCore's `USA/Canada` preset, unchanged.
+MeshCore's `USA` preset, unchanged.
 
 - Frequency: `910.525 MHz`
 - Bandwidth: `62.5 kHz`
@@ -61,7 +61,7 @@ Unscoped traffic ignores all of this and floods the way it always has, so adding
 
 Repeater operators, mostly. A repeater can hold many regions at once, and the guidance so far is to carry only what you should be relaying: your own area, plus a wider tag for the traffic that genuinely needs to travel further.
 
-Companion nodes receive everything regardless of scope, so nothing here affects what you can hear. A companion's region setting only tags what it sends. The app's experimental settings hold a default scope that applies to every flood packet the node originates, and a channel configured with its own scope overrides that default.
+Companion nodes receive everything regardless of scope, so nothing here affects what you can hear. A companion's region setting only tags what it sends. Settings → Network Settings → **Default Region Scope** applies to every flood packet the node originates, and a channel configured with its own scope overrides that default.
 
 ### The formats under discussion
 

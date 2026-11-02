@@ -34,7 +34,7 @@ If your node is paired to your phone, this section plus [Channels](#channels) is
 
 ### Radio
 
-Select the `USA/Canada` preset:
+Settings → Radio Settings → Choose Preset → `USA`:
 
 | Setting | Value |
 |---|---|
@@ -49,13 +49,15 @@ Frequency, bandwidth, and spreading factor must match the rest of the mesh exact
 Leave coding rate at `5` unless a specific link needs it. `8` adds forward error correction that can recover packets on a link that is heard but often fails to decode because of noise, interference, or multipath. It does not help a link that is simply out of range, and it costs up to 60% more airtime on every packet the node sends, time taken from everyone sharing the channel. It is mainly for a fixed repeater carrying a weak hop the mesh depends on, after antenna, feedline, and siting have been checked. Set it with `set radio 910.525,62.5,7,8`, and return to `5` if the link does not improve.
 {{< /notice >}}
 
-### Hop Bytes
+### Path Hash Size
 
-Settings → Experimental → **Hop Bytes: `2`**
+Settings → Network Settings → **Path Hash Size: `2-byte`**
 
-Every hop a packet takes is recorded in its path as a short hash of the repeater that forwarded it. At 1 byte there are only 256 possible values, so in a mesh this size two repeaters routinely hash to the same byte, after which routing and telemetry cannot tell which one actually carried the packet. Two bytes gives 65,536 values and makes collisions rare.
+Every hop a packet takes is recorded in its path as a short hash of the repeater that forwarded it. At 1 byte there are only 256 possible values, so in a mesh this size two repeaters routinely hash to the same byte, after which routing and mapping tools cannot tell which one actually carried the packet. Two bytes gives 65,536 values and makes collisions rare.
 
-The cost is path length: each hop consumes two bytes of a fixed-size path field instead of one, reducing the maximum number of hops a route can record. Florida accepts that trade.
+The node that originates a packet chooses its hash size, and repeaters forward every size. A companion's setting applies to the messages it sends; a repeater's applies to its own adverts. Set both to `2`.
+
+The cost is path length. The path field is fixed, so larger hashes leave room for fewer hops: 64 at 1 byte, 32 at 2, 21 at 3. Florida uses 2 bytes rather than 3 because some traffic here already travels more than 21 hops, and 2 bytes is enough to keep collisions rare.
 
 The CLI equivalent is `set path.hash.mode 1`.
 
@@ -86,15 +88,12 @@ CLI configuration. Reboot to apply radio changes.
 
 ```shell {linenos=false}
 set radio 910.525,62.5,7,5
-set flood.advert.interval 12
 set path.hash.mode 1
 ```
 
 `radio` sets frequency, bandwidth, spreading factor, and coding rate. The first three must match between two nodes or they cannot demodulate each other; coding rate does not. See [Regional Settings]({{< relref "/docs/meshcore/regional-settings/index.md" >}}).
 
-`flood.advert.interval` is the number of hours between flood adverts, range `3`–`168`, default `12`. Shorter intervals put more advert traffic on the air for every repeater that relays them. `advert.interval` separately controls local zero-hop adverts, in minutes.
-
-`path.hash.mode` selects the path hash size: `0` = 1-byte, `1` = 2-byte, `2` = 3-byte. Florida uses 2-byte; see [Hop Bytes](#hop-bytes).
+`path.hash.mode` selects the path hash size: `0` = 1-byte, `1` = 2-byte, `2` = 3-byte. Florida uses 2-byte; see [Path Hash Size](#path-hash-size).
 
 Fixed position, for boards without GPS:
 
@@ -111,7 +110,6 @@ Boards with a GPS module use `gps on`, `gps sync`, and `gps setloc` instead.
 get radio
 get tx
 get path.hash.mode
-get flood.advert.interval
 ver
 ```
 
