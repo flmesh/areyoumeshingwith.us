@@ -49,6 +49,10 @@ Florida uses the preset default of `5`. Every node shares the same channel, and 
 The naming convention is still being worked out across the wider MeshCore community, and Florida has not chosen its own tags. Expect the formats below to change.
 {{< /notice >}}
 
+{{< notice warning "Leave Default Region Scope blank" >}}
+Leave **Default Region Scope** blank on companions and repeaters, and leave channel scopes unset, unless you know what it affects. A scoped packet is relayed only by repeaters that carry that exact region, and few Florida repeaters carry any yet. Setting a scope now silently cuts your messages off from most of the mesh.
+{{< /notice >}}
+
 ### How they work
 
 A region is a tag carried on a packet. Every repeater keeps a list of the regions it is willing to relay, and it forwards a scoped packet only when the tag matches something in that list. The name is never sent over the air; it is hashed, and the repeater compares hashes.
@@ -100,7 +104,7 @@ region remove us-fl-cfl
 
 Each entry should show `F`, meaning flood allowed. On firmware older than `1.15.0`, follow each `region put` with `region allowf <name>`.
 
-`region default <name>` sets the scope the node puts on packets it originates itself, and `region default <null>` clears it.
+`region default <name>` sets the scope the node puts on packets it originates itself, and `region default <null>` clears it. Leave it cleared for now; see the warning above.
 
 {{< notice note "openHop repeaters" >}}
 openHop Repeater does not implement any of these. Every `region` subcommand returns `Error: Region commands not implemented`, so manage regions in the openHop Console instead. Renaming an entry there keeps its original key, so delete it and add the new name rather than editing it.
