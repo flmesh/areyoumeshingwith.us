@@ -78,7 +78,11 @@ Open this page in your phone's browser and tap a channel name to hand it straigh
 
 ## Region scopes
 
-Region scopes decide which repeaters relay a flood beyond its own area. They are set on repeaters, and companion nodes receive everything regardless, so most operators have nothing to configure here yet.
+Region scopes decide which repeaters relay a flood beyond its own area. Companion nodes receive everything regardless of scope, so most operators have nothing to configure here yet.
+
+{{< notice warning "Leave Default Region Scope blank" >}}
+Leave **Default Region Scope** blank on companions and repeaters, and leave channel scopes unset, unless you know what it affects. A scoped packet is relayed only by repeaters that carry that exact region, and few Florida repeaters carry any yet. Setting a scope now silently cuts your messages off from most of the mesh.
+{{< /notice >}}
 
 Florida has not chosen its tags and the naming convention is still moving. See [Region Scopes]({{< relref "/docs/meshcore/regional-settings/index.md" >}}#region-scopes) for how they work, the formats under discussion, and the CLI commands.
 
