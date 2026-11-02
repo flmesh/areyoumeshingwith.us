@@ -22,7 +22,7 @@ Florida runs one statewide modem preset. Region scoping is still being worked ou
 
 ## Modem preset
 
-MeshCore's `USA/Canada` preset, unchanged.
+MeshCore's `USA` preset, unchanged.
 
 - Frequency: `910.525 MHz`
 - Bandwidth: `62.5 kHz`
@@ -49,6 +49,10 @@ Florida uses the preset default of `5`. Every node shares the same channel, and 
 The naming convention is still being worked out across the wider MeshCore community, and Florida has not chosen its own tags. Expect the formats below to change.
 {{< /notice >}}
 
+{{< notice warning "Leave Default Region Scope blank" >}}
+Leave **Default Region Scope** blank on companions and repeaters, and leave channel scopes unset, unless you know what it affects. A scoped packet is relayed only by repeaters that carry that exact region, and few Florida repeaters carry any yet. Setting a scope now silently cuts your messages off from most of the mesh.
+{{< /notice >}}
+
 ### How they work
 
 A region is a tag carried on a packet. Every repeater keeps a list of the regions it is willing to relay, and it forwards a scoped packet only when the tag matches something in that list. The name is never sent over the air; it is hashed, and the repeater compares hashes.
@@ -61,7 +65,7 @@ Unscoped traffic ignores all of this and floods the way it always has, so adding
 
 Repeater operators, mostly. A repeater can hold many regions at once, and the guidance so far is to carry only what you should be relaying: your own area, plus a wider tag for the traffic that genuinely needs to travel further.
 
-Companion nodes receive everything regardless of scope, so nothing here affects what you can hear. A companion's region setting only tags what it sends. The app's experimental settings hold a default scope that applies to every flood packet the node originates, and a channel configured with its own scope overrides that default.
+Companion nodes receive everything regardless of scope, so nothing here affects what you can hear. A companion's region setting only tags what it sends. Settings → Network Settings → **Default Region Scope** applies to every flood packet the node originates, and a channel configured with its own scope overrides that default.
 
 ### The formats under discussion
 
@@ -100,7 +104,7 @@ region remove us-fl-cfl
 
 Each entry should show `F`, meaning flood allowed. On firmware older than `1.15.0`, follow each `region put` with `region allowf <name>`.
 
-`region default <name>` sets the scope the node puts on packets it originates itself, and `region default <null>` clears it.
+`region default <name>` sets the scope the node puts on packets it originates itself, and `region default <null>` clears it. Leave it cleared for now; see the warning above.
 
 {{< notice note "openHop repeaters" >}}
 openHop Repeater does not implement any of these. Every `region` subcommand returns `Error: Region commands not implemented`, so manage regions in the openHop Console instead. Renaming an entry there keeps its original key, so delete it and add the new name rather than editing it.
