@@ -111,5 +111,5 @@ require (
 	github.com/jakearchibald/idb v8.0.3+incompatible // indirect
 	github.com/martignoni/hugo-notice v0.0.0-20260115210225-7d3115657552 // indirect
 	github.com/twbs/bootstrap v5.3.8+incompatible // indirect
-	github.com/twbs/icons v1.13.1 // indirect
+	github.com/twbs/icons v1.13.2 // indirect
 )
