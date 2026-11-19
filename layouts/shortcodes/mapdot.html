@@ -1,0 +1,25 @@
+{{- /*
+    Shortcode: mapdot
+    Usage: {{< mapdot color="#3B82C4" size="18" class="my-class" >}}
+    Produces a map-style dot: colored circle with white ring and subtle shadow.
+*/ -}}
+{{ $c := .Get "color" | default "#1E90FF" }}
+{{ $class := .Get "class" | default "" }}
+{{ $id := printf "md%s" (replace $c "#" "") }}
+<svg role="img" width="1em" height="1em" viewBox="0 0 16 16" class="{{ $class }}" style="vertical-align:-0.15em; margin-right:0.35em;">
+  <defs>
+    <radialGradient id="{{ $id }}" cx="30%" cy="25%" r="60%">
+      <stop offset="0%" stop-color="#ffffff" stop-opacity="0.25"/>
+      <stop offset="45%" stop-color="{{ $c }}" stop-opacity="1"/>
+      <stop offset="100%" stop-color="#000000" stop-opacity="0.06"/>
+    </radialGradient>
+  </defs>
+  <!-- outer shaded disk like `dot` -->
+  <circle cx="8" cy="8" r="7" fill="url(#{{ $id }})" stroke="rgba(0,0,0,0.06)" stroke-width="0.5"/>
+  <!-- solid colored center -->
+  <circle cx="8" cy="8" r="4.6" fill="{{ $c }}" />
+  <!-- tight white ring (stroke around the colored center) -->
+  <circle cx="8" cy="8" r="5.4" fill="none" stroke="#ffffff" stroke-width="0.9" stroke-opacity="0.95" />
+  <!-- small highlight -->
+  <circle cx="6.2" cy="5.8" r="1.5" fill="#ffffff" fill-opacity="0.12" />
+</svg>
