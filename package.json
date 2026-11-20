@@ -19,7 +19,7 @@
   },
   "homepage": "https://github.com/flmesh/areyoumeshingwith.us#readme",
   "dependencies": {
-    "@fullhuman/postcss-purgecss": "^8.0.0",
+    "@fullhuman/postcss-purgecss": "^9.0.0",
     "@hbstack/node-packages": "^0.1.5"
   },
   "devDependencies": {
